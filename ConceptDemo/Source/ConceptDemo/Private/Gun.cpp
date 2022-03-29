@@ -10,7 +10,7 @@ AGun::AGun()
 {
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
-	this->rotate = false;
+	this->rotate = true;
 	this->rotationSpeed = 1;
 }
 
@@ -30,5 +30,27 @@ void AGun::Tick(float DeltaTime)
 		rotator.Yaw = rotationTime;
 		AddActorLocalRotation(rotator);
 	}
+}
+
+void AGun::FaceRight() {
+	FRotator rotator = FRotator::ZeroRotator;
+	rotator.Yaw = 90;
+	rotator.Pitch = 0;
+	rotator.Roll = 0;
+	this->SetActorRotation(rotator);
+}
+
+void AGun::FaceLeft() {
+	FRotator rotator = FRotator::ZeroRotator;
+	rotator.Yaw = 270;
+	rotator.Pitch = 0;
+	rotator.Roll = 0;
+	this->SetActorRotation(rotator);
+}
+
+void AGun::SetAttached() {
+	this->rotate = false;
+	this->SetActorEnableCollision(false);
+	this->SetActorScale3D(FVector(0.7f, 0.7f, 0.7f));
 }
 

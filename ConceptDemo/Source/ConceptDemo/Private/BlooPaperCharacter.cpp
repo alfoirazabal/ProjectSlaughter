@@ -2,14 +2,6 @@
 
 #include "BlooPaperCharacter.h"
 #include <PaperFlipbookComponent.h>
-#include <PaperFlipbook.h>
-#include <Components/SceneComponent.h>
-
-// DEBUG INCLUDES
-/*
-#include <Engine / Engine.h>
-#include <Math/Color.h
-*/
 
 ABlooPaperCharacter::ABlooPaperCharacter() {
 	ConstructorHelpers::FObjectFinder<UPaperFlipbook> idleFlipbookObject(TEXT("/Game/Character/Bloo/Images/Flipbooks/Bloo_idle_Flipbook.Bloo_idle_Flipbook"));
@@ -20,25 +12,36 @@ ABlooPaperCharacter::ABlooPaperCharacter() {
 	this->jumpingFlipbook = jumpingFlipbookObject.Object;
 }
 
+bool isOnTheAir(ABlooPaperCharacter* character) {
+	FVector velocity = character->GetVelocity();
+	float zVelocity = velocity.Z;
+	return zVelocity != 0;
+}
+
 void ABlooPaperCharacter::HandleMovement(float scaleValue) {
 	FVector vector = FVector::ZeroVector;
 	vector.Y = 1;
 	AddMovementInput(vector, scaleValue);
 	UPaperFlipbookComponent* sprite = GetSprite();
-	if (scaleValue == 0) {
-		sprite->SetFlipbook(this->idleFlipbook);
+	if (isOnTheAir(this)) {
+		sprite->SetFlipbook(this->jumpingFlipbook);
 	}
-	else if (scaleValue > 0) {
-		GetWorld();
-		sprite->SetFlipbook(this->movingFlipbook);
-		FRotator rotator = FRotator::ZeroRotator;
-		sprite->SetRelativeRotation(rotator);
-	}
-	else if (scaleValue < 0) {
-		sprite->SetFlipbook(this->movingFlipbook);
-		FRotator rotator = FRotator::ZeroRotator;
-		rotator.Yaw = 180;
-		sprite->SetRelativeRotation(rotator);
+	else {
+		if (scaleValue == 0) {
+			sprite->SetFlipbook(this->idleFlipbook);
+		}
+		else if (scaleValue > 0) {
+			GetWorld();
+			sprite->SetFlipbook(this->movingFlipbook);
+			FRotator rotator = FRotator::ZeroRotator;
+			sprite->SetRelativeRotation(rotator);
+		}
+		else if (scaleValue < 0) {
+			sprite->SetFlipbook(this->movingFlipbook);
+			FRotator rotator = FRotator::ZeroRotator;
+			rotator.Yaw = 180;
+			sprite->SetRelativeRotation(rotator);
+		}
 	}
 }
 

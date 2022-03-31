@@ -4,6 +4,8 @@
 #include "Gun.h"
 #include <PaperFlipbookComponent.h>
 
+const float DEFAULT_CHARACTER_PLANE_X_POSITION = 760;
+
 ABlooPaperCharacter::ABlooPaperCharacter() {
 	ConstructorHelpers::FObjectFinder<UPaperFlipbook> idleFlipbookObject(TEXT("/Game/Character/Bloo/Images/Flipbooks/Bloo_idle_Flipbook.Bloo_idle_Flipbook"));
 	ConstructorHelpers::FObjectFinder<UPaperFlipbook> movingFlipbookObject(TEXT("/Game/Character/Bloo/Images/Flipbooks/Bloo_moving.Bloo_moving"));
@@ -29,6 +31,15 @@ FRotator GetLeftRotator() {
 	FRotator rotator = FRotator::ZeroRotator;
 	rotator.Yaw = 180;
 	return rotator;
+}
+
+void EnsureXAxisLocation(ABlooPaperCharacter* character) {
+	// Prevents actor from moving along the X axis, and move only along the Y and Z axis of the simulated 3D plane.
+	FVector currentPosition = character->GetActorLocation();
+	if (currentPosition.X != DEFAULT_CHARACTER_PLANE_X_POSITION) {
+		currentPosition.X = DEFAULT_CHARACTER_PLANE_X_POSITION;
+		character->SetActorLocation(currentPosition);
+	}
 }
 
 void ABlooPaperCharacter::MoveGun() {
@@ -72,6 +83,7 @@ void ABlooPaperCharacter::HandleMovement(float scaleValue) {
 			this->facingDirection = FACING_DIRECTION::LEFT;
 		}
 	}
+	EnsureXAxisLocation(this);
 }
 
 void ABlooPaperCharacter::HandleJump() {

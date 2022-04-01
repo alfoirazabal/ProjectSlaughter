@@ -18,8 +18,11 @@ AElevatorPlatform::AElevatorPlatform()
 	this->isActivated = false;
 	this->floorLevel = 0;
 	this->ceilingLevel = 0;
+	this->stillTime = 5;
 	this->speed = 5;
 	CurrentPlatformDirection = PLATFORM_DIRECTION::GOING_UP;
+
+	this->currentStillTime = this->stillTime;
 }
 
 // Called when the game starts or when spawned
@@ -34,22 +37,30 @@ void AElevatorPlatform::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 	if (this->isActivated) {
-		FVector currentLocation = this->GetActorLocation();
-		switch (CurrentPlatformDirection) {
+		if (this->currentStillTime == 0) {
+			FVector currentLocation = this->GetActorLocation();
+			switch (CurrentPlatformDirection) {
 			case PLATFORM_DIRECTION::GOING_UP:
 				currentLocation.Z += this->speed * DeltaTime;
 				break;
 			case PLATFORM_DIRECTION::GOING_DOWN:
 				currentLocation.Z -= this->speed * DeltaTime;
 				break;
+			}
+			if (currentLocation.Z >= this->ceilingLevel) {
+				CurrentPlatformDirection = PLATFORM_DIRECTION::GOING_DOWN;
+				this->currentStillTime = this->stillTime;
+			}
+			else if (currentLocation.Z <= this->floorLevel) {
+				CurrentPlatformDirection = PLATFORM_DIRECTION::GOING_UP;
+				this->currentStillTime = this->stillTime;
+			}
+			SetActorLocation(currentLocation);
 		}
-		if (currentLocation.Z >= this->ceilingLevel) {
-			CurrentPlatformDirection = PLATFORM_DIRECTION::GOING_DOWN;
+		else {
+			this->currentStillTime--;
 		}
-		else if (currentLocation.Z <= this->floorLevel) {
-			CurrentPlatformDirection = PLATFORM_DIRECTION::GOING_UP;
-		}
-		SetActorLocation(currentLocation);
+		
 	}
 }
 

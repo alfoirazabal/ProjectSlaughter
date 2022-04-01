@@ -14,14 +14,17 @@ class CONCEPTDEMO_API AElevatorPlatform : public AActor
 public:	
 	// Sets default values for this actor's properties
 	AElevatorPlatform();
-	UPROPERTY(BlueprintReadWrite, VisibleAnywhere) bool isActivated;
-	UPROPERTY(BlueprintReadWrite, VisibleAnywhere) float floorLevel;
-	UPROPERTY(BlueprintReadWrite, VisibleAnywhere) float ceilingLevel;
-	UPROPERTY(BlueprintReadWrite, VisibleAnywhere) uint8 speed;
+	UPROPERTY(BlueprintReadWrite, EditAnywhere) bool isActivated;
+	UPROPERTY(BlueprintReadWrite, EditAnywhere) float floorLevel;
+	UPROPERTY(BlueprintReadWrite, EditAnywhere) float ceilingLevel;
+	UPROPERTY(BlueprintReadWrite, EditAnywhere) int stillTime;
+	UPROPERTY(BlueprintReadWrite, EditAnywhere) int speed;
 
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
+
+	uint8 currentStillTime;
 
 public:	
 	// Called every frame

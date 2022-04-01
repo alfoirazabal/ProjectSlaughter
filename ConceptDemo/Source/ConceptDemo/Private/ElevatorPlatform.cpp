@@ -3,12 +3,7 @@
 
 #include "ElevatorPlatform.h"
 
-enum PLATFORM_DIRECTION {
-	GOING_UP,
-	GOING_DOWN
-};
-
-PLATFORM_DIRECTION CurrentPlatformDirection;
+AElevatorPlatform::PLATFORM_STATUS CurrentPlatformStatus;
 
 // Sets default values
 AElevatorPlatform::AElevatorPlatform()
@@ -20,9 +15,14 @@ AElevatorPlatform::AElevatorPlatform()
 	this->ceilingLevel = 0;
 	this->stillTime = 5;
 	this->speed = 5;
-	CurrentPlatformDirection = PLATFORM_DIRECTION::GOING_UP;
+	CurrentPlatformStatus = PLATFORM_STATUS::MOVING_UP;
 
 	this->currentStillTime = this->stillTime;
+}
+
+AElevatorPlatform::PLATFORM_STATUS AElevatorPlatform::GetPlatformStatus() 
+{
+	return CurrentPlatformStatus;
 }
 
 // Called when the game starts or when spawned
@@ -39,26 +39,34 @@ void AElevatorPlatform::Tick(float DeltaTime)
 	if (this->isActivated) {
 		if (this->currentStillTime == 0) {
 			FVector currentLocation = this->GetActorLocation();
-			switch (CurrentPlatformDirection) {
-			case PLATFORM_DIRECTION::GOING_UP:
-				currentLocation.Z += this->speed * DeltaTime;
-				break;
-			case PLATFORM_DIRECTION::GOING_DOWN:
-				currentLocation.Z -= this->speed * DeltaTime;
-				break;
+			switch (CurrentPlatformStatus) {
+				case PLATFORM_STATUS::MOVING_UP:
+					currentLocation.Z += this->speed * DeltaTime;
+					break;
+				case PLATFORM_STATUS::MOVING_DOWN:
+					currentLocation.Z -= this->speed * DeltaTime;
+					break;
 			}
 			if (currentLocation.Z >= this->ceilingLevel) {
-				CurrentPlatformDirection = PLATFORM_DIRECTION::GOING_DOWN;
+				CurrentPlatformStatus = PLATFORM_STATUS::STATIONED_UP;
 				this->currentStillTime = this->stillTime;
 			}
 			else if (currentLocation.Z <= this->floorLevel) {
-				CurrentPlatformDirection = PLATFORM_DIRECTION::GOING_UP;
+				CurrentPlatformStatus = PLATFORM_STATUS::STATIONED_DOWN;
 				this->currentStillTime = this->stillTime;
 			}
 			SetActorLocation(currentLocation);
 		}
 		else {
 			this->currentStillTime--;
+			if (this->currentStillTime == 0) {
+				if (CurrentPlatformStatus == PLATFORM_STATUS::STATIONED_DOWN) {
+					CurrentPlatformStatus = PLATFORM_STATUS::MOVING_UP;
+;				}
+				else if (CurrentPlatformStatus == PLATFORM_STATUS::STATIONED_UP) {
+					CurrentPlatformStatus = PLATFORM_STATUS::MOVING_DOWN;
+				}
+			}
 		}
 		
 	}

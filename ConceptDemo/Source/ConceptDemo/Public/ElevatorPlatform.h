@@ -20,6 +20,13 @@ public:
 	UPROPERTY(BlueprintReadWrite, EditAnywhere) int stillTime;
 	UPROPERTY(BlueprintReadWrite, EditAnywhere) int speed;
 
+	enum PLATFORM_STATUS {
+		MOVING_UP,
+		MOVING_DOWN,
+		STATIONED_DOWN,
+		STATIONED_UP
+	};
+
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
@@ -29,5 +36,7 @@ protected:
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
+
+	virtual PLATFORM_STATUS GetPlatformStatus();
 
 };

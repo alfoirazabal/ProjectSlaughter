@@ -12,6 +12,10 @@ AGun::AGun()
 	PrimaryActorTick.bCanEverTick = true;
 	this->rotate = true;
 	this->rotationSpeed = 1;
+
+	this->bulletSpawnRelativeLocation = FVector(0.0f, 50.0f, 10.0f);
+
+	this->bulletClass = NULL;
 }
 
 // Called when the game starts or when spawned
@@ -30,22 +34,18 @@ void AGun::Tick(float DeltaTime)
 		rotator.Yaw = rotationTime;
 		AddActorLocalRotation(rotator);
 	}
-}
-
-void AGun::FaceRight() {
-	FRotator rotator = FRotator::ZeroRotator;
-	rotator.Yaw = 90;
-	rotator.Pitch = 0;
-	rotator.Roll = 0;
-	this->SetActorRotation(rotator);
-}
-
-void AGun::FaceLeft() {
-	FRotator rotator = FRotator::ZeroRotator;
-	rotator.Yaw = 270;
-	rotator.Pitch = 0;
-	rotator.Roll = 0;
-	this->SetActorRotation(rotator);
+	else {
+		FRotator rotator = FRotator::ZeroRotator;
+		switch (this->facingDirection) {
+			case FACING_DIRECTION::LEFT:
+				rotator.Yaw = 270;
+				break;
+			case FACING_DIRECTION::RIGHT:
+				rotator.Yaw = 90;
+				break;
+		}
+		this->SetActorRotation(rotator);
+	}
 }
 
 void AGun::SetAttached() {
@@ -54,3 +54,22 @@ void AGun::SetAttached() {
 	this->SetActorScale3D(FVector(0.7f, 0.7f, 0.7f));
 }
 
+void AGun::Fire() {
+	if (this->bulletClass != NULL) {
+		FVector bulletLocation = this->GetActorLocation();
+		bulletLocation.Z += this->bulletSpawnRelativeLocation.Z;
+		if (this->facingDirection == FACING_DIRECTION::LEFT) {
+			bulletLocation.Y -= this->bulletSpawnRelativeLocation.Y;
+		}
+		else if (this->facingDirection == FACING_DIRECTION::RIGHT) {
+			bulletLocation.Y += this->bulletSpawnRelativeLocation.Y;
+		}
+		ABullet* bullet = this->GetWorld()->SpawnActor<ABullet>(this->bulletClass, bulletLocation, this->GetActorRotation());
+		bullet->FacingDirection = this->facingDirection;
+		bullet->TravelSpeed = 5;
+		bullet->MaxTravelDistance = 5000;
+	}
+	else {
+		GEngine->AddOnScreenDebugMessage(23425, 10, FColor::Red, "ERR: Bullet class unset for gun: " + this->GetName());
+	}
+}

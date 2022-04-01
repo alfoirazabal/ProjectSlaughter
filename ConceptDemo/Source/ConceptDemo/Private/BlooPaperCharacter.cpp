@@ -44,16 +44,8 @@ void EnsureXAxisLocation(ABlooPaperCharacter* character) {
 
 void ABlooPaperCharacter::MoveGun() {
 	if (this->attachedGun != NULL) {
-		FVector currentPawnLocation = this->GetActorLocation();
-		this->attachedGun->SetActorLocation(currentPawnLocation);
-		switch (this->facingDirection) {
-			case RIGHT:
-				this->attachedGun->FaceRight();
-				break;
-			case LEFT:
-				this->attachedGun->FaceLeft();
-				break;
-		}
+		this->attachedGun->facingDirection = this->facingDirection;
+		this->attachedGun->SetActorLocation(this->GetActorLocation());
 	}
 }
 
@@ -99,5 +91,11 @@ void ABlooPaperCharacter::AttachGun(AGun* gun)
 	if (this->attachedGun == NULL) {
 		this->attachedGun = gun;
 		this->attachedGun->SetAttached();
+	}
+}
+
+void ABlooPaperCharacter::Fire() {
+	if (this->attachedGun != NULL) {
+		this->attachedGun->Fire();
 	}
 }

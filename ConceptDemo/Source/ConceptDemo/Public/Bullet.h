@@ -4,13 +4,8 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
+#include "SlaughterFirendsDemoConstants.h"
 #include "Bullet.generated.h"
-
-UENUM()
-enum FACING_DIRECTION {
-	RIGHT	UMETA(DisplayName = "Right"),
-	LEFT	UMETA(DisplayName = "Left")
-};
 
 UCLASS()
 class CONCEPTDEMO_API ABullet : public AActor

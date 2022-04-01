@@ -4,6 +4,8 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
+#include "Bullet.h"
+#include "SlaughterFirendsDemoConstants.h"
 #include "Gun.generated.h"
 
 UCLASS()
@@ -22,6 +24,12 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite) uint8 cartridgeSize;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite) int32 reloadTimeInMilliseconds;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite) FVector bulletSpawnRelativeLocation;
+
+	UPROPERTY(EditAnywhere) TSubclassOf<ABullet> bulletClass;
+
+	FACING_DIRECTION facingDirection;
+
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
@@ -29,8 +37,7 @@ protected:
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
-	virtual void FaceRight();
-	virtual void FaceLeft();
 	virtual void SetAttached();
+	UFUNCTION(BlueprintCallable) virtual void Fire();
 
 };

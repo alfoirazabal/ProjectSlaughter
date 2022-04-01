@@ -5,12 +5,8 @@
 #include "CoreMinimal.h"
 #include "PaperCharacter.h"
 #include <PaperFlipbook.h>
+#include "SlaughterFirendsDemoConstants.h"
 #include "BlooPaperCharacter.generated.h"
-
-enum FACING_DIRECTION {
-	RIGHT,
-	LEFT
-};
 
 UCLASS()
 class CONCEPTDEMO_API ABlooPaperCharacter : public APaperCharacter
@@ -32,6 +28,7 @@ public:
 	UFUNCTION(BlueprintCallable) virtual void HandleJump();
 	UFUNCTION(BlueprintCallable) virtual void HandleStopJump();
 	UFUNCTION(BlueprintCallable) virtual void AttachGun(AGun* gun);
+	UFUNCTION(BlueprintCallable) virtual void Fire();
 
 	ABlooPaperCharacter();
 

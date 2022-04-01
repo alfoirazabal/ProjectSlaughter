@@ -11,6 +11,8 @@ enum FACING_DIRECTION {
 	LEFT	UMETA(DisplayName = "Left")
 };
 
+const int levelsZFallLimit = -1000;
+
 /**
  * 
  */

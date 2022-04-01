@@ -14,6 +14,13 @@ ABlooPaperCharacter::ABlooPaperCharacter() {
 	this->movingFlipbook = movingFlipbookObject.Object;
 	this->jumpingFlipbook = jumpingFlipbookObject.Object;
 	this->attachedGun = NULL;
+
+	this->initialPosition = FVector::ZeroVector;
+}
+
+void ABlooPaperCharacter::BeginPlay() {
+	Super::BeginPlay();
+	this->initialPosition = this->GetActorLocation();
 }
 
 bool isOnTheAir(ABlooPaperCharacter* character) {
@@ -39,6 +46,16 @@ void EnsureXAxisLocation(ABlooPaperCharacter* character) {
 	if (currentPosition.X != DEFAULT_CHARACTER_PLANE_X_POSITION) {
 		currentPosition.X = DEFAULT_CHARACTER_PLANE_X_POSITION;
 		character->SetActorLocation(currentPosition);
+	}
+}
+
+void respawn(ABlooPaperCharacter* bloo) {
+	bloo->SetActorLocation(bloo->initialPosition);
+}
+
+void CheckCharacterFall(ABlooPaperCharacter* bloo) {
+	if (bloo->GetActorLocation().Z <= levelsZFallLimit) {
+		respawn(bloo);
 	}
 }
 
@@ -76,6 +93,7 @@ void ABlooPaperCharacter::HandleMovement(float scaleValue) {
 		}
 	}
 	EnsureXAxisLocation(this);
+	CheckCharacterFall(this);
 }
 
 void ABlooPaperCharacter::HandleJump() {

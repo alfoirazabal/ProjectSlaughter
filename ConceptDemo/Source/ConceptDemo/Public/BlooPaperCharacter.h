@@ -22,6 +22,7 @@ protected:
 	UPaperFlipbook* jumpingFlipbook;
 	AGun* attachedGun;
 	FACING_DIRECTION facingDirection;
+	virtual void BeginPlay() override;
 
 public:
 	UFUNCTION(BlueprintCallable) virtual void HandleMovement(float scaleValue);
@@ -29,6 +30,8 @@ public:
 	UFUNCTION(BlueprintCallable) virtual void HandleStopJump();
 	UFUNCTION(BlueprintCallable) virtual void AttachGun(AGun* gun);
 	UFUNCTION(BlueprintCallable) virtual void Fire();
+
+	FVector initialPosition;
 
 	ABlooPaperCharacter();
 

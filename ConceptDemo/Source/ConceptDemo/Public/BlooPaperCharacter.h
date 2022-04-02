@@ -22,13 +22,24 @@ protected:
 	UPaperFlipbook* jumpingFlipbook;
 	AGun* attachedGun;
 	FACING_DIRECTION facingDirection;
+	TArray<AGun*> gunsIgnored;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite) uint8 lives;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite) float lifeSize;
+
+	UPROPERTY(BlueprintReadWrite) uint8 currentLives;
+	UPROPERTY(BlueprintReadWrite) float currentLifeSize;
+
 	virtual void BeginPlay() override;
 
 public:
+	UFUNCTION(BlueprintCallable) virtual void Respawn();
 	UFUNCTION(BlueprintCallable) virtual void HandleMovement(float scaleValue);
 	UFUNCTION(BlueprintCallable) virtual void HandleJump();
 	UFUNCTION(BlueprintCallable) virtual void HandleStopJump();
 	UFUNCTION(BlueprintCallable) virtual void AttachGun(AGun* gun);
+	UFUNCTION(BlueprintCallable) virtual void DropGun();
+	UFUNCTION(BlueprintCallable) virtual bool HasGun();
 	UFUNCTION(BlueprintCallable) virtual void Fire();
 
 	FVector initialPosition;

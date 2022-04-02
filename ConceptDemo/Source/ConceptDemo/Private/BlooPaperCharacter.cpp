@@ -15,6 +15,12 @@ ABlooPaperCharacter::ABlooPaperCharacter() {
 	this->jumpingFlipbook = jumpingFlipbookObject.Object;
 	this->attachedGun = NULL;
 
+	this->lives = 3;
+	this->lifeSize = 100;
+
+	this->currentLives = this->lives;
+	this->currentLifeSize = this->lifeSize;
+
 	this->initialPosition = FVector::ZeroVector;
 }
 
@@ -49,13 +55,18 @@ void EnsureXAxisLocation(ABlooPaperCharacter* character) {
 	}
 }
 
-void respawn(ABlooPaperCharacter* bloo) {
-	bloo->SetActorLocation(bloo->initialPosition);
+void ABlooPaperCharacter::Respawn() {
+	if (this->attachedGun != NULL) {
+		AGun* gun = this->attachedGun;
+		this->DropGun();
+		gun->Respawn();
+	}
+	this->SetActorLocation(this->initialPosition);
 }
 
 void CheckCharacterFall(ABlooPaperCharacter* bloo) {
 	if (bloo->GetActorLocation().Z <= levelsZFallLimit) {
-		respawn(bloo);
+		bloo->Respawn();
 	}
 }
 
@@ -110,6 +121,36 @@ void ABlooPaperCharacter::AttachGun(AGun* gun)
 		this->attachedGun = gun;
 		this->attachedGun->SetAttached();
 	}
+	else {
+		this->gunsIgnored.Add(gun);
+		this->MoveIgnoreActorAdd(gun);
+	}
+}
+
+void ABlooPaperCharacter::DropGun() 
+{
+	if (this->attachedGun != NULL) {
+		this->attachedGun->SetDetached();
+		FVector newGunLocation = this->attachedGun->GetActorLocation();
+		switch (this->facingDirection) {
+			case FACING_DIRECTION::LEFT:
+				newGunLocation.Y += 50;
+				break;
+			case FACING_DIRECTION::RIGHT:
+				newGunLocation.Y -= 50;
+				break;
+		}
+		this->attachedGun->SetActorLocation(newGunLocation);
+		this->attachedGun = NULL;
+		for (int i = 0; i < this->gunsIgnored.Num(); i++) {
+			this->MoveIgnoreActorRemove(this->gunsIgnored[i]);
+		}
+		this->gunsIgnored.Empty();
+	}
+}
+
+bool ABlooPaperCharacter::HasGun() {
+	return this->attachedGun != NULL;
 }
 
 void ABlooPaperCharacter::Fire() {

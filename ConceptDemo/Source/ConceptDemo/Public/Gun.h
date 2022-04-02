@@ -28,6 +28,7 @@ public:
 
 	UPROPERTY(EditAnywhere) TSubclassOf<ABullet> bulletClass;
 
+	FVector initialLocation;
 	FACING_DIRECTION facingDirection;
 
 protected:
@@ -38,6 +39,8 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 	virtual void SetAttached();
+	virtual void SetDetached();
 	UFUNCTION(BlueprintCallable) virtual void Fire();
+	UFUNCTION(BlueprintCallable) void Respawn();
 
 };

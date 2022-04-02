@@ -22,6 +22,8 @@ AGun::AGun()
 void AGun::BeginPlay()
 {
 	Super::BeginPlay();
+
+	this->initialLocation = this->GetActorLocation();
 }
 
 // Called every frame
@@ -54,6 +56,12 @@ void AGun::SetAttached() {
 	this->SetActorScale3D(FVector(0.7f, 0.7f, 0.7f));
 }
 
+void AGun::SetDetached() {
+	this->rotate = true;
+	this->SetActorEnableCollision(true);
+	this->SetActorScale3D(FVector(1.0f, 1.0f, 1.0f));
+}
+
 void AGun::Fire() {
 	if (this->bulletClass != NULL) {
 		FVector bulletLocation = this->GetActorLocation();
@@ -72,4 +80,8 @@ void AGun::Fire() {
 	else {
 		GEngine->AddOnScreenDebugMessage(23425, 10, FColor::Red, "ERR: Bullet class unset for gun: " + this->GetName());
 	}
+}
+
+void AGun::Respawn() {
+	this->SetActorLocation(this->initialLocation);
 }

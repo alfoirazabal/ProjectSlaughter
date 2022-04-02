@@ -16,7 +16,7 @@ ABlooPaperCharacter::ABlooPaperCharacter() {
 	this->attachedGun = NULL;
 
 	this->lives = 3;
-	this->lifeSize = 100;
+	this->lifeSize = 1;
 
 	this->currentLives = this->lives;
 	this->currentLifeSize = this->lifeSize;

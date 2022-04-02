@@ -44,7 +44,7 @@ public:
 	UFUNCTION(BlueprintCallable) virtual bool HasGun();
 	UFUNCTION(BlueprintCallable) virtual void Fire();
 	UFUNCTION(BlueprintCallable) virtual void Die();
-	UFUNCTION(BlueprintImplementableEvent, Category = "Output") void UpdateHealthIndicator();
+	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable, Category = "Output") void UpdateHealthIndicator();
 
 	FVector initialPosition;
 

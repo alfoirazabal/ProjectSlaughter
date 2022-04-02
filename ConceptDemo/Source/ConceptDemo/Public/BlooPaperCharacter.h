@@ -16,6 +16,8 @@ class CONCEPTDEMO_API ABlooPaperCharacter : public APaperCharacter
 private:
 	void MoveGun();
 
+	void CheckCharacterFall();
+
 protected:
 	UPaperFlipbook* idleFlipbook;
 	UPaperFlipbook* movingFlipbook;
@@ -41,6 +43,8 @@ public:
 	UFUNCTION(BlueprintCallable) virtual void DropGun();
 	UFUNCTION(BlueprintCallable) virtual bool HasGun();
 	UFUNCTION(BlueprintCallable) virtual void Fire();
+	UFUNCTION(BlueprintCallable) virtual void Die();
+	UFUNCTION(BlueprintImplementableEvent, Category = "Output") void UpdateHealthIndicator();
 
 	FVector initialPosition;
 

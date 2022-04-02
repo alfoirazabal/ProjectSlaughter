@@ -64,9 +64,17 @@ void ABlooPaperCharacter::Respawn() {
 	this->SetActorLocation(this->initialPosition);
 }
 
-void CheckCharacterFall(ABlooPaperCharacter* bloo) {
-	if (bloo->GetActorLocation().Z <= levelsZFallLimit) {
-		bloo->Respawn();
+void ABlooPaperCharacter::CheckCharacterFall() {
+	if (this->GetActorLocation().Z <= levelsZFallLimit) {
+		this->currentLives--;
+		this->currentLifeSize = this->lifeSize;
+		if (this->currentLives == 0) {
+			this->Die();
+		}
+		else {
+			this->UpdateHealthIndicator();
+			this->Respawn();
+		}
 	}
 }
 
@@ -104,7 +112,7 @@ void ABlooPaperCharacter::HandleMovement(float scaleValue) {
 		}
 	}
 	EnsureXAxisLocation(this);
-	CheckCharacterFall(this);
+	CheckCharacterFall();
 }
 
 void ABlooPaperCharacter::HandleJump() {
@@ -157,4 +165,9 @@ void ABlooPaperCharacter::Fire() {
 	if (this->attachedGun != NULL) {
 		this->attachedGun->Fire();
 	}
+}
+
+void ABlooPaperCharacter::Die() {
+	this->DropGun();
+	this->Destroy();
 }

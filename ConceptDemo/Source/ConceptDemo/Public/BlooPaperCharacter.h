@@ -5,6 +5,8 @@
 #include "CoreMinimal.h"
 #include "PaperCharacter.h"
 #include <PaperFlipbook.h>
+#include <BlooHealthHUD.h>
+#include "Components/WidgetComponent.h"
 #include "SlaughterFirendsDemoConstants.h"
 #include "BlooPaperCharacter.generated.h"
 
@@ -25,6 +27,7 @@ protected:
 	AGun* attachedGun;
 	FACING_DIRECTION facingDirection;
 	TArray<AGun*> gunsIgnored;
+	UBlooHealthHUD* blooHealthHUD;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite) uint8 lives;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite) float lifeSize;
@@ -36,6 +39,8 @@ protected:
 	virtual void Tick(float deltaSeconds) override;
 
 public:
+
+	UFUNCTION() void UpdateHealthIndicator();
 	UFUNCTION(BlueprintCallable) virtual void Respawn();
 	UFUNCTION(BlueprintCallable) virtual void HandleMovement(float scaleValue);
 	UFUNCTION(BlueprintCallable) virtual void HandleJump();
@@ -46,7 +51,6 @@ public:
 	UFUNCTION(BlueprintCallable) virtual void Fire();
 	UFUNCTION(BlueprintCallable) virtual void TakeDamage(float damageCount);
 	UFUNCTION(BlueprintCallable) virtual void Die();
-	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable, Category = "Output") void UpdateHealthIndicator();
 
 	FVector initialPosition;
 

@@ -22,11 +22,30 @@ ABlooPaperCharacter::ABlooPaperCharacter() {
 	this->currentLifeSize = this->lifeSize;
 
 	this->initialPosition = FVector::ZeroVector;
+
+	this->blooHealthHUD = NULL;
 }
 
 void ABlooPaperCharacter::BeginPlay() {
 	Super::BeginPlay();
 	this->initialPosition = this->GetActorLocation();
+	TArray<UActorComponent*> components;
+	this->GetComponents(components);
+	UWidgetComponent* healthHUDWidgetComponent = nullptr;
+	for (int i = 0; healthHUDWidgetComponent == nullptr && i < components.Num(); i++) {
+		healthHUDWidgetComponent = Cast<UWidgetComponent>(components[i]);
+	}
+	if (healthHUDWidgetComponent) {
+		GEngine->AddOnScreenDebugMessage(564564, 2, FColor::Cyan, healthHUDWidgetComponent->GetName());
+		UUserWidget* healthHUDWidget = healthHUDWidgetComponent->GetWidget();
+		this->blooHealthHUD = Cast<UBlooHealthHUD>(healthHUDWidget);
+		if (!this->blooHealthHUD) {
+			GEngine->AddOnScreenDebugMessage(5345343, 2, FColor::Red, "Unable to cast HealthHUD to BlooHealthHUD for BlooPaperCharacter!");
+		}
+	}
+	else {
+		GEngine->AddOnScreenDebugMessage(564564, 2, FColor::Red, "HealthHUD not found!");
+	}
 }
 
 void ABlooPaperCharacter::Tick(float deltaSeconds)
@@ -71,6 +90,14 @@ void EnsureXAxisLocation(ABlooPaperCharacter* character) {
 	if (currentPosition.X != DEFAULT_CHARACTER_PLANE_X_POSITION) {
 		currentPosition.X = DEFAULT_CHARACTER_PLANE_X_POSITION;
 		character->SetActorLocation(currentPosition);
+	}
+}
+
+void ABlooPaperCharacter::UpdateHealthIndicator() 
+{
+	if (this->blooHealthHUD) {
+		this->blooHealthHUD->SetHealth(this->currentLifeSize);
+		this->blooHealthHUD->SetLives(this->currentLives);
 	}
 }
 

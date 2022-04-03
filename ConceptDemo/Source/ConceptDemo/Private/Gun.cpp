@@ -76,6 +76,7 @@ void AGun::Fire() {
 		bullet->FacingDirection = this->facingDirection;
 		bullet->TravelSpeed = 5;
 		bullet->MaxTravelDistance = 5000;
+		bullet->fireSource = this;
 	}
 	else {
 		GEngine->AddOnScreenDebugMessage(23425, 10, FColor::Red, "ERR: Bullet class unset for gun: " + this->GetName());

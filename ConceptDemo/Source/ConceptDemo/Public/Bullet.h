@@ -20,6 +20,8 @@ public:
 	UPROPERTY(BlueprintReadWrite, EditAnywhere) uint8 TravelSpeed;
 	UPROPERTY(BlueprintReadWrite, EditAnywhere) int MaxTravelDistance;
 
+	AActor* fireSource;
+
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;

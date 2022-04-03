@@ -29,6 +29,25 @@ void ABlooPaperCharacter::BeginPlay() {
 	this->initialPosition = this->GetActorLocation();
 }
 
+void ABlooPaperCharacter::Tick(float deltaSeconds)
+{
+	Super::Tick(deltaSeconds);
+	TArray<AActor*> overlappingActors;
+	this->GetOverlappingActors(overlappingActors);
+	for (int i = 0; i < overlappingActors.Num(); i++) {
+		ABullet* bullet = Cast<ABullet>(overlappingActors[i]);
+		if (bullet) {
+			if (
+				(this->attachedGun != NULL && bullet->fireSource != this->attachedGun) ||
+				this->attachedGun == NULL
+			) {
+				bullet->Destroy();
+				this->TakeDamage(0.1f);
+			}
+		}
+	}
+}
+
 bool isOnTheAir(ABlooPaperCharacter* character) {
 	FVector velocity = character->GetVelocity();
 	float zVelocity = velocity.Z;
@@ -164,6 +183,25 @@ bool ABlooPaperCharacter::HasGun() {
 void ABlooPaperCharacter::Fire() {
 	if (this->attachedGun != NULL) {
 		this->attachedGun->Fire();
+	}
+}
+
+void ABlooPaperCharacter::TakeDamage(float damageCount) 
+{
+	this->currentLifeSize -= damageCount;
+	this->UpdateHealthIndicator();
+	if (this->currentLifeSize <= 0) {
+		this->currentLives--;
+		this->UpdateHealthIndicator();
+		if (this->currentLives == 0) {
+			this->Die();
+		}
+		else {
+			this->currentLifeSize = this->lifeSize;
+			this->DropGun();
+			this->UpdateHealthIndicator();
+			this->Respawn();
+		}
 	}
 }
 

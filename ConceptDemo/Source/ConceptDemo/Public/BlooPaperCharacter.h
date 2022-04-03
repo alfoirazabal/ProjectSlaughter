@@ -33,6 +33,7 @@ protected:
 	UPROPERTY(BlueprintReadWrite) float currentLifeSize;
 
 	virtual void BeginPlay() override;
+	virtual void Tick(float deltaSeconds) override;
 
 public:
 	UFUNCTION(BlueprintCallable) virtual void Respawn();
@@ -43,6 +44,7 @@ public:
 	UFUNCTION(BlueprintCallable) virtual void DropGun();
 	UFUNCTION(BlueprintCallable) virtual bool HasGun();
 	UFUNCTION(BlueprintCallable) virtual void Fire();
+	UFUNCTION(BlueprintCallable) virtual void TakeDamage(float damageCount);
 	UFUNCTION(BlueprintCallable) virtual void Die();
 	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable, Category = "Output") void UpdateHealthIndicator();
 

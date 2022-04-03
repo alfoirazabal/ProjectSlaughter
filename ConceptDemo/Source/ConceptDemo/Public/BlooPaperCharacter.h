@@ -19,6 +19,9 @@ private:
 	void MoveGun();
 
 	void CheckCharacterFall();
+	void EnsureXAxisLocation();
+
+	bool fallingDeath;
 
 protected:
 	UPaperFlipbook* idleFlipbook;

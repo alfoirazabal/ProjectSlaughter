@@ -22,6 +22,7 @@ ABlooPaperCharacter::ABlooPaperCharacter() {
 	this->currentLifeSize = this->lifeSize;
 
 	this->initialPosition = FVector::ZeroVector;
+	this->fallingDeath = false;
 
 	this->blooHealthHUD = NULL;
 }
@@ -64,6 +65,12 @@ void ABlooPaperCharacter::Tick(float deltaSeconds)
 				this->TakeDamage(0.1f);
 			}
 		}
+		if (overlappingActors[i]->GetActorLabel().Equals("Spikes")) {
+			this->fallingDeath = true;
+			FVector currentPosition = this->GetActorLocation();
+			currentPosition.X -= 75;
+			this->SetActorLocation(currentPosition);
+		}
 	}
 }
 
@@ -84,12 +91,12 @@ FRotator GetLeftRotator() {
 	return rotator;
 }
 
-void EnsureXAxisLocation(ABlooPaperCharacter* character) {
+void ABlooPaperCharacter::EnsureXAxisLocation() {
 	// Prevents actor from moving along the X axis, and move only along the Y and Z axis of the simulated 3D plane.
-	FVector currentPosition = character->GetActorLocation();
-	if (currentPosition.X != DEFAULT_CHARACTER_PLANE_X_POSITION) {
+	FVector currentPosition = this->GetActorLocation();
+	if (!this->fallingDeath && currentPosition.X != DEFAULT_CHARACTER_PLANE_X_POSITION) {
 		currentPosition.X = DEFAULT_CHARACTER_PLANE_X_POSITION;
-		character->SetActorLocation(currentPosition);
+		this->SetActorLocation(currentPosition);
 	}
 }
 
@@ -107,6 +114,7 @@ void ABlooPaperCharacter::Respawn() {
 		this->DropGun();
 		gun->Respawn();
 	}
+	this->fallingDeath = false;
 	this->SetActorLocation(this->initialPosition);
 }
 
@@ -157,7 +165,7 @@ void ABlooPaperCharacter::HandleMovement(float scaleValue) {
 			this->facingDirection = FACING_DIRECTION::LEFT;
 		}
 	}
-	EnsureXAxisLocation(this);
+	EnsureXAxisLocation();
 	CheckCharacterFall();
 }
 

@@ -40,6 +40,7 @@ protected:
 
 	virtual void BeginPlay() override;
 	virtual void Tick(float deltaSeconds) override;
+	void MakeFallingDeath();
 
 public:
 

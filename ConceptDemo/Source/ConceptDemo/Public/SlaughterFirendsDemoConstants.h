@@ -21,4 +21,6 @@ class CONCEPTDEMO_API SlaughterFirendsDemoConstants
 public:
 	SlaughterFirendsDemoConstants();
 	~SlaughterFirendsDemoConstants();
+
+	float GenerateBoundedFloat(float min, float max);
 };

@@ -3,6 +3,8 @@
 #include "BlooPaperCharacter.h"
 #include "Gun.h"
 #include "SpikesObject.h"
+#include "Train/TunnelGateAI.h"
+#include "Train/TrainAI.h"
 #include <PaperFlipbookComponent.h>
 
 const float DEFAULT_CHARACTER_PLANE_X_POSITION = 760;
@@ -50,6 +52,14 @@ void ABlooPaperCharacter::BeginPlay() {
 	}
 }
 
+void ABlooPaperCharacter::MakeFallingDeath()
+{
+	this->fallingDeath = true;
+	FVector currentPosition = this->GetActorLocation();
+	currentPosition.X -= 250;
+	this->SetActorLocation(currentPosition);
+}
+
 void ABlooPaperCharacter::Tick(float deltaSeconds)
 {
 	Super::Tick(deltaSeconds);
@@ -58,6 +68,7 @@ void ABlooPaperCharacter::Tick(float deltaSeconds)
 	for (int i = 0; i < overlappingActors.Num(); i++) {
 		ABullet* bullet = Cast<ABullet>(overlappingActors[i]);
 		ASpikesObject* spikes = Cast<ASpikesObject>(overlappingActors[i]);
+		ATrainAI* train = Cast<ATrainAI>(overlappingActors[i]);
 		if (bullet) {
 			if (
 				(this->attachedGun != NULL && bullet->fireSource != this->attachedGun) ||
@@ -67,13 +78,11 @@ void ABlooPaperCharacter::Tick(float deltaSeconds)
 				this->TakeDamage(0.1f);
 			}
 		}
-		if (spikes) {
-			this->fallingDeath = true;
-			FVector currentPosition = this->GetActorLocation();
-			currentPosition.X -= 75;
-			this->SetActorLocation(currentPosition);
+		if (spikes || train) {
+			this->MakeFallingDeath();
 		}
 	}
+	EnsureXAxisLocation();
 }
 
 bool isOnTheAir(ABlooPaperCharacter* character) {
@@ -167,7 +176,6 @@ void ABlooPaperCharacter::HandleMovement(float scaleValue) {
 			this->facingDirection = FACING_DIRECTION::LEFT;
 		}
 	}
-	EnsureXAxisLocation();
 	CheckCharacterFall();
 }
 

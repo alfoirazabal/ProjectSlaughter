@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
 #include "TrainAI.h"
+#include "ElevatorLightAI.h"
 #include "SlaughterFirendsDemoConstants.h"
 #include "TrainAISpawner.generated.h"
 
@@ -23,7 +24,18 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite) float minSpawnTime;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite) float maxSpawnTime;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite) float trainDistanceOnYellowLight;
+
 	UPROPERTY(EditAnywhere, BlueprintReadWrite) TSubclassOf<ATrainAI> trainClass;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite) AElevatorLightAI* trainTrafficLights;
+
+private:
+	void SetRedLight();
+	void SetYellowLight();
+	void SetGreenLight();
+
+	float redLightOnTime;
+	float redLightTimeLeft;
 
 protected:
 	// Called when the game starts or when spawned

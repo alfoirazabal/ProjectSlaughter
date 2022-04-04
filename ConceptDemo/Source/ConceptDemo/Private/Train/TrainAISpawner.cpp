@@ -12,20 +12,52 @@ ATrainAISpawner::ATrainAISpawner()
 	this->travelSpeed = 4;
 	this->maxDistance = 5000;
 	this->minSpawnTime = 400;
-	this->maxSpawnTime = 700;
+	this->maxSpawnTime = 1000;
+
+	this->trainDistanceOnYellowLight = 300;
+	this->redLightOnTime = 3000 / this->travelSpeed;
+	this->redLightTimeLeft = 0;
 
 	this->currentSpawnTime = 0;
 
 	this->trainClass = NULL;
+	this->trainTrafficLights = NULL;
 
 	this->demoConstantsHelper = new SlaughterFirendsDemoConstants();
+}
+
+void ATrainAISpawner::SetRedLight()
+{
+	if (this->trainTrafficLights != NULL) {
+		this->trainTrafficLights->greenLightOn = false;
+		this->trainTrafficLights->yellowLightOn = false;
+		this->trainTrafficLights->redLightOn = true;
+	}
+}
+
+void ATrainAISpawner::SetYellowLight()
+{
+	if (this->trainTrafficLights != NULL) {
+		this->trainTrafficLights->greenLightOn = false;
+		this->trainTrafficLights->yellowLightOn = true;
+		this->trainTrafficLights->redLightOn = false;
+	}
+}
+
+void ATrainAISpawner::SetGreenLight() 
+{
+	if (this->trainTrafficLights != NULL) {
+		this->trainTrafficLights->greenLightOn = true;
+		this->trainTrafficLights->yellowLightOn = false;
+		this->trainTrafficLights->redLightOn = false;
+	}
 }
 
 // Called when the game starts or when spawned
 void ATrainAISpawner::BeginPlay()
 {
 	Super::BeginPlay();
-	
+	this->SetGreenLight();
 }
 
 void ATrainAISpawner::SpawnVehicle()
@@ -48,11 +80,23 @@ void ATrainAISpawner::Tick(float DeltaTime)
 		this->randSpawnTime = this->demoConstantsHelper->GenerateBoundedFloat(this->minSpawnTime, this->maxSpawnTime);
 	}
 	if (this->currentSpawnTime >= this->randSpawnTime) {
-		GEngine->AddOnScreenDebugMessage(456346, 2, FColor::Green, "Will spawn train");
 		this->SpawnVehicle();
+		this->redLightTimeLeft = this->redLightOnTime;
 		this->currentSpawnTime = 0;
 	}
 	else {
 		this->currentSpawnTime++;
+		if (this->redLightTimeLeft > 0) {
+			this->SetRedLight();
+			this->redLightTimeLeft--;
+		}
+		else {
+			if (this->randSpawnTime - this->currentSpawnTime < this->trainDistanceOnYellowLight) {
+				this->SetYellowLight();
+			}
+			else {
+				this->SetGreenLight();
+			}
+		}
 	}
 }

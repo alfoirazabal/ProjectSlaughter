@@ -74,7 +74,7 @@ void AGun::Fire() {
 		}
 		ABullet* bullet = this->GetWorld()->SpawnActor<ABullet>(this->bulletClass, bulletLocation, this->GetActorRotation());
 		bullet->FacingDirection = this->facingDirection;
-		bullet->TravelSpeed = 5;
+		bullet->TravelSpeed = 15;
 		bullet->MaxTravelDistance = 5000;
 		bullet->fireSource = this;
 	}

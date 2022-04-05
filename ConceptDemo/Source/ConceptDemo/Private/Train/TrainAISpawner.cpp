@@ -15,7 +15,7 @@ ATrainAISpawner::ATrainAISpawner()
 	this->maxSpawnTime = 1000;
 
 	this->trainDistanceOnYellowLight = 300;
-	this->redLightOnTime = 3000 / this->travelSpeed;
+	this->redLightOnTime = 3000 / (this->travelSpeed * 2.3);
 	this->redLightTimeLeft = 0;
 
 	this->currentSpawnTime = 0;

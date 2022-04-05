@@ -5,6 +5,7 @@
 #include "SpikesObject.h"
 #include "Train/TunnelGateAI.h"
 #include "Train/TrainAI.h"
+#include "Train/TunnelGateAI.h"
 #include <PaperFlipbookComponent.h>
 
 const float DEFAULT_CHARACTER_PLANE_X_POSITION = 760;
@@ -65,10 +66,13 @@ void ABlooPaperCharacter::Tick(float deltaSeconds)
 	Super::Tick(deltaSeconds);
 	TArray<AActor*> overlappingActors;
 	this->GetOverlappingActors(overlappingActors);
+	bool trainFound = false;
+	bool tunnelGateFound = false;
 	for (int i = 0; i < overlappingActors.Num(); i++) {
 		ABullet* bullet = Cast<ABullet>(overlappingActors[i]);
 		ASpikesObject* spikes = Cast<ASpikesObject>(overlappingActors[i]);
-		ATrainAI* train = Cast<ATrainAI>(overlappingActors[i]);
+		if (!trainFound) trainFound = Cast<ATrainAI>(overlappingActors[i]) != nullptr;
+		if (!tunnelGateFound) tunnelGateFound = Cast<ATunnelGateAI>(overlappingActors[i]) != nullptr;
 		if (bullet) {
 			if (
 				(this->attachedGun != NULL && bullet->fireSource != this->attachedGun) ||
@@ -78,9 +82,13 @@ void ABlooPaperCharacter::Tick(float deltaSeconds)
 				this->TakeDamage(0.1f);
 			}
 		}
-		if (spikes || train) {
+		if (spikes) {
 			this->MakeFallingDeath();
 		}
+	}
+	if (trainFound && tunnelGateFound)
+	{
+		this->MakeFallingDeath();
 	}
 	EnsureXAxisLocation();
 }

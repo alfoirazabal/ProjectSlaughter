@@ -13,8 +13,6 @@ AElevatorLightAI::AElevatorLightAI()
 	this->yellowLightOn = false;
 	this->greenLightOn = false;
 
-	this->elevatorPlatform = NULL;
-
 }
 
 // Called when the game starts or when spawned
@@ -46,30 +44,5 @@ void AElevatorLightAI::Tick(float DeltaTime)
 	this->redLight->SetVisibility(this->redLightOn);
 	this->yellowLight->SetVisibility(this->yellowLightOn);
 	this->greenLight->SetVisibility(this->greenLightOn);
-
-	if (this->elevatorPlatform != NULL) {
-		switch (this->elevatorPlatform->GetPlatformStatus()) {
-			case AElevatorPlatform::PLATFORM_STATUS::STATIONED_DOWN:
-				this->redLight->SetVisibility(false);
-				this->yellowLight->SetVisibility(false);
-				this->greenLight->SetVisibility(true);
-				break;
-			case AElevatorPlatform::PLATFORM_STATUS::MOVING_DOWN:
-				this->redLight->SetVisibility(false);
-				this->yellowLight->SetVisibility(true);
-				this->greenLight->SetVisibility(false);
-				break;
-			case AElevatorPlatform::PLATFORM_STATUS::MOVING_UP:
-				this->redLight->SetVisibility(true);
-				this->yellowLight->SetVisibility(true);
-				this->greenLight->SetVisibility(false);
-				break;
-			case AElevatorPlatform::PLATFORM_STATUS::STATIONED_UP:
-				this->redLight->SetVisibility(true);
-				this->yellowLight->SetVisibility(false);
-				this->greenLight->SetVisibility(false);
-				break;
-		}
-	}
 }
 

@@ -3,6 +3,9 @@
 
 #include "Gun.h"
 
+#include "BlooPaperCharacter.h"
+#include "Components/CapsuleComponent.h"
+
 const int ROTATION_TIME_DS = 150;
 
 // Sets default values
@@ -16,6 +19,14 @@ AGun::AGun()
 	this->bulletSpawnRelativeLocation = FVector(0.0f, 50.0f, 10.0f);
 
 	this->bulletClass = NULL;
+
+	this->TriggerCapsule = CreateDefaultSubobject<UCapsuleComponent>(TEXT("Trigger Capsule"));
+	this->TriggerCapsule->InitCapsuleSize(67.68, 67.68);
+	this->TriggerCapsule->SetCollisionProfileName(TEXT("Trigger"));
+	this->TriggerCapsule->SetupAttachment(this->RootComponent);
+
+	this->TriggerCapsule->OnComponentBeginOverlap.AddDynamic(this, &AGun::OnOverlapBegin);
+	this->TriggerCapsule->OnComponentEndOverlap.AddDynamic(this, &AGun::OnOverlapEnd);
 }
 
 // Called when the game starts or when spawned
@@ -85,4 +96,42 @@ void AGun::Fire() {
 
 void AGun::Respawn() {
 	this->SetActorLocation(this->initialLocation);
+}
+
+void AGun::OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
+{
+	if (OtherComp)
+	{
+		ABlooPaperCharacter* BlooPaperCharacter = Cast<ABlooPaperCharacter>(OtherActor);
+		if (BlooPaperCharacter)
+		{
+			if (!BlooPaperCharacter->HasGun())
+			{
+				BlooPaperCharacter->AttachGun(this);
+			}
+			else
+			{
+				OtherComp->IgnoreActorWhenMoving(this, true);
+			}
+		}
+	}
+}
+
+void AGun::OnOverlapEnd(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex)
+{
+	if (OtherComp)
+	{
+		ABlooPaperCharacter* BlooPaperCharacter = Cast<ABlooPaperCharacter>(OtherActor);
+		if (BlooPaperCharacter)
+		{
+			if (BlooPaperCharacter->HasGun())
+			{
+				BlooPaperCharacter->AttachGun(this);
+			}
+			else
+			{
+				OtherComp->IgnoreActorWhenMoving(this, false);
+			}
+		}
+	}
 }

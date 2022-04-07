@@ -14,6 +14,9 @@ class CONCEPTDEMO_API AGun : public AActor
 	GENERATED_BODY()
 	
 public:	
+
+	DECLARE_DYNAMIC_MULTICAST_DELEGATE(FBeginOverlapEvent);
+	
 	// Sets default values for this actor's properties
 	AGun();
 	UPROPERTY(EditAnywhere, BlueprintReadWrite) bool rotate;
@@ -28,6 +31,11 @@ public:
 
 	UPROPERTY(EditAnywhere) TSubclassOf<ABullet> bulletClass;
 
+	UPROPERTY(VisibleAnywhere, Category = "Trigger Capsule")
+	class UCapsuleComponent* TriggerCapsule;
+	UFUNCTION() void OnOverlapBegin(class UPrimitiveComponent* OverlappedComp, class AActor* OtherActor, class UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
+	UFUNCTION() void OnOverlapEnd(class UPrimitiveComponent* OverlappedComp, class AActor* OtherActor, class UPrimitiveComponent* OtherComp, int32 OtherBodyIndex);
+	
 	FVector initialLocation;
 	FACING_DIRECTION facingDirection;
 

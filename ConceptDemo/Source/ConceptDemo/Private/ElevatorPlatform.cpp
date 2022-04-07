@@ -8,18 +8,18 @@ AElevatorPlatform::AElevatorPlatform()
 {
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
-	this->isActivated = true;
-	this->floorLevel = 0;
-	this->middleLevel = 0;
-	this->ceilingLevel = 0;
-	this->stillTime = 5;
-	this->speed = 5;
+	this->bIsActivated = true;
+	this->FloorLevel = 0;
+	this->MiddleLevel = 0;
+	this->CeilingLevel = 0;
+	this->StillTime = 5;
+	this->Speed = 5;
 
-	this->MovingDirection = PLATFORM_MOVING_DIRECTION::MOVING_UP;
+	this->MovingDirection = EPlatform_Moving_Direction::Moving_Up;
 
-	this->currentStillTime = this->stillTime;
+	this->CurrentStillTime = this->StillTime;
 
-	this->inTheMiddle = false;
+	this->bInTheMiddle = false;
 }
 
 // Called when the game starts or when spawned
@@ -33,42 +33,44 @@ void AElevatorPlatform::BeginPlay()
 void AElevatorPlatform::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-	if (this->isActivated) {
-		if (this->currentStillTime == 0) {
+	if (this->bIsActivated) {
+		if (this->CurrentStillTime == 0) {
 			FVector currentLocation = this->GetActorLocation();
 			float zLocation = currentLocation.Z;
-			if (zLocation >= this->ceilingLevel && this->MovingDirection != PLATFORM_MOVING_DIRECTION::MOVING_DOWN) {
-				this->MovingDirection = PLATFORM_MOVING_DIRECTION::MOVING_DOWN;
-				this->currentStillTime = this->stillTime;
-				this->inTheMiddle = false;
-				this->PlatformStatus = PLATFORM_STATUS::ON_CEILING;
-				this->lastStaticStatus = this->PlatformStatus;
+			if (zLocation >= this->CeilingLevel && this->MovingDirection != EPlatform_Moving_Direction::Moving_Down) {
+				this->MovingDirection = EPlatform_Moving_Direction::Moving_Down;
+				this->CurrentStillTime = this->StillTime;
+				this->bInTheMiddle = false;
+				this->PlatformStatus = EPlatform_Status::On_Ceiling;
+				this->LastStaticStatus = this->PlatformStatus;
 			}
 			else if (
-					zLocation <= this->middleLevel + this->speed && 
-					zLocation >= this->middleLevel - this->speed &&
-					!this->inTheMiddle
+					zLocation <= this->MiddleLevel + this->Speed && 
+					zLocation >= this->MiddleLevel - this->Speed &&
+					!this->bInTheMiddle
 			) {
-				this->inTheMiddle = true;
-				this->currentStillTime = this->stillTime;
-				this->PlatformStatus = PLATFORM_STATUS::ON_MIDDLE;
-				this->lastStaticStatus = this->PlatformStatus;
+				this->bInTheMiddle = true;
+				this->CurrentStillTime = this->StillTime;
+				this->PlatformStatus = EPlatform_Status::On_Middle;
+				this->LastStaticStatus = this->PlatformStatus;
 			}
-			else if (zLocation <= this->floorLevel && this->MovingDirection != PLATFORM_MOVING_DIRECTION::MOVING_UP) {
-				this->MovingDirection = PLATFORM_MOVING_DIRECTION::MOVING_UP;
-				this->currentStillTime = this->stillTime;
-				this->inTheMiddle = false;
-				this->PlatformStatus = PLATFORM_STATUS::ON_FLOOR;
-				this->lastStaticStatus = this->PlatformStatus;
+			else if (zLocation <= this->FloorLevel && this->MovingDirection != EPlatform_Moving_Direction::Moving_Up) {
+				this->MovingDirection = EPlatform_Moving_Direction::Moving_Up;
+				this->CurrentStillTime = this->StillTime;
+				this->bInTheMiddle = false;
+				this->PlatformStatus = EPlatform_Status::On_Floor;
+				this->LastStaticStatus = this->PlatformStatus;
 			}
 			else {
-				this->PlatformStatus = PLATFORM_STATUS::MOVING;
+				this->PlatformStatus = EPlatform_Status::Moving;
 				switch (this->MovingDirection) {
-					case PLATFORM_MOVING_DIRECTION::MOVING_DOWN:
-						zLocation -= this->speed;
+					case EPlatform_Moving_Direction::Moving_Down:
+						zLocation -= this->Speed;
 						break;
-					case PLATFORM_MOVING_DIRECTION::MOVING_UP:
-						zLocation += this->speed;
+					case EPlatform_Moving_Direction::Moving_Up:
+						zLocation += this->Speed;
+						break;
+					default:
 						break;
 				}
 				currentLocation.Z = zLocation;
@@ -76,27 +78,28 @@ void AElevatorPlatform::Tick(float DeltaTime)
 			}
 		}
 		else {
-			this->currentStillTime--;
+			this->CurrentStillTime--;
 		}
 	}
 }
 
-PLATFORM_STATUS AElevatorPlatform::GetTargetLocation() {
-	switch (this->lastStaticStatus) {
-		case PLATFORM_STATUS::ON_CEILING:
-			return PLATFORM_STATUS::ON_MIDDLE;
-		case PLATFORM_STATUS::ON_MIDDLE:
+EPlatform_Status AElevatorPlatform::GetTargetLocation() const
+{
+	switch (this->LastStaticStatus) {
+		case EPlatform_Status::On_Ceiling:
+			return EPlatform_Status::On_Middle;
+		case EPlatform_Status::On_Middle:
 			switch (this->MovingDirection) {
-				case PLATFORM_MOVING_DIRECTION::MOVING_DOWN:
-					return PLATFORM_STATUS::ON_FLOOR;
-				case PLATFORM_MOVING_DIRECTION::MOVING_UP:
-					return PLATFORM_STATUS::ON_CEILING;
+				case EPlatform_Moving_Direction::Moving_Down:
+					return EPlatform_Status::On_Floor;
+				case EPlatform_Moving_Direction::Moving_Up:
+					return EPlatform_Status::On_Ceiling;
 				default:
-					return PLATFORM_STATUS::MOVING;
+					return EPlatform_Status::Moving;
 			}
-		case PLATFORM_STATUS::ON_FLOOR:
-			return PLATFORM_STATUS::ON_MIDDLE;
+		case EPlatform_Status::On_Floor:
+			return EPlatform_Status::On_Middle;
 		default:
-			return PLATFORM_STATUS::MOVING;
+			return EPlatform_Status::Moving;
 	}
 }

@@ -22,16 +22,16 @@ void ATrainAI::BeginPlay()
 }
 
 // Called every frame
-void ATrainAI::Tick(float DeltaTime)
+void ATrainAI::Tick(const float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-	FVector currentPosition = this->GetActorLocation();
-	float newXRelativePosition = this->direction.X * this->speed;
-	float newYRelativePosition = this->direction.Y * this->speed;
-	currentPosition.X += newXRelativePosition;
-	currentPosition.Y += newYRelativePosition;
-	this->SetActorLocation(currentPosition);
-	this->distanceTraveled += hypot(newXRelativePosition, newYRelativePosition);
+	FVector CurrentPosition = this->GetActorLocation();
+	const float NewXRelativePosition = this->direction.X * this->speed;
+	const float NewYRelativePosition = this->direction.Y * this->speed;
+	CurrentPosition.X += NewXRelativePosition;
+	CurrentPosition.Y += NewYRelativePosition;
+	this->SetActorLocation(CurrentPosition);
+	this->distanceTraveled += hypot(NewXRelativePosition, NewYRelativePosition);
 	if (this->distanceTraveled >= this->maxTravelDistance) {
 		this->Destroy();
 	}

@@ -5,24 +5,24 @@
 #include "Components/ProgressBar.h"
 #include "Components/Image.h"
 
-void UBlooHealthHUD::SetLifeAvailable(UImage* img, bool isAvailable)
+void UBlooHealthHUD::SetLifeAvailable(UImage* Image, const bool bIsAvailable)
 {
-	if (isAvailable) {
-		img->SetColorAndOpacity(FLinearColor(1, 1, 1, 1));
+	if (bIsAvailable) {
+		Image->SetColorAndOpacity(FLinearColor(1, 1, 1, 1));
 	}
 	else {
-		img->SetColorAndOpacity(FLinearColor(0, 0, 0, 1));
+		Image->SetColorAndOpacity(FLinearColor(0, 0, 0, 1));
 	}
 }
 
-void UBlooHealthHUD::SetHealth(float health) 
+void UBlooHealthHUD::SetHealth(const float Health) const
 {
-	this->ProgressBar_0->SetPercent(health);
+	this->ProgressBar_0->SetPercent(Health);
 }
 
-void UBlooHealthHUD::SetLives(uint8 lives)
+void UBlooHealthHUD::SetLives(const uint8 Lives) const
 {
-	switch (lives)
+	switch (Lives)
 	{
 		case 3:
 			this->SetLifeAvailable(this->ImgHearth3, true);
@@ -44,13 +44,15 @@ void UBlooHealthHUD::SetLives(uint8 lives)
 			this->SetLifeAvailable(this->ImgHearth2, false);
 			this->SetLifeAvailable(this->ImgHearth1, false);
 			break;
+		default:
+			break;
 	}
 }
 
-void UBlooHealthHUD::UpdateHealth(float lifeLeft, uint8 livesLeft) 
+void UBlooHealthHUD::UpdateHealth(const float LifeLeft, const uint8 LivesLeft) const
 {
-	this->SetHealth(lifeLeft);
-	this->SetLives(livesLeft);
+	this->SetHealth(LifeLeft);
+	this->SetLives(LivesLeft);
 }
 
 void UBlooHealthHUD::NativeOnInitialized()

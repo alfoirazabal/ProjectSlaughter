@@ -7,7 +7,7 @@
 #include "TunnelGateAI.generated.h"
 
 UCLASS()
-class CONCEPTDEMO_API ATunnelGateAI : public AActor
+class CONCEPTDEMO_API ATunnelGateAI final : public AActor
 {
 	GENERATED_BODY()
 	

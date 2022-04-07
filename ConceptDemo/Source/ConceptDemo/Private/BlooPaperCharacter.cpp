@@ -5,46 +5,45 @@
 #include "SpikesObject.h"
 #include "Train/TunnelGateAI.h"
 #include "Train/TrainAI.h"
-#include "Train/TunnelGateAI.h"
 #include <PaperFlipbookComponent.h>
 
-const float DEFAULT_CHARACTER_PLANE_X_POSITION = 760;
+constexpr float GDefault_Character_Plane_X_Position = 760;
 
 ABlooPaperCharacter::ABlooPaperCharacter() {
-	ConstructorHelpers::FObjectFinder<UPaperFlipbook> idleFlipbookObject(TEXT("/Game/Character/Bloo/Images/Flipbooks/Bloo_idle_Flipbook.Bloo_idle_Flipbook"));
-	ConstructorHelpers::FObjectFinder<UPaperFlipbook> movingFlipbookObject(TEXT("/Game/Character/Bloo/Images/Flipbooks/Bloo_moving.Bloo_moving"));
-	ConstructorHelpers::FObjectFinder<UPaperFlipbook> jumpingFlipbookObject(TEXT("/Game/Character/Bloo/Images/Flipbooks/Bloo_jumping_Flipbook.Bloo_jumping_Flipbook"));
-	this->idleFlipbook = idleFlipbookObject.Object;
-	this->movingFlipbook = movingFlipbookObject.Object;
-	this->jumpingFlipbook = jumpingFlipbookObject.Object;
-	this->attachedGun = NULL;
+	const ConstructorHelpers::FObjectFinder<UPaperFlipbook> IdleFlipBookObject(TEXT("/Game/Character/Bloo/Images/Flipbooks/Bloo_idle_Flipbook.Bloo_idle_Flipbook"));
+	const ConstructorHelpers::FObjectFinder<UPaperFlipbook> MovingFlipBookObject(TEXT("/Game/Character/Bloo/Images/Flipbooks/Bloo_moving.Bloo_moving"));
+	const ConstructorHelpers::FObjectFinder<UPaperFlipbook> JumpingFlipBookObject(TEXT("/Game/Character/Bloo/Images/Flipbooks/Bloo_jumping_Flipbook.Bloo_jumping_Flipbook"));
+	this->IdleFlipBook = IdleFlipBookObject.Object;
+	this->MovingFlipBook = MovingFlipBookObject.Object;
+	this->JumpingFlipBook = JumpingFlipBookObject.Object;
+	this->AttachedGun = nullptr;
 
-	this->lives = 3;
-	this->lifeSize = 1;
+	this->Lives = 3;
+	this->LifeSize = 1;
 
-	this->currentLives = this->lives;
-	this->currentLifeSize = this->lifeSize;
+	this->CurrentLives = this->Lives;
+	this->CurrentLifeSize = this->LifeSize;
 
-	this->initialPosition = FVector::ZeroVector;
-	this->fallingDeath = false;
+	this->InitialPosition = FVector::ZeroVector;
+	this->bFallingDeath = false;
 
-	this->blooHealthHUD = NULL;
+	this->BlooHealthHUD = nullptr;
 }
 
 void ABlooPaperCharacter::BeginPlay() {
 	Super::BeginPlay();
-	this->initialPosition = this->GetActorLocation();
-	TArray<UActorComponent*> components;
-	this->GetComponents(components);
-	UWidgetComponent* healthHUDWidgetComponent = nullptr;
-	for (int i = 0; healthHUDWidgetComponent == nullptr && i < components.Num(); i++) {
-		healthHUDWidgetComponent = Cast<UWidgetComponent>(components[i]);
+	this->InitialPosition = this->GetActorLocation();
+	TArray<UActorComponent*> Components;
+	this->GetComponents(Components);
+	const UWidgetComponent* HealthHUDWidgetComponent = nullptr;
+	for (int i = 0; HealthHUDWidgetComponent == nullptr && i < Components.Num(); i++) {
+		HealthHUDWidgetComponent = Cast<UWidgetComponent>(Components[i]);
 	}
-	if (healthHUDWidgetComponent) {
-		GEngine->AddOnScreenDebugMessage(564564, 2, FColor::Cyan, healthHUDWidgetComponent->GetName());
-		UUserWidget* healthHUDWidget = healthHUDWidgetComponent->GetWidget();
-		this->blooHealthHUD = Cast<UBlooHealthHUD>(healthHUDWidget);
-		if (!this->blooHealthHUD) {
+	if (HealthHUDWidgetComponent) {
+		GEngine->AddOnScreenDebugMessage(564564, 2, FColor::Cyan, HealthHUDWidgetComponent->GetName());
+		UUserWidget* HealthHUDWidget = HealthHUDWidgetComponent->GetWidget();
+		this->BlooHealthHUD = Cast<UBlooHealthHUD>(HealthHUDWidget);
+		if (!this->BlooHealthHUD) {
 			GEngine->AddOnScreenDebugMessage(5345343, 2, FColor::Red, "Unable to cast HealthHUD to BlooHealthHUD for BlooPaperCharacter!");
 		}
 	}
@@ -55,93 +54,93 @@ void ABlooPaperCharacter::BeginPlay() {
 
 void ABlooPaperCharacter::MakeFallingDeath()
 {
-	this->fallingDeath = true;
-	FVector currentPosition = this->GetActorLocation();
-	currentPosition.X -= 250;
-	this->SetActorLocation(currentPosition);
+	this->bFallingDeath = true;
+	FVector CurrentPosition = this->GetActorLocation();
+	CurrentPosition.X -= 250;
+	this->SetActorLocation(CurrentPosition);
 }
 
-void ABlooPaperCharacter::Tick(float deltaSeconds)
+void ABlooPaperCharacter::Tick(const float DeltaSeconds)
 {
-	Super::Tick(deltaSeconds);
-	TArray<AActor*> overlappingActors;
-	this->GetOverlappingActors(overlappingActors);
-	bool trainFound = false;
-	bool tunnelGateFound = false;
-	for (int i = 0; i < overlappingActors.Num(); i++) {
-		ABullet* bullet = Cast<ABullet>(overlappingActors[i]);
-		ASpikesObject* spikes = Cast<ASpikesObject>(overlappingActors[i]);
-		if (!trainFound) trainFound = Cast<ATrainAI>(overlappingActors[i]) != nullptr;
-		if (!tunnelGateFound) tunnelGateFound = Cast<ATunnelGateAI>(overlappingActors[i]) != nullptr;
-		if (bullet) {
+	Super::Tick(DeltaSeconds);
+	TArray<AActor*> OverlappingActors;
+	this->GetOverlappingActors(OverlappingActors);
+	bool bTrainFound = false;
+	bool bTunnelGateFound = false;
+	for (int i = 0; i < OverlappingActors.Num(); i++) {
+		ABullet* Bullet = Cast<ABullet>(OverlappingActors[i]);
+		const ASpikesObject* Spikes = Cast<ASpikesObject>(OverlappingActors[i]);
+		if (!bTrainFound) bTrainFound = Cast<ATrainAI>(OverlappingActors[i]) != nullptr;
+		if (!bTunnelGateFound) bTunnelGateFound = Cast<ATunnelGateAI>(OverlappingActors[i]) != nullptr;
+		if (Bullet) {
 			if (
-				(this->attachedGun != NULL && bullet->fireSource != this->attachedGun) ||
-				this->attachedGun == NULL
+				(this->AttachedGun != nullptr && Bullet->FireSource != this->AttachedGun) ||
+				this->AttachedGun == nullptr
 			) {
-				bullet->Destroy();
+				Bullet->Destroy();
 				this->TakeDamage(0.1f);
 			}
 		}
-		if (spikes) {
+		if (Spikes) {
 			this->MakeFallingDeath();
 		}
 	}
-	if (trainFound && tunnelGateFound)
+	if (bTrainFound && bTunnelGateFound)
 	{
 		this->MakeFallingDeath();
 	}
 	EnsureXAxisLocation();
 }
 
-bool isOnTheAir(ABlooPaperCharacter* character) {
-	FVector velocity = character->GetVelocity();
-	float zVelocity = velocity.Z;
-	return zVelocity != 0;
+bool IsOnTheAir(const ABlooPaperCharacter* character) {
+	const FVector Velocity = character->GetVelocity();
+	const float ZVelocity = Velocity.Z;
+	return ZVelocity != 0;
 }
 
 FRotator GetRightRotator() {
-	FRotator rotator = FRotator::ZeroRotator;
-	return rotator;
+	const FRotator Rotator = FRotator::ZeroRotator;
+	return Rotator;
 }
 
 FRotator GetLeftRotator() {
-	FRotator rotator = FRotator::ZeroRotator;
-	rotator.Yaw = 180;
-	return rotator;
+	FRotator Rotator = FRotator::ZeroRotator;
+	Rotator.Yaw = 180;
+	return Rotator;
 }
 
 void ABlooPaperCharacter::EnsureXAxisLocation() {
 	// Prevents actor from moving along the X axis, and move only along the Y and Z axis of the simulated 3D plane.
-	FVector currentPosition = this->GetActorLocation();
-	if (!this->fallingDeath && currentPosition.X != DEFAULT_CHARACTER_PLANE_X_POSITION) {
-		currentPosition.X = DEFAULT_CHARACTER_PLANE_X_POSITION;
-		this->SetActorLocation(currentPosition);
+	FVector CurrentPosition = this->GetActorLocation();
+	if (!this->bFallingDeath && CurrentPosition.X != GDefault_Character_Plane_X_Position) {
+		CurrentPosition.X = GDefault_Character_Plane_X_Position;
+		this->SetActorLocation(CurrentPosition);
 	}
 }
 
-void ABlooPaperCharacter::UpdateHealthIndicator() 
+void ABlooPaperCharacter::UpdateHealthIndicator() const
 {
-	if (this->blooHealthHUD) {
-		this->blooHealthHUD->SetHealth(this->currentLifeSize);
-		this->blooHealthHUD->SetLives(this->currentLives);
+	if (this->BlooHealthHUD) {
+		this->BlooHealthHUD->SetHealth(this->CurrentLifeSize);
+		this->BlooHealthHUD->SetLives(this->CurrentLives);
 	}
 }
 
 void ABlooPaperCharacter::Respawn() {
-	if (this->attachedGun != NULL) {
-		AGun* gun = this->attachedGun;
+	if (this->AttachedGun != nullptr) {
+		AGun* Gun = this->AttachedGun;
 		this->DropGun();
-		gun->Respawn();
+		Gun->Respawn();
 	}
-	this->fallingDeath = false;
-	this->SetActorLocation(this->initialPosition);
+	this->bFallingDeath = false;
+	this->SetActorLocation(this->InitialPosition);
 }
 
 void ABlooPaperCharacter::CheckCharacterFall() {
-	if (this->GetActorLocation().Z <= levelsZFallLimit) {
-		this->currentLives--;
-		this->currentLifeSize = this->lifeSize;
-		if (this->currentLives == 0) {
+	if (this->GetActorLocation().Z <= GLevelsZFallLimit) {
+		this->CurrentLives--;
+		this->CurrentLifeSize = this->LifeSize;
+		if (this->CurrentLives == 0) {
 			this->Die();
 		}
 		else {
@@ -151,37 +150,35 @@ void ABlooPaperCharacter::CheckCharacterFall() {
 	}
 }
 
-void ABlooPaperCharacter::MoveGun() {
-	if (this->attachedGun != NULL) {
-		this->attachedGun->facingDirection = this->facingDirection;
-		this->attachedGun->SetActorLocation(this->GetActorLocation());
+void ABlooPaperCharacter::MoveGun() const {
+	if (this->AttachedGun != nullptr) {
+		this->AttachedGun->FacingDirection = this->FacingDirection;
+		this->AttachedGun->SetActorLocation(this->GetActorLocation());
 	}
 }
 
-void ABlooPaperCharacter::HandleMovement(float scaleValue) {
+void ABlooPaperCharacter::HandleMovement(float ScaleValue) {
 	FVector vector = FVector::ZeroVector;
 	vector.Y = 1;
-	AddMovementInput(vector, scaleValue);
+	AddMovementInput(vector, ScaleValue);
 	MoveGun();
 	UPaperFlipbookComponent* sprite = GetSprite();
-	if (isOnTheAir(this)) {
-		sprite->SetFlipbook(this->jumpingFlipbook);
+	if (IsOnTheAir(this)) {
+		sprite->SetFlipbook(this->JumpingFlipBook);
 	}
 	else {
-		if (scaleValue == 0) {
-			sprite->SetFlipbook(this->idleFlipbook);
+		if (ScaleValue == 0) {
+			sprite->SetFlipbook(this->IdleFlipBook);
 		}
-		else if (scaleValue > 0) {
-			this->
-			GetWorld();
-			sprite->SetFlipbook(this->movingFlipbook);
+		else if (ScaleValue > 0) {
+			sprite->SetFlipbook(this->MovingFlipBook);
 			sprite->SetRelativeRotation(GetRightRotator());
-			this->facingDirection = FACING_DIRECTION::RIGHT;
+			this->FacingDirection = EFacing_Direction::Right;
 		}
-		else if (scaleValue < 0) {
-			sprite->SetFlipbook(this->movingFlipbook);
+		else if (ScaleValue < 0) {
+			sprite->SetFlipbook(this->MovingFlipBook);
 			sprite->SetRelativeRotation(GetLeftRotator());
-			this->facingDirection = FACING_DIRECTION::LEFT;
+			this->FacingDirection = EFacing_Direction::Left;
 		}
 	}
 	CheckCharacterFall();
@@ -195,62 +192,62 @@ void ABlooPaperCharacter::HandleStopJump() {
 	StopJumping();
 }
 
-void ABlooPaperCharacter::AttachGun(AGun* gun)
+void ABlooPaperCharacter::AttachGun(AGun* Gun)
 {
-	if (this->attachedGun == NULL) {
-		this->attachedGun = gun;
-		this->attachedGun->SetAttached();
+	if (this->AttachedGun == nullptr) {
+		this->AttachedGun = Gun;
+		this->AttachedGun->SetAttached();
 	}
 	else {
-		this->gunsIgnored.Add(gun);
-		this->MoveIgnoreActorAdd(gun);
+		this->GunsIgnored.Add(Gun);
+		this->MoveIgnoreActorAdd(Gun);
 	}
 }
 
 void ABlooPaperCharacter::DropGun() 
 {
-	if (this->attachedGun != NULL) {
-		this->attachedGun->SetDetached();
-		FVector newGunLocation = this->attachedGun->GetActorLocation();
-		switch (this->facingDirection) {
-			case FACING_DIRECTION::LEFT:
-				newGunLocation.Y += 50;
+	if (this->AttachedGun != nullptr) {
+		this->AttachedGun->SetDetached();
+		FVector NewGunLocation = this->AttachedGun->GetActorLocation();
+		switch (this->FacingDirection) {
+			case EFacing_Direction::Left:
+				NewGunLocation.Y += 50;
 				break;
-			case FACING_DIRECTION::RIGHT:
-				newGunLocation.Y -= 50;
+			case EFacing_Direction::Right:
+				NewGunLocation.Y -= 50;
 				break;
 		}
-		this->attachedGun->SetActorLocation(newGunLocation);
-		this->attachedGun = NULL;
-		for (int i = 0; i < this->gunsIgnored.Num(); i++) {
-			this->MoveIgnoreActorRemove(this->gunsIgnored[i]);
+		this->AttachedGun->SetActorLocation(NewGunLocation);
+		this->AttachedGun = nullptr;
+		for (int i = 0; i < this->GunsIgnored.Num(); i++) {
+			this->MoveIgnoreActorRemove(this->GunsIgnored[i]);
 		}
-		this->gunsIgnored.Empty();
+		this->GunsIgnored.Empty();
 	}
 }
 
 bool ABlooPaperCharacter::HasGun() {
-	return this->attachedGun != NULL;
+	return this->AttachedGun != nullptr;
 }
 
 void ABlooPaperCharacter::Fire() {
-	if (this->attachedGun != NULL) {
-		this->attachedGun->Fire();
+	if (this->AttachedGun != nullptr) {
+		this->AttachedGun->Fire();
 	}
 }
 
-void ABlooPaperCharacter::TakeDamage(float damageCount) 
+void ABlooPaperCharacter::TakeDamage(const float DamageCount) 
 {
-	this->currentLifeSize -= damageCount;
+	this->CurrentLifeSize -= DamageCount;
 	this->UpdateHealthIndicator();
-	if (this->currentLifeSize <= 0) {
-		this->currentLives--;
+	if (this->CurrentLifeSize <= 0) {
+		this->CurrentLives--;
 		this->UpdateHealthIndicator();
-		if (this->currentLives == 0) {
+		if (this->CurrentLives == 0) {
 			this->Die();
 		}
 		else {
-			this->currentLifeSize = this->lifeSize;
+			this->CurrentLifeSize = this->LifeSize;
 			this->DropGun();
 			this->UpdateHealthIndicator();
 			this->Respawn();

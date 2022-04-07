@@ -7,9 +7,9 @@ SlaughterFirendsDemoConstants::SlaughterFirendsDemoConstants()
 {
 }
 
-float SlaughterFirendsDemoConstants::GenerateBoundedFloat(float min, float max)
+float SlaughterFirendsDemoConstants::GenerateBoundedFloat(const float Min, const float Max)
 {
-	return min + static_cast <float> (rand()) / (static_cast <float> (RAND_MAX / (max - min)));
+	return Min + static_cast <float> (rand()) / (static_cast <float> (RAND_MAX / (Max - Min)));
 }
 
 SlaughterFirendsDemoConstants::~SlaughterFirendsDemoConstants()

@@ -8,7 +8,7 @@
 #include "ElevatorLightV2AI.generated.h"
 
 UCLASS()
-class CONCEPTDEMO_API AElevatorLightV2AI : public AActor
+class CONCEPTDEMO_API AElevatorLightV2AI final : public AActor
 {
 	GENERATED_BODY()
 	

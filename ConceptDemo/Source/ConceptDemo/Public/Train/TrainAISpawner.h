@@ -10,7 +10,7 @@
 #include "TrainAISpawner.generated.h"
 
 UCLASS()
-class CONCEPTDEMO_API ATrainAISpawner : public AActor
+class CONCEPTDEMO_API ATrainAISpawner final : public AActor
 {
 	GENERATED_BODY()
 	
@@ -30,9 +30,9 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite) AElevatorLightAI* trainTrafficLights;
 
 private:
-	void SetRedLight();
-	void SetYellowLight();
-	void SetGreenLight();
+	void SetRedLight() const;
+	void SetYellowLight() const;
+	void SetGreenLight() const;
 
 	float redLightOnTime;
 	float redLightTimeLeft;

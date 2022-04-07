@@ -7,7 +7,7 @@
 #include "SpikesObject.generated.h"
 
 UCLASS()
-class CONCEPTDEMO_API ASpikesObject : public AActor
+class CONCEPTDEMO_API ASpikesObject final : public AActor
 {
 	GENERATED_BODY()
 	

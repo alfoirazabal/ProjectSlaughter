@@ -6,57 +6,59 @@
 #include "PaperCharacter.h"
 #include <PaperFlipbook.h>
 #include <BlooHealthHUD.h>
+
+#include "Gun.h"
 #include "Components/WidgetComponent.h"
 #include "SlaughterFirendsDemoConstants.h"
 #include "BlooPaperCharacter.generated.h"
 
 UCLASS()
-class CONCEPTDEMO_API ABlooPaperCharacter : public APaperCharacter
+class CONCEPTDEMO_API ABlooPaperCharacter final : public APaperCharacter
 {
 	GENERATED_BODY()
 
 private:
-	void MoveGun();
+	void MoveGun() const;
 
 	void CheckCharacterFall();
 	void EnsureXAxisLocation();
 
-	bool fallingDeath;
+	bool bFallingDeath;
 
 protected:
-	UPaperFlipbook* idleFlipbook;
-	UPaperFlipbook* movingFlipbook;
-	UPaperFlipbook* jumpingFlipbook;
-	AGun* attachedGun;
-	FACING_DIRECTION facingDirection;
-	TArray<AGun*> gunsIgnored;
-	UBlooHealthHUD* blooHealthHUD;
+	UPROPERTY() UPaperFlipbook* IdleFlipBook;
+	UPROPERTY() UPaperFlipbook* MovingFlipBook;
+	UPROPERTY() UPaperFlipbook* JumpingFlipBook;
+	UPROPERTY() AGun* AttachedGun;
+	EFacing_Direction FacingDirection;
+	UPROPERTY() TArray<AGun*> GunsIgnored;
+	UPROPERTY() UBlooHealthHUD* BlooHealthHUD;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite) uint8 lives;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite) float lifeSize;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite) uint8 Lives;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite) float LifeSize;
 
-	UPROPERTY(BlueprintReadWrite) uint8 currentLives;
-	UPROPERTY(BlueprintReadWrite) float currentLifeSize;
+	UPROPERTY(BlueprintReadWrite) uint8 CurrentLives;
+	UPROPERTY(BlueprintReadWrite) float CurrentLifeSize;
 
 	virtual void BeginPlay() override;
-	virtual void Tick(float deltaSeconds) override;
+	virtual void Tick(float DeltaSeconds) override;
 	void MakeFallingDeath();
 
 public:
 
-	UFUNCTION() void UpdateHealthIndicator();
-	UFUNCTION(BlueprintCallable) virtual void Respawn();
-	UFUNCTION(BlueprintCallable) virtual void HandleMovement(float scaleValue);
-	UFUNCTION(BlueprintCallable) virtual void HandleJump();
-	UFUNCTION(BlueprintCallable) virtual void HandleStopJump();
-	UFUNCTION(BlueprintCallable) virtual void AttachGun(AGun* gun);
-	UFUNCTION(BlueprintCallable) virtual void DropGun();
-	UFUNCTION(BlueprintCallable) virtual bool HasGun();
-	UFUNCTION(BlueprintCallable) virtual void Fire();
-	UFUNCTION(BlueprintCallable) virtual void TakeDamage(float damageCount);
-	UFUNCTION(BlueprintCallable) virtual void Die();
+	UFUNCTION() void UpdateHealthIndicator() const;
+	UFUNCTION(BlueprintCallable) void Respawn();
+	UFUNCTION(BlueprintCallable) void HandleMovement(float ScaleValue);
+	UFUNCTION(BlueprintCallable) void HandleJump();
+	UFUNCTION(BlueprintCallable) void HandleStopJump();
+	UFUNCTION(BlueprintCallable) void AttachGun(AGun* Gun);
+	UFUNCTION(BlueprintCallable) void DropGun();
+	UFUNCTION(BlueprintCallable) bool HasGun();
+	UFUNCTION(BlueprintCallable) void Fire();
+	UFUNCTION(BlueprintCallable) void TakeDamage(float DamageCount);
+	UFUNCTION(BlueprintCallable) void Die();
 
-	FVector initialPosition;
+	FVector InitialPosition;
 
 	ABlooPaperCharacter();
 

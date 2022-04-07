@@ -7,7 +7,7 @@
 #include "TrainAI.generated.h"
 
 UCLASS()
-class CONCEPTDEMO_API ATrainAI : public AActor
+class CONCEPTDEMO_API ATrainAI final : public AActor
 {
 	GENERATED_BODY()
 	

@@ -19,7 +19,7 @@ void ATunnelGateAI::BeginPlay()
 }
 
 // Called every frame
-void ATunnelGateAI::Tick(float DeltaTime)
+void ATunnelGateAI::Tick(const float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 

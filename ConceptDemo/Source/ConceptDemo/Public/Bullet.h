@@ -8,7 +8,7 @@
 #include "Bullet.generated.h"
 
 UCLASS()
-class CONCEPTDEMO_API ABullet : public AActor
+class CONCEPTDEMO_API ABullet final : public AActor
 {
 	GENERATED_BODY()
 	
@@ -16,17 +16,17 @@ public:
 	// Sets default values for this actor's properties
 	ABullet();
 
-	UPROPERTY(BlueprintReadWrite, EditAnywhere) TEnumAsByte<FACING_DIRECTION> FacingDirection;
+	UPROPERTY(BlueprintReadWrite, EditAnywhere) TEnumAsByte<EFacing_Direction> FacingDirection;
 	UPROPERTY(BlueprintReadWrite, EditAnywhere) uint8 TravelSpeed;
 	UPROPERTY(BlueprintReadWrite, EditAnywhere) int MaxTravelDistance;
 
-	AActor* fireSource;
+	UPROPERTY() AActor* FireSource;
 
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
-	FVector initialPosition;
-	float totalDistanceTraveled;
+	FVector InitialPosition;
+	float TotalDistanceTraveled;
 
 public:	
 	// Called every frame

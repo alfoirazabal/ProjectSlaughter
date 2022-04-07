@@ -9,7 +9,7 @@
 #include "Gun.generated.h"
 
 UCLASS()
-class CONCEPTDEMO_API AGun : public AActor
+class CONCEPTDEMO_API AGun final : public AActor
 {
 	GENERATED_BODY()
 	
@@ -19,25 +19,25 @@ public:
 	
 	// Sets default values for this actor's properties
 	AGun();
-	UPROPERTY(EditAnywhere, BlueprintReadWrite) bool rotate;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite) uint8 rotationSpeed;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite) uint8 shotsCount;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite) int32 timeBetweenShotsInMilliseconds;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite) float shotDamage;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite) uint8 cartridgeSize;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite) int32 reloadTimeInMilliseconds;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite) bool bRotate;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite) uint8 RotationSpeed;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite) uint8 ShotsCount;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite) int32 TimeBetweenShotsInMilliseconds;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite) float ShotDamage;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite) uint8 CartridgeSize;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite) int32 ReloadTimeInMilliseconds;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite) FVector bulletSpawnRelativeLocation;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite) FVector BulletSpawnRelativeLocation;
 
-	UPROPERTY(EditAnywhere) TSubclassOf<ABullet> bulletClass;
+	UPROPERTY(EditAnywhere) TSubclassOf<ABullet> BulletClass;
 
 	UPROPERTY(VisibleAnywhere, Category = "Trigger Capsule")
 	class UCapsuleComponent* TriggerCapsule;
 	UFUNCTION() void OnOverlapBegin(class UPrimitiveComponent* OverlappedComp, class AActor* OtherActor, class UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
 	UFUNCTION() void OnOverlapEnd(class UPrimitiveComponent* OverlappedComp, class AActor* OtherActor, class UPrimitiveComponent* OtherComp, int32 OtherBodyIndex);
 	
-	FVector initialLocation;
-	FACING_DIRECTION facingDirection;
+	FVector InitialLocation;
+	EFacing_Direction FacingDirection;
 
 protected:
 	// Called when the game starts or when spawned
@@ -46,9 +46,9 @@ protected:
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
-	virtual void SetAttached();
-	virtual void SetDetached();
-	UFUNCTION(BlueprintCallable) virtual void Fire();
+	void SetAttached();
+	void SetDetached();
+	UFUNCTION(BlueprintCallable) void Fire();
 	UFUNCTION(BlueprintCallable) void Respawn();
 
 };

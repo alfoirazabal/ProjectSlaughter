@@ -20,36 +20,36 @@ ATrainAISpawner::ATrainAISpawner()
 
 	this->currentSpawnTime = 0;
 
-	this->trainClass = NULL;
-	this->trainTrafficLights = NULL;
+	this->trainClass = nullptr;
+	this->trainTrafficLights = nullptr;
 
 	this->demoConstantsHelper = new SlaughterFirendsDemoConstants();
 }
 
-void ATrainAISpawner::SetRedLight()
+void ATrainAISpawner::SetRedLight() const
 {
-	if (this->trainTrafficLights != NULL) {
-		this->trainTrafficLights->greenLightOn = false;
-		this->trainTrafficLights->yellowLightOn = false;
-		this->trainTrafficLights->redLightOn = true;
+	if (this->trainTrafficLights != nullptr) {
+		this->trainTrafficLights->bGreenLightOn = false;
+		this->trainTrafficLights->bYellowLightOn = false;
+		this->trainTrafficLights->bRedLightOn = true;
 	}
 }
 
-void ATrainAISpawner::SetYellowLight()
+void ATrainAISpawner::SetYellowLight() const
 {
-	if (this->trainTrafficLights != NULL) {
-		this->trainTrafficLights->greenLightOn = false;
-		this->trainTrafficLights->yellowLightOn = true;
-		this->trainTrafficLights->redLightOn = false;
+	if (this->trainTrafficLights != nullptr) {
+		this->trainTrafficLights->bGreenLightOn = false;
+		this->trainTrafficLights->bYellowLightOn = true;
+		this->trainTrafficLights->bRedLightOn = false;
 	}
 }
 
-void ATrainAISpawner::SetGreenLight() 
+void ATrainAISpawner::SetGreenLight() const
 {
-	if (this->trainTrafficLights != NULL) {
-		this->trainTrafficLights->greenLightOn = true;
-		this->trainTrafficLights->yellowLightOn = false;
-		this->trainTrafficLights->redLightOn = false;
+	if (this->trainTrafficLights != nullptr) {
+		this->trainTrafficLights->bGreenLightOn = true;
+		this->trainTrafficLights->bYellowLightOn = false;
+		this->trainTrafficLights->bRedLightOn = false;
 	}
 }
 
@@ -62,17 +62,17 @@ void ATrainAISpawner::BeginPlay()
 
 void ATrainAISpawner::SpawnVehicle()
 {
-	if (this->trainClass != NULL)
+	if (this->trainClass != nullptr)
 	{
-		ATrainAI* train = this->GetWorld()->SpawnActor<ATrainAI>(this->trainClass, this->GetActorLocation(), this->GetActorRotation());
-		train->speed = this->travelSpeed;
-		train->direction = this->direction;
-		train->maxTravelDistance = this->maxDistance;
+		ATrainAI* Train = this->GetWorld()->SpawnActor<ATrainAI>(this->trainClass, this->GetActorLocation(), this->GetActorRotation());
+		Train->speed = this->travelSpeed;
+		Train->direction = this->direction;
+		Train->maxTravelDistance = this->maxDistance;
 	}
 }
 
 // Called every frame
-void ATrainAISpawner::Tick(float DeltaTime)
+void ATrainAISpawner::Tick(const float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 	if (this->currentSpawnTime == 0)

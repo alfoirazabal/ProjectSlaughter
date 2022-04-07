@@ -6,19 +6,19 @@
 #include "BlooPaperCharacter.h"
 #include "Components/CapsuleComponent.h"
 
-const int ROTATION_TIME_DS = 150;
+constexpr int GRotation_Time_DS = 150;
 
 // Sets default values
 AGun::AGun()
 {
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
-	this->rotate = true;
-	this->rotationSpeed = 1;
+	this->bRotate = true;
+	this->RotationSpeed = 1;
 
-	this->bulletSpawnRelativeLocation = FVector(0.0f, 50.0f, 10.0f);
+	this->BulletSpawnRelativeLocation = FVector(0.0f, 50.0f, 10.0f);
 
-	this->bulletClass = NULL;
+	this->BulletClass = nullptr;
 
 	this->TriggerCapsule = CreateDefaultSubobject<UCapsuleComponent>(TEXT("Trigger Capsule"));
 	this->TriggerCapsule->InitCapsuleSize(67.68, 67.68);
@@ -34,26 +34,26 @@ void AGun::BeginPlay()
 {
 	Super::BeginPlay();
 
-	this->initialLocation = this->GetActorLocation();
+	this->InitialLocation = this->GetActorLocation();
 }
 
 // Called every frame
-void AGun::Tick(float DeltaTime)
+void AGun::Tick(const float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-	if (rotate) {
-		int rotationTime = (DeltaTime * ROTATION_TIME_DS) * rotationSpeed;
-		FRotator rotator = FRotator::ZeroRotator;
-		rotator.Yaw = rotationTime;
-		AddActorLocalRotation(rotator);
+	if (bRotate) {
+		const int RotationTime = (DeltaTime * GRotation_Time_DS) * RotationSpeed;
+		FRotator Rotator = FRotator::ZeroRotator;
+		Rotator.Yaw = RotationTime;
+		AddActorLocalRotation(Rotator);
 	}
 	else {
 		FRotator rotator = FRotator::ZeroRotator;
-		switch (this->facingDirection) {
-			case FACING_DIRECTION::LEFT:
+		switch (this->FacingDirection) {
+			case EFacing_Direction::Left:
 				rotator.Yaw = 270;
 				break;
-			case FACING_DIRECTION::RIGHT:
+			case EFacing_Direction::Right:
 				rotator.Yaw = 90;
 				break;
 		}
@@ -62,32 +62,32 @@ void AGun::Tick(float DeltaTime)
 }
 
 void AGun::SetAttached() {
-	this->rotate = false;
+	this->bRotate = false;
 	this->SetActorEnableCollision(false);
 	this->SetActorScale3D(FVector(0.7f, 0.7f, 0.7f));
 }
 
 void AGun::SetDetached() {
-	this->rotate = true;
+	this->bRotate = true;
 	this->SetActorEnableCollision(true);
 	this->SetActorScale3D(FVector(1.0f, 1.0f, 1.0f));
 }
 
 void AGun::Fire() {
-	if (this->bulletClass != NULL) {
+	if (this->BulletClass != nullptr) {
 		FVector bulletLocation = this->GetActorLocation();
-		bulletLocation.Z += this->bulletSpawnRelativeLocation.Z;
-		if (this->facingDirection == FACING_DIRECTION::LEFT) {
-			bulletLocation.Y -= this->bulletSpawnRelativeLocation.Y;
+		bulletLocation.Z += this->BulletSpawnRelativeLocation.Z;
+		if (this->FacingDirection == EFacing_Direction::Left) {
+			bulletLocation.Y -= this->BulletSpawnRelativeLocation.Y;
 		}
-		else if (this->facingDirection == FACING_DIRECTION::RIGHT) {
-			bulletLocation.Y += this->bulletSpawnRelativeLocation.Y;
+		else if (this->FacingDirection == EFacing_Direction::Right) {
+			bulletLocation.Y += this->BulletSpawnRelativeLocation.Y;
 		}
-		ABullet* bullet = this->GetWorld()->SpawnActor<ABullet>(this->bulletClass, bulletLocation, this->GetActorRotation());
-		bullet->FacingDirection = this->facingDirection;
+		ABullet* bullet = this->GetWorld()->SpawnActor<ABullet>(this->BulletClass, bulletLocation, this->GetActorRotation());
+		bullet->FacingDirection = this->FacingDirection;
 		bullet->TravelSpeed = 15;
 		bullet->MaxTravelDistance = 5000;
-		bullet->fireSource = this;
+		bullet->FireSource = this;
 	}
 	else {
 		GEngine->AddOnScreenDebugMessage(23425, 10, FColor::Red, "ERR: Bullet class unset for gun: " + this->GetName());
@@ -95,7 +95,7 @@ void AGun::Fire() {
 }
 
 void AGun::Respawn() {
-	this->SetActorLocation(this->initialLocation);
+	this->SetActorLocation(this->InitialLocation);
 }
 
 void AGun::OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)

@@ -15,8 +15,8 @@ void AElevatorLightV2AI::BeginPlay()
 {
 	Super::BeginPlay();
 
-	TArray<UActorComponent*> Components = this->GetComponentsByClass(UPointLightComponent::StaticClass());
-	GEngine->AddOnScreenDebugMessage(345235, 2, FColor::Yellow, FString::FromInt(Components.Num()));
+	TArray<UPointLightComponent*> Components;
+	this->GetComponents(Components);
 	for (int32 i = 0; i < Components.Num(); i++)
 	{
 		if (Components[i]->GetName().Equals("SpikesRedLight")) {
@@ -38,7 +38,7 @@ void AElevatorLightV2AI::BeginPlay()
 }
 
 // Called every frame
-void AElevatorLightV2AI::Tick(float DeltaTime)
+void AElevatorLightV2AI::Tick(const float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 }

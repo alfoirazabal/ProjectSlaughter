@@ -9,66 +9,72 @@ AElevatorLightSetter::AElevatorLightSetter()
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
-	this->elevatorLight = NULL;
-	this->elevatorPlatform = NULL;
+	this->ElevatorLight = nullptr;
+	this->ElevatorPlatform = nullptr;
 }
 
 // Called when the game starts or when spawned
 void AElevatorLightSetter::BeginPlay()
 {
 	Super::BeginPlay();
-	if (this->elevatorLight == NULL) {
+	if (this->ElevatorLight == nullptr) {
 		GEngine->AddOnScreenDebugMessage(43121963, 5, FColor::Red, "Need to setup elevator light for ElevatorLightSetter!");
 	}
-	if (this->elevatorPlatform == NULL) {
+	if (this->ElevatorPlatform == nullptr) {
 		GEngine->AddOnScreenDebugMessage(43121964, 5, FColor::Red, "Need to setup elevator platform for ElevatorLightSetter!");
 	}
 }
 
 // Called every frame
-void AElevatorLightSetter::Tick(float DeltaTime)
+void AElevatorLightSetter::Tick(const float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-	if (this->elevatorPlatform->PlatformStatus == PLATFORM_STATUS::MOVING) {
-		this->elevatorLight->MiddleGreenLight->SetVisibility(false);
-		this->elevatorLight->SpikesRedLight->SetVisibility(false);
-		this->elevatorLight->SubwayRedLight->SetVisibility(false);
-		switch (this->elevatorPlatform->MovingDirection) {
-			case PLATFORM_MOVING_DIRECTION::MOVING_DOWN:
-				this->elevatorLight->YellowDownLight->SetVisibility(true);
-				this->elevatorLight->YellowUpLight->SetVisibility(false);
+	if (this->ElevatorPlatform->PlatformStatus == EPlatform_Status::Moving) {
+		this->ElevatorLight->MiddleGreenLight->SetVisibility(false);
+		this->ElevatorLight->SpikesRedLight->SetVisibility(false);
+		this->ElevatorLight->SubwayRedLight->SetVisibility(false);
+		switch (this->ElevatorPlatform->MovingDirection) {
+			case EPlatform_Moving_Direction::Moving_Down:
+				this->ElevatorLight->YellowDownLight->SetVisibility(true);
+				this->ElevatorLight->YellowUpLight->SetVisibility(false);
 				break;
-			case PLATFORM_MOVING_DIRECTION::MOVING_UP:
-				this->elevatorLight->YellowDownLight->SetVisibility(false);
-				this->elevatorLight->YellowUpLight->SetVisibility(true);
+			case EPlatform_Moving_Direction::Moving_Up:
+				this->ElevatorLight->YellowDownLight->SetVisibility(false);
+				this->ElevatorLight->YellowUpLight->SetVisibility(true);
+				break;
+			default:
 				break;
 		}
-		switch (this->elevatorPlatform->GetTargetLocation()) {
-			case PLATFORM_STATUS::ON_CEILING:
-				this->elevatorLight->SpikesRedLight->SetVisibility(true);
+		switch (this->ElevatorPlatform->GetTargetLocation()) {
+			case EPlatform_Status::On_Ceiling:
+				this->ElevatorLight->SpikesRedLight->SetVisibility(true);
 				break;
-			case PLATFORM_STATUS::ON_MIDDLE:
-				this->elevatorLight->MiddleGreenLight->SetVisibility(true);
+			case EPlatform_Status::On_Middle:
+				this->ElevatorLight->MiddleGreenLight->SetVisibility(true);
 				break;
-			case PLATFORM_STATUS::ON_FLOOR:
-				this->elevatorLight->SubwayRedLight->SetVisibility(true);
+			case EPlatform_Status::On_Floor:
+				this->ElevatorLight->SubwayRedLight->SetVisibility(true);
+				break;
+			default:
 				break;
 		}
 	}
 	else {
-		switch (this->elevatorPlatform->PlatformStatus) {
-			case PLATFORM_STATUS::ON_CEILING:
-				this->elevatorLight->SpikesRedLight->SetVisibility(true);
-				this->elevatorLight->YellowDownLight->SetVisibility(true);
-				this->elevatorLight->YellowUpLight->SetVisibility(false);
+		switch (this->ElevatorPlatform->PlatformStatus) {
+			case EPlatform_Status::On_Ceiling:
+				this->ElevatorLight->SpikesRedLight->SetVisibility(true);
+				this->ElevatorLight->YellowDownLight->SetVisibility(true);
+				this->ElevatorLight->YellowUpLight->SetVisibility(false);
 				break;
-			case PLATFORM_STATUS::ON_MIDDLE:
-				this->elevatorLight->MiddleGreenLight->SetVisibility(true);
+			case EPlatform_Status::On_Middle:
+				this->ElevatorLight->MiddleGreenLight->SetVisibility(true);
 				break;
-			case PLATFORM_STATUS::ON_FLOOR:
-				this->elevatorLight->SubwayRedLight->SetVisibility(true);
-				this->elevatorLight->YellowUpLight->SetVisibility(true);
-				this->elevatorLight->YellowDownLight->SetVisibility(false);
+			case EPlatform_Status::On_Floor:
+				this->ElevatorLight->SubwayRedLight->SetVisibility(true);
+				this->ElevatorLight->YellowUpLight->SetVisibility(true);
+				this->ElevatorLight->YellowDownLight->SetVisibility(false);
+				break;
+			default:
 				break;
 		}
 	}

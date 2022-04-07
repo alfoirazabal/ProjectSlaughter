@@ -15,12 +15,12 @@ class UImage;
  * 
  */
 UCLASS()
-class CONCEPTDEMO_API UBlooHealthHUD : public UUserWidget
+class CONCEPTDEMO_API UBlooHealthHUD final : public UUserWidget
 {
 	GENERATED_BODY()
 
 private:
-	void SetLifeAvailable(UImage* image, bool isAvailable);
+	static void SetLifeAvailable(UImage* Image, bool bIsAvailable);
 
 public:
 	UPROPERTY(meta = (BindWidget)) UProgressBar* ProgressBar_0;
@@ -29,12 +29,12 @@ public:
 	UPROPERTY(meta = (BindWidget)) UImage* ImgHearth3;
 
 protected:
-	void NativeOnInitialized() override;
+	virtual void NativeOnInitialized() override;
 
 public:
-	UFUNCTION() void SetHealth(float health);
-	UFUNCTION() void SetLives(uint8 lives);
+	UFUNCTION() void SetHealth(float Health) const;
+	UFUNCTION() void SetLives(uint8 Lives) const;
 
-	void UpdateHealth(float lifeLeft, uint8 livesLeft);
+	void UpdateHealth(float LifeLeft, uint8 LivesLeft) const;
 
 };

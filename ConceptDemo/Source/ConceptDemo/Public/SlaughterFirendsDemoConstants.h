@@ -3,15 +3,14 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include <UObject/Class.h>
 
 UENUM()
-enum FACING_DIRECTION {
-	RIGHT	UMETA(DisplayName = "Right"),
-	LEFT	UMETA(DisplayName = "Left")
+enum EFacing_Direction {
+	Right	UMETA(DisplayName = "Right"),
+	Left	UMETA(DisplayName = "Left")
 };
 
-const int levelsZFallLimit = -1000;
+constexpr int GLevelsZFallLimit = -1000;
 
 /**
  * 
@@ -22,5 +21,5 @@ public:
 	SlaughterFirendsDemoConstants();
 	~SlaughterFirendsDemoConstants();
 
-	float GenerateBoundedFloat(float min, float max);
+	static float GenerateBoundedFloat(float Min, float Max);
 };

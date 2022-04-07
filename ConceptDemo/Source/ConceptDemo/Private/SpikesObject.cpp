@@ -19,7 +19,7 @@ void ASpikesObject::BeginPlay()
 }
 
 // Called every frame
-void ASpikesObject::Tick(float DeltaTime)
+void ASpikesObject::Tick(const float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 

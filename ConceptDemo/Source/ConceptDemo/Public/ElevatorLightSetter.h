@@ -9,7 +9,7 @@
 #include "ElevatorLightSetter.generated.h"
 
 UCLASS()
-class CONCEPTDEMO_API AElevatorLightSetter : public AActor
+class CONCEPTDEMO_API AElevatorLightSetter final : public AActor
 {
 	GENERATED_BODY()
 	
@@ -17,8 +17,8 @@ public:
 	// Sets default values for this actor's properties
 	AElevatorLightSetter();
 
-	UPROPERTY(EditAnywhere) AElevatorLightV2AI* elevatorLight;
-	UPROPERTY(EditAnywhere) AElevatorPlatform* elevatorPlatform;
+	UPROPERTY(EditAnywhere) AElevatorLightV2AI* ElevatorLight;
+	UPROPERTY(EditAnywhere) AElevatorPlatform* ElevatorPlatform;
 
 protected:
 	// Called when the game starts or when spawned

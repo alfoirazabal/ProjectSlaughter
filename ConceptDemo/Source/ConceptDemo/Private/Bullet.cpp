@@ -8,9 +8,9 @@ ABullet::ABullet()
 {
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
-	this->initialPosition = this->GetActorLocation();
+	this->InitialPosition = this->GetActorLocation();
 	this->TravelSpeed = 3;
-	this->totalDistanceTraveled = 0;
+	this->TotalDistanceTraveled = 0;
 	this->MaxTravelDistance = 5000;
 }
 
@@ -21,19 +21,19 @@ void ABullet::BeginPlay()
 }
 
 // Called every frame
-void ABullet::Tick(float DeltaTime)
+void ABullet::Tick(const float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-	FVector currentPosition = this->GetActorLocation();
-	if (this->FacingDirection == FACING_DIRECTION::RIGHT) {
-		currentPosition.Y += this->TravelSpeed;
+	FVector CurrentPosition = this->GetActorLocation();
+	if (this->FacingDirection == EFacing_Direction::Right) {
+		CurrentPosition.Y += this->TravelSpeed;
 	}
-	else if (this->FacingDirection == FACING_DIRECTION::LEFT) {
-		currentPosition.Y -= this->TravelSpeed;
+	else if (this->FacingDirection == EFacing_Direction::Left) {
+		CurrentPosition.Y -= this->TravelSpeed;
 	}
-	this->SetActorLocation(currentPosition);
-	this->totalDistanceTraveled += this->TravelSpeed;
-	if (this->totalDistanceTraveled >= this->MaxTravelDistance) {
+	this->SetActorLocation(CurrentPosition);
+	this->TotalDistanceTraveled += this->TravelSpeed;
+	if (this->TotalDistanceTraveled >= this->MaxTravelDistance) {
 		this->Destroy();
 	}
 }

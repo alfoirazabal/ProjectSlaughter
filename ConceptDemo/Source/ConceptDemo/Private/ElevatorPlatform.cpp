@@ -35,9 +35,9 @@ void AElevatorPlatform::Tick(float DeltaTime)
 	Super::Tick(DeltaTime);
 	if (this->bIsActivated) {
 		if (this->CurrentStillTime == 0) {
-			FVector currentLocation = this->GetActorLocation();
-			float zLocation = currentLocation.Z;
-			if (zLocation >= this->CeilingLevel && this->MovingDirection != EPlatform_Moving_Direction::Moving_Down) {
+			FVector CurrentLocation = this->GetActorLocation();
+			float ZLocation = CurrentLocation.Z;
+			if (ZLocation >= this->CeilingLevel && this->MovingDirection != EPlatform_Moving_Direction::Moving_Down) {
 				this->MovingDirection = EPlatform_Moving_Direction::Moving_Down;
 				this->CurrentStillTime = this->StillTime;
 				this->bInTheMiddle = false;
@@ -45,8 +45,8 @@ void AElevatorPlatform::Tick(float DeltaTime)
 				this->LastStaticStatus = this->PlatformStatus;
 			}
 			else if (
-					zLocation <= this->MiddleLevel + this->Speed && 
-					zLocation >= this->MiddleLevel - this->Speed &&
+					ZLocation <= this->MiddleLevel + this->Speed && 
+					ZLocation >= this->MiddleLevel - this->Speed &&
 					!this->bInTheMiddle
 			) {
 				this->bInTheMiddle = true;
@@ -54,7 +54,7 @@ void AElevatorPlatform::Tick(float DeltaTime)
 				this->PlatformStatus = EPlatform_Status::On_Middle;
 				this->LastStaticStatus = this->PlatformStatus;
 			}
-			else if (zLocation <= this->FloorLevel && this->MovingDirection != EPlatform_Moving_Direction::Moving_Up) {
+			else if (ZLocation <= this->FloorLevel && this->MovingDirection != EPlatform_Moving_Direction::Moving_Up) {
 				this->MovingDirection = EPlatform_Moving_Direction::Moving_Up;
 				this->CurrentStillTime = this->StillTime;
 				this->bInTheMiddle = false;
@@ -65,16 +65,16 @@ void AElevatorPlatform::Tick(float DeltaTime)
 				this->PlatformStatus = EPlatform_Status::Moving;
 				switch (this->MovingDirection) {
 					case EPlatform_Moving_Direction::Moving_Down:
-						zLocation -= this->Speed;
+						ZLocation -= this->Speed;
 						break;
 					case EPlatform_Moving_Direction::Moving_Up:
-						zLocation += this->Speed;
+						ZLocation += this->Speed;
 						break;
 					default:
 						break;
 				}
-				currentLocation.Z = zLocation;
-				this->SetActorLocation(currentLocation);
+				CurrentLocation.Z = ZLocation;
+				this->SetActorLocation(CurrentLocation);
 			}
 		}
 		else {

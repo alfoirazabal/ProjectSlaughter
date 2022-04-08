@@ -48,16 +48,16 @@ void AGun::Tick(const float DeltaTime)
 		AddActorLocalRotation(Rotator);
 	}
 	else {
-		FRotator rotator = FRotator::ZeroRotator;
+		FRotator Rotator = FRotator::ZeroRotator;
 		switch (this->FacingDirection) {
 			case EFacing_Direction::Left:
-				rotator.Yaw = 270;
+				Rotator.Yaw = 270;
 				break;
 			case EFacing_Direction::Right:
-				rotator.Yaw = 90;
+				Rotator.Yaw = 90;
 				break;
 		}
-		this->SetActorRotation(rotator);
+		this->SetActorRotation(Rotator);
 	}
 }
 

@@ -3,9 +3,10 @@
 #include "BlooPaperCharacter.h"
 #include "Gun.h"
 #include "SpikesObject.h"
-#include "Train/TunnelGateAI.h"
 #include "Train/TrainAI.h"
 #include <PaperFlipbookComponent.h>
+
+#include "Components/CapsuleComponent.h"
 
 constexpr float GDefault_Character_Plane_X_Position = 760;
 
@@ -28,6 +29,14 @@ ABlooPaperCharacter::ABlooPaperCharacter() {
 	this->bFallingDeath = false;
 
 	this->BlooHealthHUD = nullptr;
+
+	this->TriggerCapsule = CreateDefaultSubobject<UCapsuleComponent>(TEXT("Trigger Capsule"));
+	this->TriggerCapsule->InitCapsuleSize(38.59, 89.37);
+	this->TriggerCapsule->SetCollisionProfileName("Trigger");
+	this->TriggerCapsule->SetupAttachment(this->RootComponent);
+
+	this->TriggerCapsule->OnComponentBeginOverlap.AddDynamic(this, &ABlooPaperCharacter::OnOverlapBegin);
+	this->TriggerCapsule->OnComponentEndOverlap.AddDynamic(this, &ABlooPaperCharacter::OnOverlapEnd);
 }
 
 void ABlooPaperCharacter::BeginPlay() {
@@ -63,32 +72,6 @@ void ABlooPaperCharacter::MakeFallingDeath()
 void ABlooPaperCharacter::Tick(const float DeltaSeconds)
 {
 	Super::Tick(DeltaSeconds);
-	TArray<AActor*> OverlappingActors;
-	this->GetOverlappingActors(OverlappingActors);
-	bool bTrainFound = false;
-	bool bTunnelGateFound = false;
-	for (int i = 0; i < OverlappingActors.Num(); i++) {
-		ABullet* Bullet = Cast<ABullet>(OverlappingActors[i]);
-		const ASpikesObject* Spikes = Cast<ASpikesObject>(OverlappingActors[i]);
-		if (!bTrainFound) bTrainFound = Cast<ATrainAI>(OverlappingActors[i]) != nullptr;
-		if (!bTunnelGateFound) bTunnelGateFound = Cast<ATunnelGateAI>(OverlappingActors[i]) != nullptr;
-		if (Bullet) {
-			if (
-				(this->AttachedGun != nullptr && Bullet->FireSource != this->AttachedGun) ||
-				this->AttachedGun == nullptr
-			) {
-				Bullet->Destroy();
-				this->TakeDamage(0.1f);
-			}
-		}
-		if (Spikes) {
-			this->MakeFallingDeath();
-		}
-	}
-	if (bTrainFound && bTunnelGateFound)
-	{
-		this->MakeFallingDeath();
-	}
 	EnsureXAxisLocation();
 }
 
@@ -211,10 +194,10 @@ void ABlooPaperCharacter::DropGun()
 		FVector NewGunLocation = this->AttachedGun->GetActorLocation();
 		switch (this->FacingDirection) {
 			case EFacing_Direction::Left:
-				NewGunLocation.Y += 50;
+				NewGunLocation.Y += 125;
 				break;
 			case EFacing_Direction::Right:
-				NewGunLocation.Y -= 50;
+				NewGunLocation.Y -= 125;
 				break;
 		}
 		this->AttachedGun->SetActorLocation(NewGunLocation);
@@ -258,4 +241,37 @@ void ABlooPaperCharacter::TakeDamage(const float DamageCount)
 void ABlooPaperCharacter::Die() {
 	this->DropGun();
 	this->Destroy();
+}
+
+void ABlooPaperCharacter::OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
+{
+	if (OtherComp)
+	{
+		ABullet* Bullet = Cast<ABullet>(OtherActor);
+		const ASpikesObject* Spikes = Cast<ASpikesObject>(OtherActor);
+		const ATrainAI* Train = Cast<ATrainAI>(OtherActor);
+		if (Bullet)
+		{
+			if (
+				(this->AttachedGun != nullptr && Bullet->FireSource != nullptr && Bullet->FireSource != this->AttachedGun) ||
+				this->AttachedGun == nullptr
+			) {
+				Bullet->Destroy();
+				this->TakeDamage(0.1f);
+			}
+		}
+		if (Spikes)
+		{
+			this->MakeFallingDeath();
+		}
+		if (Train)
+		{
+			this->MakeFallingDeath();
+		}
+	}
+}
+
+void ABlooPaperCharacter::OnOverlapEnd(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex)
+{
+	
 }

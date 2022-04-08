@@ -83,11 +83,14 @@ void AGun::Fire() {
 		else if (this->FacingDirection == EFacing_Direction::Right) {
 			bulletLocation.Y += this->BulletSpawnRelativeLocation.Y;
 		}
-		ABullet* bullet = this->GetWorld()->SpawnActor<ABullet>(this->BulletClass, bulletLocation, this->GetActorRotation());
-		bullet->FacingDirection = this->FacingDirection;
-		bullet->TravelSpeed = 15;
-		bullet->MaxTravelDistance = 5000;
-		bullet->FireSource = this;
+		ABullet* Bullet = this->GetWorld()->SpawnActor<ABullet>(this->BulletClass, bulletLocation, this->GetActorRotation());
+		if (Bullet)
+		{
+			Bullet->FireSource = this;
+			Bullet->FacingDirection = this->FacingDirection;
+			Bullet->TravelSpeed = 15;
+			Bullet->MaxTravelDistance = 5000;
+		}
 	}
 	else {
 		GEngine->AddOnScreenDebugMessage(23425, 10, FColor::Red, "ERR: Bullet class unset for gun: " + this->GetName());

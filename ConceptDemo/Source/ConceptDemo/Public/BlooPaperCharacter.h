@@ -46,20 +46,27 @@ protected:
 
 public:
 
+	DECLARE_DYNAMIC_MULTICAST_DELEGATE(FBeginOverlapEvent);
+
 	UFUNCTION() void UpdateHealthIndicator() const;
-	UFUNCTION(BlueprintCallable) void Respawn();
+	UFUNCTION() void Respawn();
 	UFUNCTION(BlueprintCallable) void HandleMovement(float ScaleValue);
 	UFUNCTION(BlueprintCallable) void HandleJump();
 	UFUNCTION(BlueprintCallable) void HandleStopJump();
-	UFUNCTION(BlueprintCallable) void AttachGun(AGun* Gun);
+	UFUNCTION() void AttachGun(AGun* Gun);
 	UFUNCTION(BlueprintCallable) void DropGun();
-	UFUNCTION(BlueprintCallable) bool HasGun();
+	UFUNCTION() bool HasGun();
 	UFUNCTION(BlueprintCallable) void Fire();
-	UFUNCTION(BlueprintCallable) void TakeDamage(float DamageCount);
-	UFUNCTION(BlueprintCallable) void Die();
+	UFUNCTION() void TakeDamage(float DamageCount);
+	UFUNCTION() void Die();
 
 	FVector InitialPosition;
 
 	ABlooPaperCharacter();
+
+	UPROPERTY(VisibleAnywhere, Category = "Trigger Capsule")
+	class UCapsuleComponent* TriggerCapsule;
+	UFUNCTION() void OnOverlapBegin(class UPrimitiveComponent* OverlappedComp, class AActor* OtherActor, class UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
+	UFUNCTION() void OnOverlapEnd(class UPrimitiveComponent* OverlappedComp, class AActor* OtherActor, class UPrimitiveComponent* OtherComp, int32 OtherBodyIndex);
 
 };

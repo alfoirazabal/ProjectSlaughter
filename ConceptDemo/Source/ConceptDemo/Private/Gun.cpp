@@ -3,7 +3,7 @@
 
 #include "Gun.h"
 
-#include "BlooPaperCharacter.h"
+#include "ConceptDemoPaperCharacter.h"
 #include "Components/CapsuleComponent.h"
 
 constexpr int GRotation_Time_DS = 150;
@@ -105,12 +105,12 @@ void AGun::OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor* OtherActo
 {
 	if (OtherComp)
 	{
-		ABlooPaperCharacter* BlooPaperCharacter = Cast<ABlooPaperCharacter>(OtherActor);
-		if (BlooPaperCharacter)
+		AUConceptDemoPaperCharacter* ConceptDemoPaperCharacter = Cast<AUConceptDemoPaperCharacter>(OtherActor);
+		if (ConceptDemoPaperCharacter)
 		{
-			if (!BlooPaperCharacter->HasGun())
+			if (!ConceptDemoPaperCharacter->HasGun())
 			{
-				BlooPaperCharacter->AttachGun(this);
+				ConceptDemoPaperCharacter->AttachGun(this);
 			}
 			else
 			{
@@ -124,12 +124,12 @@ void AGun::OnOverlapEnd(UPrimitiveComponent* OverlappedComp, AActor* OtherActor,
 {
 	if (OtherComp)
 	{
-		ABlooPaperCharacter* BlooPaperCharacter = Cast<ABlooPaperCharacter>(OtherActor);
-		if (BlooPaperCharacter)
+		AUConceptDemoPaperCharacter* ConceptDemoPaperCharacter = Cast<AUConceptDemoPaperCharacter>(OtherActor);
+		if (ConceptDemoPaperCharacter)
 		{
-			if (BlooPaperCharacter->HasGun())
+			if (ConceptDemoPaperCharacter->HasGun())
 			{
-				BlooPaperCharacter->AttachGun(this);
+				ConceptDemoPaperCharacter->AttachGun(this);
 			}
 			else
 			{

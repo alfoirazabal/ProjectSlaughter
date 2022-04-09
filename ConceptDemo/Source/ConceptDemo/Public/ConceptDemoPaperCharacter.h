@@ -32,9 +32,10 @@ public:
 
 protected:
 	// Called when the game starts
-	UPROPERTY() UPaperFlipbook* IdleFlipBook;
-	UPROPERTY() UPaperFlipbook* MovingFlipBook;
-	UPROPERTY() UPaperFlipbook* JumpingFlipBook;
+	UPROPERTY(EditAnywhere, Category="Concept Demo Action Sprites") UPaperFlipbook* IdleFlipBook;
+	UPROPERTY(EditAnywhere, Category="Concept Demo Action Sprites") UPaperFlipbook* MovingFlipBook;
+	UPROPERTY(EditAnywhere, Category="Concept Demo Action Sprites") UPaperFlipbook* JumpingFlipBook;
+	UPROPERTY(EditAnywhere, Category="Character Asset Positions") int GunZRelativeLocation;
 	
 	UPROPERTY() AGun* AttachedGun;
 	EFacing_Direction FacingDirection;

@@ -10,6 +10,7 @@
 
 #include "Components/CapsuleComponent.h"
 #include "Components/WidgetComponent.h"
+#include "GameFramework/CharacterMovementComponent.h"
 
 constexpr float GDefault_Character_Plane_X_Position = 760;
 
@@ -28,6 +29,8 @@ AUConceptDemoPaperCharacter::AUConceptDemoPaperCharacter()
 	this->bFallingDeath = false;
 
 	this->HealthHUD = nullptr;
+	
+	this->GetCharacterMovement()->JumpZVelocity = 650;
 
 	this->TriggerCapsule = CreateDefaultSubobject<UCapsuleComponent>(TEXT("Trigger Capsule"));
 	this->TriggerCapsule->InitCapsuleSize(38.59, 89.37);
@@ -42,7 +45,9 @@ void AUConceptDemoPaperCharacter::MoveGun() const
 {
 	if (this->AttachedGun != nullptr) {
 		this->AttachedGun->FacingDirection = this->FacingDirection;
-		this->AttachedGun->SetActorLocation(this->GetActorLocation());
+		FVector ActorLocation = this->GetActorLocation();
+		ActorLocation.Z += this->GunZRelativeLocation;
+		this->AttachedGun->SetActorLocation(ActorLocation);
 	}
 }
 

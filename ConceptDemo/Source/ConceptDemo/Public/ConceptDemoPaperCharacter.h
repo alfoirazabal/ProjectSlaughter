@@ -57,6 +57,7 @@ public:
 	UFUNCTION() void UpdateHealthIndicator() const;
 	UFUNCTION() void Respawn();
 	UFUNCTION(BlueprintCallable) void HandleMovement(float ScaleValue);
+	UFUNCTION(BlueprintCallable) void DropDown();
 	UFUNCTION(BlueprintCallable) void HandleJump();
 	UFUNCTION(BlueprintCallable) void HandleStopJump();
 	UFUNCTION() void AttachGun(AGun* Gun);

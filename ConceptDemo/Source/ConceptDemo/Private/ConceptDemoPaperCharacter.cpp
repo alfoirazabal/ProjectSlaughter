@@ -8,6 +8,7 @@
 #include "Train/TrainAI.h"
 #include <PaperFlipbookComponent.h>
 
+#include "SemiSolidPlatform.h"
 #include "Components/CapsuleComponent.h"
 #include "Components/WidgetComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
@@ -175,6 +176,24 @@ void AUConceptDemoPaperCharacter::HandleMovement(const float ScaleValue)
 		}
 	}
 	CheckCharacterFall();
+}
+
+void AUConceptDemoPaperCharacter::DropDown()
+{
+	FFindFloorResult FloorResult = this->GetCharacterMovement()->CurrentFloor;
+	FHitResult HitResult = FloorResult.HitResult;
+	AActor* FloorActor = HitResult.GetActor();
+	if (FloorActor)
+	{
+		ASemiSolidPlatform* SemiSolidPlatform = Cast<ASemiSolidPlatform>(FloorActor);
+		if (SemiSolidPlatform)
+		{
+			FVector CurrentPosition = this->GetActorLocation();
+			CurrentPosition.Z -= 10;
+			this->SetActorLocation(CurrentPosition);
+			this->MoveIgnoreActorAdd(SemiSolidPlatform);
+		}
+	}
 }
 
 void AUConceptDemoPaperCharacter::HandleJump()

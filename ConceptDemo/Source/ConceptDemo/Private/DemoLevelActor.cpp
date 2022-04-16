@@ -6,12 +6,23 @@
 #include "BlooPaperCharacter.h"
 #include "Kismet/GameplayStatics.h"
 
+ADemoLevelActor::ADemoLevelActor()
+{
+	this->RandomPlayerSpawnLocations.Add(FVector(450, -650, 423));
+	this->RandomPlayerSpawnLocations.Add(FVector(450, 370, 423));
+}
+
+
 void ADemoLevelActor::BeginPlay()
 {
 	Super::BeginPlay();
 	const FRotator PlayerSpawnRotation = FRotator(0, 90, 0);
-	this->Player1 = this->GetWorld()->SpawnActor<AUConceptDemoPaperCharacter>(this->Characters[0], FVector(450, -650, 423), PlayerSpawnRotation);
-	this->Player2 = this->GetWorld()->SpawnActor<AUConceptDemoPaperCharacter>(this->Characters[0], FVector(450, 370, 423), PlayerSpawnRotation);
+	const FVector P1Location = this->RandomPlayerSpawnLocations[FMath::RandRange(0, this->RandomPlayerSpawnLocations.Num() - 1)];
+	this->RandomPlayerSpawnLocations.Remove(P1Location);
+	const FVector P2Location = this->RandomPlayerSpawnLocations[FMath::RandRange(0, this->RandomPlayerSpawnLocations.Num() - 1)];
+	this->RandomPlayerSpawnLocations.Remove(P2Location);
+	this->Player1 = this->GetWorld()->SpawnActor<AUConceptDemoPaperCharacter>(this->Characters[0], P1Location, PlayerSpawnRotation);
+	this->Player2 = this->GetWorld()->SpawnActor<AUConceptDemoPaperCharacter>(this->Characters[0], P2Location, PlayerSpawnRotation);
 	this->SetupInputs();
 }
 

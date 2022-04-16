@@ -16,7 +16,11 @@ class CONCEPTDEMO_API ADemoLevelActor : public ALevelScriptActor
 	GENERATED_BODY()
 
 public:
+
+	ADemoLevelActor();
+	
 	UPROPERTY(EditAnywhere) TArray<TSubclassOf<AUConceptDemoPaperCharacter>> Characters;
+	UPROPERTY(EditAnywhere) TArray<FVector> RandomPlayerSpawnLocations;
 	UPROPERTY() AUConceptDemoPaperCharacter* Player1;
 	UPROPERTY() AUConceptDemoPaperCharacter* Player2;
 

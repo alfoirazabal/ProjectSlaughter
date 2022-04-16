@@ -34,7 +34,8 @@ protected:
 	void P2DropDownPressed();
 	void P2Fire();
 	void P2DropGun();
-
+	
 	UFUNCTION() void P1ReactToDeath();
 	UFUNCTION() void P2ReactToDeath();
+	UFUNCTION() void ExitLevel();
 };

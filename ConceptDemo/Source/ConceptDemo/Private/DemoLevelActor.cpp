@@ -3,6 +3,8 @@
 
 #include "DemoLevelActor.h"
 
+#include "Kismet/GameplayStatics.h"
+
 void ADemoLevelActor::SetupInputs()
 {
 	this->InputComponent->BindAxis(TEXT("P1 HorizontalMovement"), this, &ADemoLevelActor::P1HorizontalMovement);
@@ -18,6 +20,11 @@ void ADemoLevelActor::SetupInputs()
 	this->InputComponent->BindAction(TEXT("P2 Drop Down"), IE_Pressed, this, &ADemoLevelActor::P2DropDownPressed);
 	this->InputComponent->BindAction(TEXT("P2 Fire"), IE_Pressed, this, &ADemoLevelActor::P2Fire);
 	this->InputComponent->BindAction(TEXT("P2 Drop Gun"), IE_Pressed, this, &ADemoLevelActor::P2DropGun);
+
+	this->InputComponent->BindAction(TEXT("Level Exit"), IE_Pressed, this, &ADemoLevelActor::ExitLevel);
+
+	APlayerController* PlayerController = UGameplayStatics::GetPlayerController(GetWorld(), 0);
+	PlayerController->SetShowMouseCursor(false);
 
 	this->Player1->PlayerDeath.AddDynamic(this, &ADemoLevelActor::P1ReactToDeath);
 	this->Player2->PlayerDeath.AddDynamic(this, &ADemoLevelActor::P2ReactToDeath);
@@ -93,3 +100,7 @@ void ADemoLevelActor::P2ReactToDeath()
 	GEngine->AddOnScreenDebugMessage(35234212, 2, FColor::Yellow, "P2 Died");
 }
 
+void ADemoLevelActor::ExitLevel()
+{
+	UGameplayStatics::OpenLevel(this, "MainMenu");
+}

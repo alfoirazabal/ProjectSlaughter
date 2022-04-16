@@ -16,9 +16,13 @@ class CONCEPTDEMO_API ADemoLevelActor : public ALevelScriptActor
 	GENERATED_BODY()
 
 public:
-	UPROPERTY(EditAnywhere) AUConceptDemoPaperCharacter* Player1;
-	UPROPERTY(EditAnywhere) AUConceptDemoPaperCharacter* Player2;
-	UFUNCTION(BlueprintCallable) void SetupInputs();
+	UPROPERTY(EditAnywhere) TArray<TSubclassOf<AUConceptDemoPaperCharacter>> Characters;
+	UPROPERTY() AUConceptDemoPaperCharacter* Player1;
+	UPROPERTY() AUConceptDemoPaperCharacter* Player2;
+
+	virtual void BeginPlay() override;
+	
+	UFUNCTION() void SetupInputs();
 
 protected:
 	void P1HorizontalMovement(float AxisValue);

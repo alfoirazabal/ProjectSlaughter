@@ -3,7 +3,18 @@
 
 #include "DemoLevelActor.h"
 
+#include "BlooPaperCharacter.h"
 #include "Kismet/GameplayStatics.h"
+
+void ADemoLevelActor::BeginPlay()
+{
+	Super::BeginPlay();
+	const FRotator PlayerSpawnRotation = FRotator(0, 90, 0);
+	this->Player1 = this->GetWorld()->SpawnActor<AUConceptDemoPaperCharacter>(this->Characters[0], FVector(450, -650, 423), PlayerSpawnRotation);
+	this->Player2 = this->GetWorld()->SpawnActor<AUConceptDemoPaperCharacter>(this->Characters[0], FVector(450, 370, 423), PlayerSpawnRotation);
+	this->SetupInputs();
+}
+
 
 void ADemoLevelActor::SetupInputs()
 {

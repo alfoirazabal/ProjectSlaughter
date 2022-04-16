@@ -274,6 +274,7 @@ void AUConceptDemoPaperCharacter::TakeDamage(float DamageCount)
 void AUConceptDemoPaperCharacter::Die()
 {
 	this->DropGun();
+	this->PlayerDeath.Broadcast();
 	this->Destroy();
 }
 

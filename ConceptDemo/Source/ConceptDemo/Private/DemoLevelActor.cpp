@@ -18,6 +18,9 @@ void ADemoLevelActor::SetupInputs()
 	this->InputComponent->BindAction(TEXT("P2 Drop Down"), IE_Pressed, this, &ADemoLevelActor::P2DropDownPressed);
 	this->InputComponent->BindAction(TEXT("P2 Fire"), IE_Pressed, this, &ADemoLevelActor::P2Fire);
 	this->InputComponent->BindAction(TEXT("P2 Drop Gun"), IE_Pressed, this, &ADemoLevelActor::P2DropGun);
+
+	this->Player1->PlayerDeath.AddDynamic(this, &ADemoLevelActor::P1ReactToDeath);
+	this->Player2->PlayerDeath.AddDynamic(this, &ADemoLevelActor::P2ReactToDeath);
 }
 
 void ADemoLevelActor::P1HorizontalMovement(const float AxisValue)
@@ -79,3 +82,14 @@ void ADemoLevelActor::P2DropGun()
 {
 	if (IsValid(this->Player2)) this->Player2->DropGun();
 }
+
+void ADemoLevelActor::P1ReactToDeath()
+{
+	GEngine->AddOnScreenDebugMessage(35234211, 2, FColor::Yellow, "P1 Died");
+}
+
+void ADemoLevelActor::P2ReactToDeath()
+{
+	GEngine->AddOnScreenDebugMessage(35234212, 2, FColor::Yellow, "P2 Died");
+}
+

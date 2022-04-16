@@ -10,6 +10,7 @@
 #include "PaperCharacter.h"
 #include "ConceptDemoPaperCharacter.generated.h"
 
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnPlayerDeath);
 
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class CONCEPTDEMO_API AUConceptDemoPaperCharacter : public APaperCharacter
@@ -66,6 +67,8 @@ public:
 	UFUNCTION(BlueprintCallable) void Fire();
 	UFUNCTION() void TakeDamage(float DamageCount);
 	UFUNCTION() void Die();
+	
+	FOnPlayerDeath PlayerDeath;
 
 	FVector InitialPosition;
 	

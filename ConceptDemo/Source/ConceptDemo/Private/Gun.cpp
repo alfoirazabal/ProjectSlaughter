@@ -15,6 +15,9 @@ AGun::AGun()
 	PrimaryActorTick.bCanEverTick = true;
 	this->bRotate = true;
 	this->RotationSpeed = 1;
+	this->TimeBetweenShots = 10;
+	this->CurrentTimeBetweenShots = 0;
+	this->ShotDamage = 0.035;
 
 	this->BulletSpawnRelativeLocation = FVector(0.0f, 50.0f, 10.0f);
 
@@ -56,6 +59,10 @@ void AGun::Tick(const float DeltaTime)
 		}
 		this->SetActorRotation(Rotator);
 	}
+	if (this->CurrentTimeBetweenShots > 0)
+	{
+		this->CurrentTimeBetweenShots--;
+	}
 }
 
 void AGun::SetAttached() {
@@ -72,21 +79,26 @@ void AGun::SetDetached() {
 
 void AGun::Fire() {
 	if (this->BulletClass != nullptr) {
-		FVector bulletLocation = this->GetActorLocation();
-		bulletLocation.Z += this->BulletSpawnRelativeLocation.Z;
-		if (this->FacingDirection == EFacing_Direction::Left) {
-			bulletLocation.Y -= this->BulletSpawnRelativeLocation.Y;
-		}
-		else if (this->FacingDirection == EFacing_Direction::Right) {
-			bulletLocation.Y += this->BulletSpawnRelativeLocation.Y;
-		}
-		ABullet* Bullet = this->GetWorld()->SpawnActor<ABullet>(this->BulletClass, bulletLocation, this->GetActorRotation());
-		if (Bullet)
+		if (this->CurrentTimeBetweenShots == 0)
 		{
-			Bullet->FireSource = this;
-			Bullet->FacingDirection = this->FacingDirection;
-			Bullet->TravelSpeed = 15;
-			Bullet->MaxTravelDistance = 5000;
+			FVector bulletLocation = this->GetActorLocation();
+			bulletLocation.Z += this->BulletSpawnRelativeLocation.Z;
+			if (this->FacingDirection == EFacing_Direction::Left) {
+				bulletLocation.Y -= this->BulletSpawnRelativeLocation.Y;
+			}
+			else if (this->FacingDirection == EFacing_Direction::Right) {
+				bulletLocation.Y += this->BulletSpawnRelativeLocation.Y;
+			}
+			ABullet* Bullet = this->GetWorld()->SpawnActor<ABullet>(this->BulletClass, bulletLocation, this->GetActorRotation());
+			if (Bullet)
+			{
+				Bullet->FireSource = this;
+				Bullet->FacingDirection = this->FacingDirection;
+				Bullet->TravelSpeed = 15;
+				Bullet->MaxTravelDistance = 5000;
+				Bullet->BulletDamage = this->ShotDamage;
+			}
+			this->CurrentTimeBetweenShots = this->TimeBetweenShots;
 		}
 	}
 	else {

@@ -22,7 +22,7 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite) bool bRotate;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite) uint8 RotationSpeed;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite) uint8 ShotsCount;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite) int32 TimeBetweenShotsInMilliseconds;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite) int32 TimeBetweenShots;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite) float ShotDamage;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite) uint8 CartridgeSize;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite) int32 ReloadTimeInMilliseconds;
@@ -40,6 +40,7 @@ public:
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
+	int32 CurrentTimeBetweenShots;
 
 public:	
 	// Called every frame

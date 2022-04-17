@@ -302,7 +302,7 @@ void AUConceptDemoPaperCharacter::OnOverlapBegin(UPrimitiveComponent* Overlapped
 				this->AttachedGun == nullptr
 			) {
 				Bullet->Destroy();
-				this->TakeDamage(0.1f);
+				this->TakeDamage(Bullet->BulletDamage);
 			}
 		}
 		if (Spikes)

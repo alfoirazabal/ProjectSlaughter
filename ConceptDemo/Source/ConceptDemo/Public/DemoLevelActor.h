@@ -35,14 +35,14 @@ protected:
 	void P1JumpPressed();
 	void P1JumpReleased();
 	void P1DropDownPressed();
-	void P1Fire();
+	void P1Fire(const float AxisValue);
 	void P1DropGun();
 
 	void P2HorizontalMovement(float AxisValue);
 	void P2JumpPressed();
 	void P2JumpReleased();
 	void P2DropDownPressed();
-	void P2Fire();
+	void P2Fire(const float AxisValue);
 	void P2DropGun();
 
 	UPROPERTY() TArray<AGun*> LevelGuns;

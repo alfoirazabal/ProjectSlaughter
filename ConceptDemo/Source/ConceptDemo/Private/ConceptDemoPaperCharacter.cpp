@@ -294,6 +294,7 @@ void AUConceptDemoPaperCharacter::OnOverlapBegin(UPrimitiveComponent* Overlapped
 		ABullet* Bullet = Cast<ABullet>(OtherActor);
 		const ASpikesObject* Spikes = Cast<ASpikesObject>(OtherActor);
 		const ATrainAI* Train = Cast<ATrainAI>(OtherActor);
+		AGun* Gun = Cast<AGun>(OtherActor);
 		if (Bullet)
 		{
 			if (
@@ -312,11 +313,33 @@ void AUConceptDemoPaperCharacter::OnOverlapBegin(UPrimitiveComponent* Overlapped
 		{
 			this->MakeFallingDeath();
 		}
+		if (Gun)
+		{
+			if (!this->HasGun())
+			{
+				this->AttachGun(Gun);
+			}
+			else
+			{
+				this->MoveIgnoreActorAdd(Gun);
+			}
+		}
 	}
 }
 
 void AUConceptDemoPaperCharacter::OnOverlapEnd(UPrimitiveComponent* OverlappedComp, AActor* OtherActor,
 	UPrimitiveComponent* OtherComp, int32 OtherBodyIndex)
 {
+	if (OtherComp)
+	{
+		AGun* Gun = Cast<AGun>(OtherActor);
+		if (Gun)
+		{
+			if (this->HasGun())
+			{
+				this->MoveIgnoreActorRemove(Gun);
+			}
+		}
+	}
 }
 

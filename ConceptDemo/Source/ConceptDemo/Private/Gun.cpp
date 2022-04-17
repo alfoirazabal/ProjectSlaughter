@@ -24,9 +24,6 @@ AGun::AGun()
 	this->TriggerCapsule->InitCapsuleSize(67.68, 67.68);
 	this->TriggerCapsule->SetCollisionProfileName(TEXT("Trigger"));
 	this->TriggerCapsule->SetupAttachment(this->RootComponent);
-
-	this->TriggerCapsule->OnComponentBeginOverlap.AddDynamic(this, &AGun::OnOverlapBegin);
-	this->TriggerCapsule->OnComponentEndOverlap.AddDynamic(this, &AGun::OnOverlapEnd);
 }
 
 // Called when the game starts or when spawned
@@ -99,42 +96,4 @@ void AGun::Fire() {
 
 void AGun::Respawn() {
 	this->SetActorLocation(this->InitialLocation);
-}
-
-void AGun::OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
-{
-	if (OtherComp)
-	{
-		AUConceptDemoPaperCharacter* ConceptDemoPaperCharacter = Cast<AUConceptDemoPaperCharacter>(OtherActor);
-		if (ConceptDemoPaperCharacter)
-		{
-			if (!ConceptDemoPaperCharacter->HasGun())
-			{
-				ConceptDemoPaperCharacter->AttachGun(this);
-			}
-			else
-			{
-				OtherComp->IgnoreActorWhenMoving(this, true);
-			}
-		}
-	}
-}
-
-void AGun::OnOverlapEnd(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex)
-{
-	if (OtherComp)
-	{
-		AUConceptDemoPaperCharacter* ConceptDemoPaperCharacter = Cast<AUConceptDemoPaperCharacter>(OtherActor);
-		if (ConceptDemoPaperCharacter)
-		{
-			if (ConceptDemoPaperCharacter->HasGun())
-			{
-				ConceptDemoPaperCharacter->AttachGun(this);
-			}
-			else
-			{
-				OtherComp->IgnoreActorWhenMoving(this, false);
-			}
-		}
-	}
 }

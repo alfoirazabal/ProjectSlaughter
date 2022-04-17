@@ -16,11 +16,13 @@ class CONCEPTDEMO_API ADemoLevelActor : public ALevelScriptActor
 	GENERATED_BODY()
 
 public:
-
+	
 	ADemoLevelActor();
 	
 	UPROPERTY(EditAnywhere) TArray<TSubclassOf<AUConceptDemoPaperCharacter>> Characters;
 	UPROPERTY(EditAnywhere) TArray<FVector> RandomPlayerSpawnLocations;
+	UPROPERTY(EditAnywhere) TArray<TSubclassOf<AGun>> Guns;
+	UPROPERTY(EditAnywhere) TArray<FVector> RandomGunSpawnLocations;
 	UPROPERTY() AUConceptDemoPaperCharacter* Player1;
 	UPROPERTY() AUConceptDemoPaperCharacter* Player2;
 
@@ -42,7 +44,11 @@ protected:
 	void P2DropDownPressed();
 	void P2Fire();
 	void P2DropGun();
-	
+
+	UPROPERTY() TArray<AGun*> LevelGuns;
+
+	UFUNCTION() void SpawnPlayers();
+	UFUNCTION() void SpawnGuns();
 	UFUNCTION() void P1ReactToDeath();
 	UFUNCTION() void P2ReactToDeath();
 	UFUNCTION() void ExitLevel();

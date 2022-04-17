@@ -19,15 +19,15 @@ public:
 	
 	// Sets default values for this actor's properties
 	AGun();
-	UPROPERTY(EditAnywhere, BlueprintReadWrite) bool bRotate;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite) uint8 RotationSpeed;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite) uint8 ShotsCount;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite) int32 TimeBetweenShots;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite) float ShotDamage;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite) uint8 CartridgeSize;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite) int32 ReloadTimeInMilliseconds;
+	UPROPERTY(EditAnywhere) bool bRotate;
+	UPROPERTY(EditAnywhere) uint8 RotationSpeed;
+	UPROPERTY(EditAnywhere) uint8 ShotsCount;
+	UPROPERTY(EditAnywhere) int32 TimeBetweenShots;
+	UPROPERTY(EditAnywhere) float ShotDamage;
+	UPROPERTY(EditAnywhere) uint8 CartridgeSize;
+	UPROPERTY(EditAnywhere) int32 ReloadTimeInMilliseconds;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite) FVector BulletSpawnRelativeLocation;
+	UPROPERTY(EditAnywhere) FVector BulletSpawnRelativeLocation;
 
 	UPROPERTY(EditAnywhere) TSubclassOf<ABullet> BulletClass;
 
@@ -36,6 +36,7 @@ public:
 
 	FVector InitialLocation;
 	EFacing_Direction FacingDirection;
+	int32 ShotsLeft;
 
 protected:
 	// Called when the game starts or when spawned
@@ -47,7 +48,7 @@ public:
 	virtual void Tick(float DeltaTime) override;
 	void SetAttached();
 	void SetDetached();
-	UFUNCTION(BlueprintCallable) void Fire();
-	UFUNCTION(BlueprintCallable) void Respawn();
+	UFUNCTION() void Fire();
+	UFUNCTION() void Respawn();
 
 };

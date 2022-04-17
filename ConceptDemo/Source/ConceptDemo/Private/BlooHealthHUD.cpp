@@ -49,6 +49,17 @@ void UBlooHealthHUD::SetLives(const uint8 Lives) const
 	}
 }
 
+void UBlooHealthHUD::SetShotsLeft(const int32 ShotsTotal, const int32 ShotsLeft)
+{
+	const float ShotsPercent = static_cast<float>(ShotsLeft) / static_cast<float>(ShotsTotal);
+	this->GunBulletsProgressBar->SetPercent(ShotsPercent);
+}
+
+void UBlooHealthHUD::SetNoGun()
+{
+	this->GunBulletsProgressBar->SetPercent(0);
+}
+
 void UBlooHealthHUD::UpdateHealth(const float LifeLeft, const uint8 LivesLeft) const
 {
 	this->SetHealth(LifeLeft);

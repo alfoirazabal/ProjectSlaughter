@@ -95,6 +95,10 @@ void AUConceptDemoPaperCharacter::BeginPlay()
 		if (!this->HealthHUD) {
 			GEngine->AddOnScreenDebugMessage(5345343, 2, FColor::Red, "Unable to cast HealthHUD for PaperCharacter!");
 		}
+		else
+		{
+			this->HealthHUD->SetNoGun();
+		}
 	}
 	else {
 		GEngine->AddOnScreenDebugMessage(564564, 2, FColor::Red, "HealthHUD not found!");
@@ -211,6 +215,7 @@ void AUConceptDemoPaperCharacter::AttachGun(AGun* Gun)
 	if (this->AttachedGun == nullptr) {
 		this->AttachedGun = Gun;
 		this->AttachedGun->SetAttached();
+		this->HealthHUD->SetShotsLeft(Gun->ShotsCount, Gun->ShotsLeft);
 	}
 	else {
 		this->GunsIgnored.Add(Gun);
@@ -237,6 +242,7 @@ void AUConceptDemoPaperCharacter::DropGun()
 			this->MoveIgnoreActorRemove(this->GunsIgnored[i]);
 		}
 		this->GunsIgnored.Empty();
+		this->HealthHUD->SetNoGun();
 	}
 }
 
@@ -249,6 +255,7 @@ void AUConceptDemoPaperCharacter::Fire()
 {
 	if (this->AttachedGun != nullptr) {
 		this->AttachedGun->Fire();
+		this->HealthHUD->SetShotsLeft(this->AttachedGun->ShotsCount, this->AttachedGun->ShotsLeft);
 	}
 }
 

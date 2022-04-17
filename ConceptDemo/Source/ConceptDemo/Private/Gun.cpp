@@ -16,6 +16,8 @@ AGun::AGun()
 	this->bRotate = true;
 	this->RotationSpeed = 1;
 	this->TimeBetweenShots = 10;
+	this->ShotsCount = 50;
+	this->ShotsLeft = this->ShotsCount;
 	this->CurrentTimeBetweenShots = 0;
 	this->ShotDamage = 0.035;
 
@@ -79,7 +81,7 @@ void AGun::SetDetached() {
 
 void AGun::Fire() {
 	if (this->BulletClass != nullptr) {
-		if (this->CurrentTimeBetweenShots == 0)
+		if (this->CurrentTimeBetweenShots == 0 && this->ShotsLeft > 0)
 		{
 			FVector bulletLocation = this->GetActorLocation();
 			bulletLocation.Z += this->BulletSpawnRelativeLocation.Z;
@@ -99,6 +101,11 @@ void AGun::Fire() {
 				Bullet->BulletDamage = this->ShotDamage;
 			}
 			this->CurrentTimeBetweenShots = this->TimeBetweenShots;
+			this->ShotsLeft--;
+		}
+		if (this->ShotsLeft == 0)
+		{
+			this->Destroy();
 		}
 	}
 	else {

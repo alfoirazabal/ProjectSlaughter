@@ -19,10 +19,11 @@ public:
 	
 	ADemoLevelActor();
 	
-	UPROPERTY(EditAnywhere) TArray<TSubclassOf<AUConceptDemoPaperCharacter>> Characters;
 	UPROPERTY(EditAnywhere) TArray<FVector> RandomPlayerSpawnLocations;
 	UPROPERTY(EditAnywhere) TArray<TSubclassOf<AGun>> Guns;
 	UPROPERTY(EditAnywhere) TArray<FVector> RandomGunSpawnLocations;
+	UPROPERTY(EditAnywhere) TSubclassOf<AUConceptDemoPaperCharacter> Player1Type;
+	UPROPERTY(EditAnywhere) TSubclassOf<AUConceptDemoPaperCharacter> Player2Type;
 	UPROPERTY() AUConceptDemoPaperCharacter* Player1;
 	UPROPERTY() AUConceptDemoPaperCharacter* Player2;
 

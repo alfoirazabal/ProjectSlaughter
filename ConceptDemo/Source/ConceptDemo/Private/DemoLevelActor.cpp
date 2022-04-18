@@ -18,9 +18,9 @@ ADemoLevelActor::ADemoLevelActor()
 void ADemoLevelActor::BeginPlay()
 {
 	Super::BeginPlay();
-	if (this->Characters.Num() == 0)
+	if (!this->Player1Type || !this->Player2Type)
 	{
-		GEngine->AddOnScreenDebugMessage(91652223, 2, FColor::Red, "Need to setup Demo Level characters!");
+		GEngine->AddOnScreenDebugMessage(91652223, 2, FColor::Red, "Need to setup Demo Level characters on Player1 and Player2!");
 	}
 	else
 	{
@@ -129,8 +129,8 @@ void ADemoLevelActor::SpawnPlayers()
 	this->RandomPlayerSpawnLocations.Remove(P1Location);
 	const FVector P2Location = this->RandomPlayerSpawnLocations[FMath::RandRange(0, this->RandomPlayerSpawnLocations.Num() - 1)];
 	this->RandomPlayerSpawnLocations.Remove(P2Location);
-	this->Player1 = this->GetWorld()->SpawnActor<AUConceptDemoPaperCharacter>(this->Characters[0], P1Location, PlayerSpawnRotation);
-	this->Player2 = this->GetWorld()->SpawnActor<AUConceptDemoPaperCharacter>(this->Characters[0], P2Location, PlayerSpawnRotation);
+	this->Player1 = this->GetWorld()->SpawnActor<AUConceptDemoPaperCharacter>(this->Player1Type, P1Location, PlayerSpawnRotation);
+	this->Player2 = this->GetWorld()->SpawnActor<AUConceptDemoPaperCharacter>(this->Player2Type, P2Location, PlayerSpawnRotation);
 }
 
 

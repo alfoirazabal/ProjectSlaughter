@@ -65,6 +65,7 @@ public:
 	UFUNCTION(BlueprintCallable) void DropGun();
 	UFUNCTION() bool HasGun() const;
 	UFUNCTION(BlueprintCallable) void Fire();
+	UFUNCTION() void UpdateShotsCount();
 	UFUNCTION() void TakeDamage(float DamageCount);
 	UFUNCTION() void Die();
 	

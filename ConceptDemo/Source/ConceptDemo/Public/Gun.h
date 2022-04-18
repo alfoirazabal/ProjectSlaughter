@@ -8,6 +8,8 @@
 #include "SlaughterFirendsDemoConstants.h"
 #include "Gun.generated.h"
 
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnShotLost);
+
 UCLASS()
 class CONCEPTDEMO_API AGun final : public AActor
 {
@@ -26,6 +28,7 @@ public:
 	UPROPERTY(EditAnywhere) float ShotDamage;
 	UPROPERTY(EditAnywhere) uint8 CartridgeSize;
 	UPROPERTY(EditAnywhere) int32 ReloadTimeInMilliseconds;
+	UPROPERTY(EditAnywhere) int32 ShotLossTime;	// Time by which a bullet is lost. If 0 the gun shall be destroyed
 
 	UPROPERTY(EditAnywhere) FVector BulletSpawnRelativeLocation;
 
@@ -38,10 +41,13 @@ public:
 	EFacing_Direction FacingDirection;
 	int32 ShotsLeft;
 
+	FOnShotLost ShotLost;
+
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 	int32 CurrentTimeBetweenShots;
+	int32 CurrentShotLossTime;
 
 public:	
 	// Called every frame

@@ -216,6 +216,7 @@ void AUConceptDemoPaperCharacter::AttachGun(AGun* Gun)
 		this->AttachedGun = Gun;
 		this->AttachedGun->SetAttached();
 		this->HealthHUD->SetShotsLeft(Gun->ShotsCount, Gun->ShotsLeft);
+		this->AttachedGun->ShotLost.AddDynamic(this, &AUConceptDemoPaperCharacter::UpdateShotsCount);
 	}
 	else {
 		this->GunsIgnored.Add(Gun);
@@ -237,6 +238,7 @@ void AUConceptDemoPaperCharacter::DropGun()
 			break;
 		}
 		this->AttachedGun->SetActorLocation(NewGunLocation);
+		this->AttachedGun->ShotLost.RemoveDynamic(this, &AUConceptDemoPaperCharacter::UpdateShotsCount);
 		this->AttachedGun = nullptr;
 		for (int i = 0; i < this->GunsIgnored.Num(); i++) {
 			this->MoveIgnoreActorRemove(this->GunsIgnored[i]);
@@ -258,6 +260,15 @@ void AUConceptDemoPaperCharacter::Fire()
 		this->HealthHUD->SetShotsLeft(this->AttachedGun->ShotsCount, this->AttachedGun->ShotsLeft);
 	}
 }
+
+void AUConceptDemoPaperCharacter::UpdateShotsCount()
+{
+	if (this->AttachedGun && this->HealthHUD)
+	{
+		this->HealthHUD->SetShotsLeft(this->AttachedGun->ShotsCount, this->AttachedGun->ShotsLeft);
+	}
+}
+
 
 void AUConceptDemoPaperCharacter::TakeDamage(float DamageCount)
 {

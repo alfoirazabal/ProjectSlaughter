@@ -19,6 +19,8 @@ AGun::AGun()
 	this->ShotsCount = 50;
 	this->ShotsLeft = this->ShotsCount;
 	this->CurrentTimeBetweenShots = 0;
+	this->ShotLossTime = 100;
+	this->CurrentShotLossTime = this->ShotLossTime;
 	this->ShotDamage = 0.035;
 
 	this->BulletSpawnRelativeLocation = FVector(0.0f, 50.0f, 10.0f);
@@ -64,6 +66,17 @@ void AGun::Tick(const float DeltaTime)
 	if (this->CurrentTimeBetweenShots > 0)
 	{
 		this->CurrentTimeBetweenShots--;
+	}
+	this->CurrentShotLossTime--;
+	if (this->CurrentShotLossTime == 0)
+	{
+		this->CurrentShotLossTime = this->ShotLossTime;
+		this->ShotsLeft--;
+		this->ShotLost.Broadcast();
+		if (this->ShotsLeft == 0)
+		{
+			this->Destroy();
+		}
 	}
 }
 

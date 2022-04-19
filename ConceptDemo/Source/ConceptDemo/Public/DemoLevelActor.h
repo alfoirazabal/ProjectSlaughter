@@ -22,6 +22,7 @@ public:
 	UPROPERTY(EditAnywhere) TArray<FVector> RandomPlayerSpawnLocations;
 	UPROPERTY(EditAnywhere) TArray<TSubclassOf<AGun>> Guns;
 	UPROPERTY(EditAnywhere) TArray<FVector> RandomGunSpawnLocations;
+	UPROPERTY(EditAnywhere) float GunsSpawnCheckTimeInSeconds;
 	UPROPERTY(EditAnywhere) TSubclassOf<AUConceptDemoPaperCharacter> Player1Type;
 	UPROPERTY(EditAnywhere) TSubclassOf<AUConceptDemoPaperCharacter> Player2Type;
 	UPROPERTY() AUConceptDemoPaperCharacter* Player1;
@@ -47,10 +48,13 @@ protected:
 	void P2DropGun();
 
 	UPROPERTY() TArray<AGun*> LevelGuns;
+	UPROPERTY() int8 LevelGunsCount;
+	UPROPERTY() TArray<FVector> ReservedGunsSpawnLocations;
 
 	UFUNCTION() void SpawnPlayers();
 	UFUNCTION() void SpawnGuns();
 	UFUNCTION() void P1ReactToDeath();
 	UFUNCTION() void P2ReactToDeath();
+	UFUNCTION() void ReactToGunDeath(AGun* Gun);
 	UFUNCTION() void ExitLevel();
 };

@@ -75,7 +75,7 @@ void AGun::Tick(const float DeltaTime)
 		this->ShotLost.Broadcast();
 		if (this->ShotsLeft == 0)
 		{
-			this->Destroy();
+			this->GunDead.Broadcast(this);
 		}
 	}
 }
@@ -118,7 +118,7 @@ void AGun::Fire() {
 		}
 		if (this->ShotsLeft == 0)
 		{
-			this->Destroy();
+			this->GunDead.Broadcast(this);
 		}
 	}
 	else {

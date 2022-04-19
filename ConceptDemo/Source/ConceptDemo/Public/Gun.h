@@ -18,6 +18,7 @@ class CONCEPTDEMO_API AGun final : public AActor
 public:	
 
 	DECLARE_DYNAMIC_MULTICAST_DELEGATE(FBeginOverlapEvent);
+	DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnGunDead, AGun*, Gun);
 	
 	// Sets default values for this actor's properties
 	AGun();
@@ -42,6 +43,7 @@ public:
 	int32 ShotsLeft;
 
 	FOnShotLost ShotLost;
+	FOnGunDead GunDead;
 
 protected:
 	// Called when the game starts or when spawned

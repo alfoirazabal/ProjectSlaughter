@@ -255,8 +255,11 @@ bool AUConceptDemoPaperCharacter::HasGun() const
 
 void AUConceptDemoPaperCharacter::Fire()
 {
-	if (this->AttachedGun != nullptr) {
+	if (IsValid(this->AttachedGun)) {
 		this->AttachedGun->Fire();
+	}
+	if (IsValid(this->AttachedGun))
+	{
 		this->HealthHUD->SetShotsLeft(this->AttachedGun->ShotsCount, this->AttachedGun->ShotsLeft);
 	}
 }

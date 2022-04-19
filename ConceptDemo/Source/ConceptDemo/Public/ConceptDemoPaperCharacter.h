@@ -38,7 +38,6 @@ protected:
 	UPROPERTY(EditAnywhere, Category="Concept Demo Action Sprites") UPaperFlipbook* JumpingFlipBook;
 	UPROPERTY(EditAnywhere, Category="Character Asset Positions") int GunZRelativeLocation;
 	
-	UPROPERTY() AGun* AttachedGun;
 	EFacing_Direction FacingDirection;
 	UPROPERTY() TArray<AGun*> GunsIgnored;
 	UPROPERTY() UBlooHealthHUD* HealthHUD;
@@ -71,6 +70,7 @@ public:
 	
 	FOnPlayerDeath PlayerDeath;
 
+	UPROPERTY() AGun* AttachedGun;
 	FVector InitialPosition;
 	
 	// Called every frame

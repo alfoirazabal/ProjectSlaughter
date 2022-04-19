@@ -228,7 +228,15 @@ void AUConceptDemoPaperCharacter::DropGun()
 {
 	if (this->AttachedGun != nullptr) {
 		this->AttachedGun->SetDetached();
-		FVector NewGunLocation = this->AttachedGun->GetActorLocation();
+		FVector NewGunLocation;
+		if (this->bFallingDeath)
+		{
+			NewGunLocation = this->AttachedGun->InitialLocation;
+		}
+		else
+		{
+			NewGunLocation = this->AttachedGun->GetActorLocation();
+		}
 		switch (this->FacingDirection) {
 		case EFacing_Direction::Left:
 			NewGunLocation.Y += 125;

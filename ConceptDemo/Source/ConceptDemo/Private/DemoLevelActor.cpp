@@ -8,12 +8,13 @@
 
 ADemoLevelActor::ADemoLevelActor()
 {
-	this->RandomPlayerSpawnLocations.Add(FVector(450, -650, 423));
-	this->RandomPlayerSpawnLocations.Add(FVector(450, 370, 423));
+	this->RandomPlayerSpawnLocations.Add(FVector(760, -650, 423));
+	this->RandomPlayerSpawnLocations.Add(FVector(760, 370, 423));
 	this->RandomGunSpawnLocations.Add(FVector(760, -340, 920));
-	this->RandomGunSpawnLocations.Add(FVector(770, -60, 10));
+	this->RandomGunSpawnLocations.Add(FVector(760, -60, 10));
 	this->ReservedGunsSpawnLocations.Reserve(this->RandomGunSpawnLocations.Num());
 	this->GunsSpawnCheckTimeInSeconds = 5;
+	this->LevelGunsCount = this->RandomGunSpawnLocations.Num();
 }
 
 
@@ -38,7 +39,6 @@ void ADemoLevelActor::BeginPlay()
 	else
 	{
 		FTimerHandle TimerHandle;
-		this->LevelGunsCount = this->RandomGunSpawnLocations.Num();
 		this->LevelGuns.Reserve(this->LevelGunsCount);
 		this->GetWorld()->GetTimerManager().SetTimer(
 			TimerHandle, this, &ADemoLevelActor::SpawnGuns, this->GunsSpawnCheckTimeInSeconds, true
@@ -147,18 +147,26 @@ void ADemoLevelActor::SpawnGuns()
 	while (!NotEnoughSpawnLocations && this->LevelGuns.Num() < this->LevelGunsCount)
 	{
 		FVector NewGunLocation = FVector::ZeroVector;
+		for (int i = 0 ; this->RandomGunSpawnLocations.Num() > 0 && i < this->RandomGunSpawnLocations.Num() ; i++)
+		{
+			const int RandomIndex = FMath::RandRange(0, this->RandomGunSpawnLocations.Num() - 1);
+			this->RandomGunSpawnLocations.Swap(i, RandomIndex);
+		}
 		for (int i = 0 ; NewGunLocation.Equals(FVector::ZeroVector) && i < this->LevelGunsCount ; i++)
 		{
-			FVector CurrentRandomSpawnLocation = this->RandomGunSpawnLocations[i];
-			if (!this->ReservedGunsSpawnLocations.Contains(CurrentRandomSpawnLocation))
+			if (i < this->RandomGunSpawnLocations.Num())
 			{
-				NewGunLocation = CurrentRandomSpawnLocation;
-				this->ReservedGunsSpawnLocations.Add(NewGunLocation);
+				FVector CurrentRandomSpawnLocation = this->RandomGunSpawnLocations[i];
+				if (!this->ReservedGunsSpawnLocations.Contains(CurrentRandomSpawnLocation))
+				{
+					NewGunLocation = CurrentRandomSpawnLocation;
+					this->ReservedGunsSpawnLocations.Add(NewGunLocation);
+				}
 			}
 		}
 		if (NewGunLocation != FVector::ZeroVector)
 		{
-			AGun* NewGun = this->GetWorld()->SpawnActor<AGun>(this->Guns[0], NewGunLocation, FRotator(0, FMath::RandRange(0, 360), 0));
+			AGun* NewGun = this->GetWorld()->SpawnActor<AGun>(this->Guns[FMath::RandRange(0, this->Guns.Num() - 1)], NewGunLocation, FRotator(0, FMath::RandRange(0, 360), 0));
 			this->ReservedGunsSpawnLocations.Add(NewGunLocation);
 			this->LevelGuns.Add(NewGun);
 			NewGun->GunDead.AddDynamic(this, &ADemoLevelActor::ReactToGunDeath);

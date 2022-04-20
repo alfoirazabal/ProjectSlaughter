@@ -12,6 +12,7 @@
 #include "Components/CapsuleComponent.h"
 #include "Components/WidgetComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
+#include "SpecialZones/DangerZone.h"
 
 constexpr float GDefault_Character_Plane_X_Position = 760;
 
@@ -324,6 +325,7 @@ void AUConceptDemoPaperCharacter::OnOverlapBegin(UPrimitiveComponent* Overlapped
 		const ASpikesObject* Spikes = Cast<ASpikesObject>(OtherActor);
 		const ATrainAI* Train = Cast<ATrainAI>(OtherActor);
 		AGun* Gun = Cast<AGun>(OtherActor);
+		ADangerZone* DangerZone = Cast<ADangerZone>(OtherActor);
 		if (Bullet)
 		{
 			if (

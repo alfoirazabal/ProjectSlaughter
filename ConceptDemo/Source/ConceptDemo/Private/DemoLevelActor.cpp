@@ -24,20 +24,26 @@ void ADemoLevelActor::BeginPlay()
 	Super::BeginPlay();
 
 	this->GameInstance = Cast<UDemoGameInstance>(this->GetGameInstance());
-	this->Player1Type = this->GameInstance->SelectedPlayer1Type;
-	this->Player2Type = this->GameInstance->SelectedPlayer2Type;
-	
-	if (!this->Player1Type || !this->Player2Type)
+	if (IsValid(this->GameInstance->SelectedPlayer1Type))
 	{
-		GEngine->AddOnScreenDebugMessage(91652223, 2, FColor::Red, "Need to setup Demo Level characters on Player1 and Player2!");
+		this->Player1Type = this->GameInstance->SelectedPlayer1Type;
 	}
 	else
 	{
-		this->SpawnPlayers();
-		this->SetupInputs();
-		this->Player1->PlayerDeath.AddDynamic(this, &ADemoLevelActor::P1ReactToDeath);
-		this->Player2->PlayerDeath.AddDynamic(this, &ADemoLevelActor::P2ReactToDeath);
+		GEngine->AddOnScreenDebugMessage(91652223, 4, FColor::Red, "Need to setup Demo Level characters for Player1! Will spawn design set character");
 	}
+	if (IsValid(this->GameInstance->SelectedPlayer2Type))
+	{
+		this->Player2Type = this->GameInstance->SelectedPlayer2Type;
+	}
+	else
+	{
+		GEngine->AddOnScreenDebugMessage(91652224, 4, FColor::Red, "Need to setup Demo Level characters for Player2! Will spawn design set character");
+	}
+	this->SpawnPlayers();
+	this->SetupInputs();
+	this->Player1->PlayerDeath.AddDynamic(this, &ADemoLevelActor::P1ReactToDeath);
+	this->Player2->PlayerDeath.AddDynamic(this, &ADemoLevelActor::P2ReactToDeath);
 	if (this->Guns.Num() == 0)
 	{
 		GEngine->AddOnScreenDebugMessage(92576662, 2, FColor::Red, "Need to setup Demo Level guns!");

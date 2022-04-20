@@ -31,6 +31,8 @@ public:
 	// Sets default values for this component's properties
 	AUConceptDemoPaperCharacter();
 
+	UPROPERTY(EditAnywhere) UTexture2D* CharacterImage;
+
 protected:
 	// Called when the game starts
 	UPROPERTY(EditAnywhere, Category="Concept Demo Action Sprites") UPaperFlipbook* IdleFlipBook;

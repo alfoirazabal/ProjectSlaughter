@@ -17,6 +17,7 @@ class CONCEPTDEMO_API UPlayerSelectionWidget : public UUserWidget
 	GENERATED_BODY()
 
 	UPROPERTY(EditAnywhere) TArray<TSubclassOf<AUConceptDemoPaperCharacter>> CharacterTypes;
+	TArray<AUConceptDemoPaperCharacter*> Characters;
 	UPROPERTY(EditAnywhere) AUConceptDemoPaperCharacter* Player1Character;
 	UPROPERTY(EditAnywhere) AUConceptDemoPaperCharacter* Player2Character;
 	uint16 Player1CharacterIndex;

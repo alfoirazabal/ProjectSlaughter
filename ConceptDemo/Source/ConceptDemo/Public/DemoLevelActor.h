@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "ConceptDemoPaperCharacter.h"
+#include "DemoGameInstance.h"
 #include "Engine/LevelScriptActor.h"
 #include "DemoLevelActor.generated.h"
 
@@ -18,7 +19,8 @@ class CONCEPTDEMO_API ADemoLevelActor : public ALevelScriptActor
 public:
 	
 	ADemoLevelActor();
-	
+
+	UPROPERTY() UDemoGameInstance* GameInstance;
 	UPROPERTY(EditAnywhere) TArray<FVector> RandomPlayerSpawnLocations;
 	UPROPERTY(EditAnywhere) TArray<TSubclassOf<AGun>> Guns;
 	UPROPERTY(EditAnywhere) TArray<FVector> RandomGunSpawnLocations;

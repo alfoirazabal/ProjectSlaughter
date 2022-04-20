@@ -23,9 +23,9 @@ void ADemoLevelActor::BeginPlay()
 {
 	Super::BeginPlay();
 
-	const UDemoGameInstance* GameInstance = Cast<UDemoGameInstance>(this->GetGameInstance());
-	this->Player1Type = GameInstance->SelectedPlayer1Type;
-	this->Player2Type = GameInstance->SelectedPlayer2Type;
+	this->GameInstance = Cast<UDemoGameInstance>(this->GetGameInstance());
+	this->Player1Type = this->GameInstance->SelectedPlayer1Type;
+	this->Player2Type = this->GameInstance->SelectedPlayer2Type;
 	
 	if (!this->Player1Type || !this->Player2Type)
 	{
@@ -189,11 +189,15 @@ void ADemoLevelActor::SpawnGuns()
 void ADemoLevelActor::P1ReactToDeath()
 {
 	GEngine->AddOnScreenDebugMessage(35234211, 2, FColor::Yellow, "P1 Died");
+	this->GameInstance->WinningPlayerNumber = 2;
+	UGameplayStatics::OpenLevel(this, "GameOverMenu");
 }
 
 void ADemoLevelActor::P2ReactToDeath()
 {
 	GEngine->AddOnScreenDebugMessage(35234212, 2, FColor::Yellow, "P2 Died");
+	this->GameInstance->WinningPlayerNumber = 1;
+	UGameplayStatics::OpenLevel(this, "GameOverMenu");
 }
 
 void ADemoLevelActor::ReactToGunDeath(AGun* Gun)

@@ -3,6 +3,7 @@
 
 #include "Menus/PlayerSelectionWidget.h"
 
+#include "DemoGameInstance.h"
 #include "Components/Image.h"
 #include "Kismet/GameplayStatics.h"
 
@@ -77,5 +78,8 @@ void UPlayerSelectionWidget::GoBack()
 
 void UPlayerSelectionWidget::BeginGame()
 {
+	UDemoGameInstance* GameInstance = Cast<UDemoGameInstance>(this->GetGameInstance());
+	GameInstance->SelectedPlayer1Type = this->Player1Character->GetClass();
+	GameInstance->SelectedPlayer2Type = this->Player2Character->GetClass();
 	UGameplayStatics::OpenLevel(this, "/Game/DemoLevel");
 }

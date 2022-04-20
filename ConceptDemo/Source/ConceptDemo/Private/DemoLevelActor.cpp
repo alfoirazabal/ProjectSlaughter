@@ -4,6 +4,7 @@
 #include "DemoLevelActor.h"
 
 #include "BlooPaperCharacter.h"
+#include "DemoGameInstance.h"
 #include "Kismet/GameplayStatics.h"
 
 ADemoLevelActor::ADemoLevelActor()
@@ -21,6 +22,11 @@ ADemoLevelActor::ADemoLevelActor()
 void ADemoLevelActor::BeginPlay()
 {
 	Super::BeginPlay();
+
+	const UDemoGameInstance* GameInstance = Cast<UDemoGameInstance>(this->GetGameInstance());
+	this->Player1Type = GameInstance->SelectedPlayer1Type;
+	this->Player2Type = GameInstance->SelectedPlayer2Type;
+	
 	if (!this->Player1Type || !this->Player2Type)
 	{
 		GEngine->AddOnScreenDebugMessage(91652223, 2, FColor::Red, "Need to setup Demo Level characters on Player1 and Player2!");

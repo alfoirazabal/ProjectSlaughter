@@ -45,7 +45,7 @@ void ASemiSolidPlatform::OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AAc
 		AUConceptDemoPaperCharacter* Character = Cast<AUConceptDemoPaperCharacter>(OtherActor);
 		if (Character)
 		{
-			if (Character->GetCharacterMovement()->Velocity.Z > 0)
+			if (Character->GetCharacterMovement()->Velocity.Z <= 0)
 			{
 				Character->MoveIgnoreActorAdd(this);
 			}

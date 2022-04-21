@@ -9,7 +9,21 @@
 void UGameOverWidget::NativeConstruct()
 {
 	const UDemoGameInstance* GameInstance = Cast<UDemoGameInstance>(this->GetGameInstance());
-	switch (GameInstance->WinningPlayerNumber)
+	if (IsValid(GameInstance)) {
+		UE_LOG(LogTemp, Warning, TEXT("GameInstance OK"));
+		TSubclassOf<AUConceptDemoPaperCharacter> SelectedPlayerType;
+		if (IsValid(GameInstance->SelectedPlayer1Type)) {
+			UE_LOG(LogTemp, Warning, TEXT("SelectedPlayer1Type OK"));
+			if (IsValid(GameInstance->SelectedPlayer1Type.GetDefaultObject())) {
+				UE_LOG(LogTemp, Warning, TEXT("GetDefaultSubObject OK"));
+				if (IsValid(GameInstance->SelectedPlayer1Type.GetDefaultObject()->CharacterImage)) {
+					UE_LOG(LogTemp, Warning, TEXT("CharacterImage OK"));
+					this->WinnerPlayerImage->SetBrushFromTexture(GameInstance->SelectedPlayer1Type.GetDefaultObject()->CharacterImage);
+				}
+			}
+		}
+	}
+	/*switch (GameInstance->WinningPlayerNumber)
 	{
 		case 1:
 			this->WinnerPlayerImage->SetBrushFromTexture(GameInstance->SelectedPlayer1Type.GetDefaultObject()->CharacterImage);
@@ -22,6 +36,7 @@ void UGameOverWidget::NativeConstruct()
 	}
 	this->TextBlockWinnerPlayerNumber->SetText(FText::FromString(FString::FromInt(GameInstance->WinningPlayerNumber)));
 	this->ButtonContinue->OnClicked.AddDynamic(this, &UGameOverWidget::ContinueToMainMenu);
+	*/
 }
 
 void UGameOverWidget::ContinueToMainMenu()

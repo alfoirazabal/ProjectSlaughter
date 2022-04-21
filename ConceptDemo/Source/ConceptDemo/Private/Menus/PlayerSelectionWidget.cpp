@@ -83,5 +83,7 @@ void UPlayerSelectionWidget::BeginGame()
 	UClass* Player2CharacterClass = this->Player2Character->GetClass();
 	if (IsValid(Player1CharacterClass)) GameInstance->SelectedPlayer1Type = Player1CharacterClass;
 	if (IsValid(Player2CharacterClass)) GameInstance->SelectedPlayer2Type = Player2CharacterClass;
+	GameInstance->Player1Name = this->EditableTextBoxPlayer1Name->Text;
+	GameInstance->Player2Name = this->EditableTextBoxPlayer2Name->Text;
 	UGameplayStatics::OpenLevel(this, "/Game/DemoLevel");
 }

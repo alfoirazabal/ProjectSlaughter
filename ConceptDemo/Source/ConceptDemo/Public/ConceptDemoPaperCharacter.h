@@ -42,6 +42,8 @@ protected:
 
 	UPROPERTY(EditAnywhere, Category="Sounds") USoundBase* JumpSound;
 	
+	UPROPERTY(EditAnywhere) FText PlayerName;
+	
 	EFacing_Direction FacingDirection;
 	UPROPERTY() TArray<AGun*> GunsIgnored;
 	UPROPERTY() UPaperCharacterHUD* CharacterHUD;
@@ -58,6 +60,7 @@ public:
 
 	DECLARE_DYNAMIC_MULTICAST_DELEGATE(FBeginOverlapEvent);
 
+	UFUNCTION() void SetPlayerName(FText NewPlayerName) const;
 	UFUNCTION() void UpdateHealthIndicator() const;
 	UFUNCTION() void Respawn();
 	UFUNCTION(BlueprintCallable) void HandleMovement(float ScaleValue);

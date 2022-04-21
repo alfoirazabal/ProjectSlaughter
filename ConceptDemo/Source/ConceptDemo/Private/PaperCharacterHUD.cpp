@@ -39,18 +39,23 @@ void UPaperCharacterHUD::SetLives(const uint8 Lives) const
 	}
 }
 
-void UPaperCharacterHUD::SetShotsLeft(const int32 ShotsTotal, const int32 ShotsLeft)
+void UPaperCharacterHUD::SetShotsLeft(const int32 ShotsTotal, const int32 ShotsLeft) const
 {
 	const float ShotsPercent = static_cast<float>(ShotsLeft) / static_cast<float>(ShotsTotal);
 	this->ProgressBarCurrentStamina->SetPercent(ShotsPercent);
 }
 
-void UPaperCharacterHUD::SetNoGun()
+void UPaperCharacterHUD::SetNoGun() const
 {
 	this->ProgressBarCurrentStamina->SetPercent(0);
 }
 
-void UPaperCharacterHUD::UpdateHealth(float LifeLeft, uint8 LivesLeft) const
+void UPaperCharacterHUD::SetPlayerName(const FText Name) const
+{
+	this->TextBlockPlayerName->SetText(Name);
+}
+
+void UPaperCharacterHUD::UpdateHealth(const float LifeLeft, const uint8 LivesLeft) const
 {
 	this->SetHealth(LifeLeft);
 	this->SetLives(LivesLeft);

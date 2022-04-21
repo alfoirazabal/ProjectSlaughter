@@ -35,8 +35,20 @@ void UGameOverWidget::NativeConstruct()
 				}
 			}
 		}
+		FText WinnerPlayerName;
+		switch (GameInstance->WinningPlayerNumber)
+		{
+			case 1:
+				WinnerPlayerName = GameInstance->Player1Name;
+				break;
+			case 2:
+				WinnerPlayerName = GameInstance->Player2Name;
+				break;
+			default:
+				break;
+		}
+		this->TextBlockWinnerPlayerName->SetText(WinnerPlayerName);
 	}
-	this->TextBlockWinnerPlayerNumber->SetText(FText::FromString(FString::FromInt(GameInstance->WinningPlayerNumber)));
 	this->ButtonContinue->OnClicked.AddDynamic(this, &UGameOverWidget::ContinueToMainMenu);
 }
 

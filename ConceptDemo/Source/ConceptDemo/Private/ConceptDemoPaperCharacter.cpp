@@ -29,6 +29,8 @@ AUConceptDemoPaperCharacter::AUConceptDemoPaperCharacter()
 
 	this->InitialPosition = FVector::ZeroVector;
 	this->bFallingDeath = false;
+
+	this->PlayerName = FText::FromString("Player");
 	
 	this->GetCharacterMovement()->JumpZVelocity = 650;
 
@@ -109,6 +111,14 @@ void AUConceptDemoPaperCharacter::MakeFallingDeath()
 	FVector CurrentPosition = this->GetActorLocation();
 	CurrentPosition.X -= 250;
 	this->SetActorLocation(CurrentPosition);
+}
+
+void AUConceptDemoPaperCharacter::SetPlayerName(const FText NewPlayerName) const
+{
+	if (this->CharacterHUD)
+	{
+		this->CharacterHUD->SetPlayerName(NewPlayerName);
+	}
 }
 
 void AUConceptDemoPaperCharacter::UpdateHealthIndicator() const

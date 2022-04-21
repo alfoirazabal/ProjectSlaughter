@@ -32,8 +32,9 @@ protected:
 public:
 	UFUNCTION() void SetHealth(float Health) const;
 	UFUNCTION() void SetLives(uint8 Lives) const;
-	UFUNCTION() void SetShotsLeft(const int32 ShotsTotal, const int32 ShotsLeft);
-	UFUNCTION() void SetNoGun();
+	UFUNCTION() void SetShotsLeft(const int32 ShotsTotal, const int32 ShotsLeft) const;
+	UFUNCTION() void SetNoGun() const;
+	UFUNCTION() void SetPlayerName(FText Name) const;
 
 	void UpdateHealth(float LifeLeft, uint8 LivesLeft) const;
 	

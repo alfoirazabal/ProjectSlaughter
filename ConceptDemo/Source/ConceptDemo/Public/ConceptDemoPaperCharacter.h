@@ -39,6 +39,8 @@ protected:
 	UPROPERTY(EditAnywhere, Category="Concept Demo Action Sprites") UPaperFlipbook* MovingFlipBook;
 	UPROPERTY(EditAnywhere, Category="Concept Demo Action Sprites") UPaperFlipbook* JumpingFlipBook;
 	UPROPERTY(EditAnywhere, Category="Character Asset Positions") int GunZRelativeLocation;
+
+	UPROPERTY(EditAnywhere, Category="Sounds") USoundBase* JumpSound;
 	
 	EFacing_Direction FacingDirection;
 	UPROPERTY() TArray<AGun*> GunsIgnored;
@@ -60,8 +62,7 @@ public:
 	UFUNCTION() void Respawn();
 	UFUNCTION(BlueprintCallable) void HandleMovement(float ScaleValue);
 	UFUNCTION(BlueprintCallable) void DropDown();
-	UFUNCTION(BlueprintCallable) void HandleJump();
-	UFUNCTION(BlueprintCallable) void HandleStopJump();
+	virtual void Jump() override;
 	UFUNCTION() void AttachGun(AGun* Gun);
 	UFUNCTION(BlueprintCallable) void DropGun();
 	UFUNCTION() bool HasGun() const;

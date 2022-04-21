@@ -5,6 +5,7 @@
 
 #include "ConceptDemoPaperCharacter.h"
 #include "Components/CapsuleComponent.h"
+#include "Kismet/GameplayStatics.h"
 
 constexpr int GRotation_Time_DS = 150;
 
@@ -104,6 +105,7 @@ void AGun::Fire() {
 			else if (this->FacingDirection == EFacing_Direction::Right) {
 				bulletLocation.Y += this->BulletSpawnRelativeLocation.Y;
 			}
+			UGameplayStatics::PlaySound2D(this->GetWorld(), this->ShotSound);
 			ABullet* Bullet = this->GetWorld()->SpawnActor<ABullet>(this->BulletClass, bulletLocation, this->GetActorRotation());
 			if (Bullet)
 			{

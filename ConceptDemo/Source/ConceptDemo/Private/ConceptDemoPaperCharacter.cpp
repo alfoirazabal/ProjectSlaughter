@@ -12,6 +12,7 @@
 #include "Components/CapsuleComponent.h"
 #include "Components/WidgetComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
+#include "Kismet/GameplayStatics.h"
 #include "SpecialZones/DangerZone.h"
 
 constexpr float GDefault_Character_Plane_X_Position = 760;
@@ -201,14 +202,10 @@ void AUConceptDemoPaperCharacter::DropDown()
 	}
 }
 
-void AUConceptDemoPaperCharacter::HandleJump()
+void AUConceptDemoPaperCharacter::Jump()
 {
-	Jump();
-}
-
-void AUConceptDemoPaperCharacter::HandleStopJump()
-{
-	StopJumping();
+	if (this->GetCharacterMovement()->Velocity.Z == 0) UGameplayStatics::PlaySound2D(this->GetWorld(), this->JumpSound);
+	Super::Jump();
 }
 
 void AUConceptDemoPaperCharacter::AttachGun(AGun* Gun)

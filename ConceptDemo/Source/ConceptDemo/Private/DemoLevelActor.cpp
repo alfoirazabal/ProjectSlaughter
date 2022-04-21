@@ -88,7 +88,7 @@ void ADemoLevelActor::P1JumpPressed()
 
 void ADemoLevelActor::P1JumpReleased()
 {
-	if (IsValid(this->Player1)) this->Player1->HandleStopJump();
+	if (IsValid(this->Player1)) this->Player1->StopJumping();
 }
 
 void ADemoLevelActor::P1DropDownPressed()
@@ -118,7 +118,7 @@ void ADemoLevelActor::P2JumpPressed()
 
 void ADemoLevelActor::P2JumpReleased()
 {
-	if (IsValid(this->Player2)) this->Player2->HandleStopJump();
+	if (IsValid(this->Player2)) this->Player2->StopJumping();
 }
 
 void ADemoLevelActor::P2DropDownPressed()

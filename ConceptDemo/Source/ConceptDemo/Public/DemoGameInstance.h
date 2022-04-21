@@ -18,6 +18,8 @@ class CONCEPTDEMO_API UDemoGameInstance : public UGameInstance
 public:
 	UPROPERTY() TSubclassOf<AUConceptDemoPaperCharacter> SelectedPlayer1Type;
 	UPROPERTY() TSubclassOf<AUConceptDemoPaperCharacter> SelectedPlayer2Type;
+	UPROPERTY() FText Player1Name;
+	UPROPERTY() FText Player2Name;
 	UPROPERTY() uint8 WinningPlayerNumber;
 	
 };

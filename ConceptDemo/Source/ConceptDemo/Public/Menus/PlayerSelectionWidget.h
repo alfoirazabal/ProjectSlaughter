@@ -6,6 +6,8 @@
 #include "ConceptDemoPaperCharacter.h"
 #include "Blueprint/UserWidget.h"
 #include "Components/Button.h"
+#include "Components/EditableTextBox.h"
+#include "Components/Image.h"
 #include "PlayerSelectionWidget.generated.h"
 
 /**
@@ -30,6 +32,8 @@ public:
 	UPROPERTY(meta = (BindWidget)) UButton* Player2ChangeButton;
 	UPROPERTY(meta = (BindWidget)) UImage* Player1CharacterImage;
 	UPROPERTY(meta = (BindWidget)) UImage* Player2CharacterImage;
+	UPROPERTY(meta = (BindWidget)) UEditableTextBox* EditableTextBoxPlayer1Name;
+	UPROPERTY(meta = (BindWidget)) UEditableTextBox* EditableTextBoxPlayer2Name;
 
 	virtual void NativeConstruct() override;
 

@@ -19,7 +19,7 @@ class CONCEPTDEMO_API UGameOverWidget : public UUserWidget
 
 public:
 	UPROPERTY(meta = (BindWidget)) UImage* WinnerPlayerImage;
-	UPROPERTY(meta = (BindWidget)) UTextBlock* TextBlockWinnerPlayerNumber;
+	UPROPERTY(meta = (BindWidget)) UTextBlock* TextBlockWinnerPlayerName;
 	UPROPERTY(meta = (BindWidget)) UButton* ButtonContinue;
 
 	virtual void NativeConstruct() override;

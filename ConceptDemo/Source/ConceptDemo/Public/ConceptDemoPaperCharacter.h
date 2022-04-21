@@ -5,9 +5,9 @@
 #include "CoreMinimal.h"
 #include <PaperFlipbook.h>
 
-#include "BlooHealthHUD.h"
 #include "Gun.h"
 #include "PaperCharacter.h"
+#include "PaperCharacterHUD.h"
 #include "ConceptDemoPaperCharacter.generated.h"
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnPlayerDeath);
@@ -42,9 +42,11 @@ protected:
 
 	UPROPERTY(EditAnywhere, Category="Sounds") USoundBase* JumpSound;
 	
+	UPROPERTY(EditAnywhere) FText PlayerName;
+	
 	EFacing_Direction FacingDirection;
 	UPROPERTY() TArray<AGun*> GunsIgnored;
-	UPROPERTY() UBlooHealthHUD* HealthHUD;
+	UPROPERTY() UPaperCharacterHUD* CharacterHUD;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite) uint8 Lives;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite) float LifeSize;
@@ -58,6 +60,7 @@ public:
 
 	DECLARE_DYNAMIC_MULTICAST_DELEGATE(FBeginOverlapEvent);
 
+	UFUNCTION() void SetPlayerName(FText NewPlayerName) const;
 	UFUNCTION() void UpdateHealthIndicator() const;
 	UFUNCTION() void Respawn();
 	UFUNCTION(BlueprintCallable) void HandleMovement(float ScaleValue);

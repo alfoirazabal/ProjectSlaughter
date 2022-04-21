@@ -3,7 +3,6 @@
 
 #include "DemoLevelActor.h"
 
-#include "BlooPaperCharacter.h"
 #include "DemoGameInstance.h"
 #include "Kismet/GameplayStatics.h"
 
@@ -145,6 +144,8 @@ void ADemoLevelActor::SpawnPlayers()
 	this->RandomPlayerSpawnLocations.Remove(P2Location);
 	this->Player1 = this->GetWorld()->SpawnActor<AUConceptDemoPaperCharacter>(this->Player1Type, P1Location, PlayerSpawnRotation);
 	this->Player2 = this->GetWorld()->SpawnActor<AUConceptDemoPaperCharacter>(this->Player2Type, P2Location, PlayerSpawnRotation);
+	this->Player1->SetPlayerName(this->GameInstance->Player1Name);
+	this->Player2->SetPlayerName(this->GameInstance->Player2Name);
 }
 
 

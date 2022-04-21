@@ -13,7 +13,6 @@
 #include "Components/WidgetComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "Kismet/GameplayStatics.h"
-#include "SpecialZones/DangerZone.h"
 
 constexpr float GDefault_Character_Plane_X_Position = 760;
 
@@ -31,7 +30,7 @@ AUConceptDemoPaperCharacter::AUConceptDemoPaperCharacter()
 	this->InitialPosition = FVector::ZeroVector;
 	this->bFallingDeath = false;
 
-	this->HealthHUD = nullptr;
+	this->PlayerName = FText::FromString("Player");
 	
 	this->GetCharacterMovement()->JumpZVelocity = 650;
 
@@ -86,20 +85,19 @@ void AUConceptDemoPaperCharacter::BeginPlay()
 	this->InitialPosition = this->GetActorLocation();
 	TArray<UActorComponent*> Components;
 	this->GetComponents(Components);
-	const UWidgetComponent* HealthHUDWidgetComponent = nullptr;
-	for (int i = 0; HealthHUDWidgetComponent == nullptr && i < Components.Num(); i++) {
-		HealthHUDWidgetComponent = Cast<UWidgetComponent>(Components[i]);
+	const UWidgetComponent* WidgetComponent = nullptr;
+	for (int i = 0; WidgetComponent == nullptr && i < Components.Num(); i++) {
+		WidgetComponent = Cast<UWidgetComponent>(Components[i]);
 	}
-	if (HealthHUDWidgetComponent) {
-		GEngine->AddOnScreenDebugMessage(564564, 2, FColor::Cyan, HealthHUDWidgetComponent->GetName());
-		UUserWidget* HealthHUDWidget = HealthHUDWidgetComponent->GetWidget();
-		this->HealthHUD = Cast<UBlooHealthHUD>(HealthHUDWidget);
-		if (!this->HealthHUD) {
+	if (WidgetComponent) {
+		UUserWidget* HUDWidget = WidgetComponent->GetWidget();
+		this->CharacterHUD = Cast<UPaperCharacterHUD>(HUDWidget);
+		if (!this->CharacterHUD) {
 			GEngine->AddOnScreenDebugMessage(5345343, 2, FColor::Red, "Unable to cast HealthHUD for PaperCharacter!");
 		}
 		else
 		{
-			this->HealthHUD->SetNoGun();
+			this->CharacterHUD->SetNoGun();
 		}
 	}
 	else {
@@ -115,11 +113,19 @@ void AUConceptDemoPaperCharacter::MakeFallingDeath()
 	this->SetActorLocation(CurrentPosition);
 }
 
+void AUConceptDemoPaperCharacter::SetPlayerName(const FText NewPlayerName) const
+{
+	if (this->CharacterHUD)
+	{
+		this->CharacterHUD->SetPlayerName(NewPlayerName);
+	}
+}
+
 void AUConceptDemoPaperCharacter::UpdateHealthIndicator() const
 {
-	if (this->HealthHUD) {
-		this->HealthHUD->SetHealth(this->CurrentLifeSize);
-		this->HealthHUD->SetLives(this->CurrentLives);
+	if (this->CharacterHUD) {
+		this->CharacterHUD->SetHealth(this->CurrentLifeSize);
+		this->CharacterHUD->SetLives(this->CurrentLives);
 	}
 }
 
@@ -213,7 +219,7 @@ void AUConceptDemoPaperCharacter::AttachGun(AGun* Gun)
 	if (this->AttachedGun == nullptr) {
 		this->AttachedGun = Gun;
 		this->AttachedGun->SetAttached();
-		this->HealthHUD->SetShotsLeft(Gun->ShotsCount, Gun->ShotsLeft);
+		this->CharacterHUD->SetShotsLeft(Gun->ShotsCount, Gun->ShotsLeft);
 		this->AttachedGun->ShotLost.AddDynamic(this, &AUConceptDemoPaperCharacter::UpdateShotsCount);
 	}
 	else {
@@ -250,7 +256,7 @@ void AUConceptDemoPaperCharacter::DropGun()
 			this->MoveIgnoreActorRemove(this->GunsIgnored[i]);
 		}
 		this->GunsIgnored.Empty();
-		this->HealthHUD->SetNoGun();
+		this->CharacterHUD->SetNoGun();
 	}
 }
 
@@ -266,15 +272,15 @@ void AUConceptDemoPaperCharacter::Fire()
 	}
 	if (IsValid(this->AttachedGun))
 	{
-		this->HealthHUD->SetShotsLeft(this->AttachedGun->ShotsCount, this->AttachedGun->ShotsLeft);
+		this->CharacterHUD->SetShotsLeft(this->AttachedGun->ShotsCount, this->AttachedGun->ShotsLeft);
 	}
 }
 
 void AUConceptDemoPaperCharacter::UpdateShotsCount()
 {
-	if (this->AttachedGun && this->HealthHUD)
+	if (this->AttachedGun && this->CharacterHUD)
 	{
-		this->HealthHUD->SetShotsLeft(this->AttachedGun->ShotsCount, this->AttachedGun->ShotsLeft);
+		this->CharacterHUD->SetShotsLeft(this->AttachedGun->ShotsCount, this->AttachedGun->ShotsLeft);
 	}
 }
 

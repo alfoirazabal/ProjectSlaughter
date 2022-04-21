@@ -13,7 +13,6 @@
 #include "Components/WidgetComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "Kismet/GameplayStatics.h"
-#include "SpecialZones/DangerZone.h"
 
 constexpr float GDefault_Character_Plane_X_Position = 760;
 
@@ -30,8 +29,6 @@ AUConceptDemoPaperCharacter::AUConceptDemoPaperCharacter()
 
 	this->InitialPosition = FVector::ZeroVector;
 	this->bFallingDeath = false;
-
-	this->HealthHUD = nullptr;
 	
 	this->GetCharacterMovement()->JumpZVelocity = 650;
 
@@ -91,8 +88,7 @@ void AUConceptDemoPaperCharacter::BeginPlay()
 		HealthHUDWidgetComponent = Cast<UWidgetComponent>(Components[i]);
 	}
 	if (HealthHUDWidgetComponent) {
-		GEngine->AddOnScreenDebugMessage(564564, 2, FColor::Cyan, HealthHUDWidgetComponent->GetName());
-		UUserWidget* HealthHUDWidget = HealthHUDWidgetComponent->GetWidget();
+		/*UUserWidget* HealthHUDWidget = HealthHUDWidgetComponent->GetWidget();
 		this->HealthHUD = Cast<UBlooHealthHUD>(HealthHUDWidget);
 		if (!this->HealthHUD) {
 			GEngine->AddOnScreenDebugMessage(5345343, 2, FColor::Red, "Unable to cast HealthHUD for PaperCharacter!");
@@ -100,7 +96,7 @@ void AUConceptDemoPaperCharacter::BeginPlay()
 		else
 		{
 			this->HealthHUD->SetNoGun();
-		}
+		}*/
 	}
 	else {
 		GEngine->AddOnScreenDebugMessage(564564, 2, FColor::Red, "HealthHUD not found!");
@@ -117,10 +113,10 @@ void AUConceptDemoPaperCharacter::MakeFallingDeath()
 
 void AUConceptDemoPaperCharacter::UpdateHealthIndicator() const
 {
-	if (this->HealthHUD) {
+	/*if (this->HealthHUD) {
 		this->HealthHUD->SetHealth(this->CurrentLifeSize);
 		this->HealthHUD->SetLives(this->CurrentLives);
-	}
+	}*/
 }
 
 void AUConceptDemoPaperCharacter::Respawn()
@@ -213,7 +209,7 @@ void AUConceptDemoPaperCharacter::AttachGun(AGun* Gun)
 	if (this->AttachedGun == nullptr) {
 		this->AttachedGun = Gun;
 		this->AttachedGun->SetAttached();
-		this->HealthHUD->SetShotsLeft(Gun->ShotsCount, Gun->ShotsLeft);
+		// this->HealthHUD->SetShotsLeft(Gun->ShotsCount, Gun->ShotsLeft);
 		this->AttachedGun->ShotLost.AddDynamic(this, &AUConceptDemoPaperCharacter::UpdateShotsCount);
 	}
 	else {
@@ -250,7 +246,7 @@ void AUConceptDemoPaperCharacter::DropGun()
 			this->MoveIgnoreActorRemove(this->GunsIgnored[i]);
 		}
 		this->GunsIgnored.Empty();
-		this->HealthHUD->SetNoGun();
+		// this->HealthHUD->SetNoGun();
 	}
 }
 
@@ -266,16 +262,16 @@ void AUConceptDemoPaperCharacter::Fire()
 	}
 	if (IsValid(this->AttachedGun))
 	{
-		this->HealthHUD->SetShotsLeft(this->AttachedGun->ShotsCount, this->AttachedGun->ShotsLeft);
+		// this->HealthHUD->SetShotsLeft(this->AttachedGun->ShotsCount, this->AttachedGun->ShotsLeft);
 	}
 }
 
 void AUConceptDemoPaperCharacter::UpdateShotsCount()
 {
-	if (this->AttachedGun && this->HealthHUD)
+	/*if (this->AttachedGun && this->HealthHUD)
 	{
 		this->HealthHUD->SetShotsLeft(this->AttachedGun->ShotsCount, this->AttachedGun->ShotsLeft);
-	}
+	}*/
 }
 
 

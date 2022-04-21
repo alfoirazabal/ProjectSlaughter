@@ -3,7 +3,6 @@
 
 #include "DemoLevelActor.h"
 
-#include "BlooPaperCharacter.h"
 #include "DemoGameInstance.h"
 #include "Kismet/GameplayStatics.h"
 

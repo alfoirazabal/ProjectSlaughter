@@ -5,7 +5,6 @@
 #include "CoreMinimal.h"
 #include <PaperFlipbook.h>
 
-#include "BlooHealthHUD.h"
 #include "Gun.h"
 #include "PaperCharacter.h"
 #include "ConceptDemoPaperCharacter.generated.h"
@@ -44,7 +43,6 @@ protected:
 	
 	EFacing_Direction FacingDirection;
 	UPROPERTY() TArray<AGun*> GunsIgnored;
-	UPROPERTY() UBlooHealthHUD* HealthHUD;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite) uint8 Lives;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite) float LifeSize;

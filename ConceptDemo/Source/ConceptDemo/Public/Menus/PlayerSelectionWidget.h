@@ -6,6 +6,7 @@
 #include "ConceptDemoPaperCharacter.h"
 #include "Blueprint/UserWidget.h"
 #include "Components/Button.h"
+#include "Components/Image.h"
 #include "PlayerSelectionWidget.generated.h"
 
 /**

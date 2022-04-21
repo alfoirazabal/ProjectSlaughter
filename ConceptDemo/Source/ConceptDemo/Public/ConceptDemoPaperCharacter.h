@@ -7,6 +7,7 @@
 
 #include "Gun.h"
 #include "PaperCharacter.h"
+#include "PaperCharacterHUD.h"
 #include "ConceptDemoPaperCharacter.generated.h"
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnPlayerDeath);
@@ -43,6 +44,7 @@ protected:
 	
 	EFacing_Direction FacingDirection;
 	UPROPERTY() TArray<AGun*> GunsIgnored;
+	UPROPERTY() UPaperCharacterHUD* CharacterHUD;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite) uint8 Lives;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite) float LifeSize;

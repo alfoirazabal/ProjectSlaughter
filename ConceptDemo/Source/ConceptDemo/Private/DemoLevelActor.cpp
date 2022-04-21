@@ -24,21 +24,16 @@ void ADemoLevelActor::BeginPlay()
 	Super::BeginPlay();
 
 	this->GameInstance = Cast<UDemoGameInstance>(this->GetGameInstance());
-	if (IsValid(this->GameInstance->SelectedPlayer1Type))
+	if (IsValid(this->GameInstance))
 	{
-		this->Player1Type = this->GameInstance->SelectedPlayer1Type;
-	}
-	else
-	{
-		GEngine->AddOnScreenDebugMessage(91652223, 4, FColor::Red, "Need to setup Demo Level characters for Player1! Will spawn design set character");
-	}
-	if (IsValid(this->GameInstance->SelectedPlayer2Type))
-	{
-		this->Player2Type = this->GameInstance->SelectedPlayer2Type;
-	}
-	else
-	{
-		GEngine->AddOnScreenDebugMessage(91652224, 4, FColor::Red, "Need to setup Demo Level characters for Player2! Will spawn design set character");
+		UClass* Player1ClassType = this->GameInstance->SelectedPlayer1Type;
+		UClass* Player2ClassType = this->GameInstance->SelectedPlayer2Type;
+		if (IsValid(Player1ClassType)) this->Player1Type = Player1ClassType;
+		if (IsValid(Player2ClassType)) this->Player2Type = Player2ClassType;
+		if (!IsValid(Player1ClassType) || !IsValid(Player2ClassType))
+		{
+			GEngine->AddOnScreenDebugMessage(91652223, 4, FColor::Red, "Need to setup Demo Level characters for Player1 and Player2! Will spawn design set character");
+		}
 	}
 	this->SpawnPlayers();
 	this->SetupInputs();

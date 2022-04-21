@@ -79,7 +79,9 @@ void UPlayerSelectionWidget::GoBack()
 void UPlayerSelectionWidget::BeginGame()
 {
 	UDemoGameInstance* GameInstance = Cast<UDemoGameInstance>(this->GetGameInstance());
-	GameInstance->SelectedPlayer1Type = this->Player1Character->GetClass();
-	GameInstance->SelectedPlayer2Type = this->Player2Character->GetClass();
+	UClass* Player1CharacterClass = this->Player1Character->GetClass();
+	UClass* Player2CharacterClass = this->Player2Character->GetClass();
+	if (IsValid(Player1CharacterClass)) GameInstance->SelectedPlayer1Type = Player1CharacterClass;
+	if (IsValid(Player2CharacterClass)) GameInstance->SelectedPlayer2Type = Player2CharacterClass;
 	UGameplayStatics::OpenLevel(this, "/Game/DemoLevel");
 }

@@ -16,8 +16,8 @@ class CONCEPTDEMO_API UDemoGameInstance : public UGameInstance
 	GENERATED_BODY()
 
 public:
-	TSubclassOf<AUConceptDemoPaperCharacter> SelectedPlayer1Type;
-	TSubclassOf<AUConceptDemoPaperCharacter> SelectedPlayer2Type;
+	UPROPERTY() TSubclassOf<AUConceptDemoPaperCharacter> SelectedPlayer1Type;
+	UPROPERTY() TSubclassOf<AUConceptDemoPaperCharacter> SelectedPlayer2Type;
 	UPROPERTY() uint8 WinningPlayerNumber;
 	
 };

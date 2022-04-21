@@ -325,7 +325,6 @@ void AUConceptDemoPaperCharacter::OnOverlapBegin(UPrimitiveComponent* Overlapped
 		const ASpikesObject* Spikes = Cast<ASpikesObject>(OtherActor);
 		const ATrainAI* Train = Cast<ATrainAI>(OtherActor);
 		AGun* Gun = Cast<AGun>(OtherActor);
-		ADangerZone* DangerZone = Cast<ADangerZone>(OtherActor);
 		if (Bullet)
 		{
 			if (

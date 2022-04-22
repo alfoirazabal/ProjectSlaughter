@@ -18,7 +18,6 @@ AGun::AGun()
 	this->RotationSpeed = 1;
 	this->TimeBetweenShots = 10;
 	this->ShotsCount = 50;
-	this->ShotsLeft = this->ShotsCount;
 	this->CurrentTimeBetweenShots = 0;
 	this->ShotLossTime = 100;
 	this->CurrentShotLossTime = this->ShotLossTime;
@@ -38,7 +37,7 @@ AGun::AGun()
 void AGun::BeginPlay()
 {
 	Super::BeginPlay();
-
+	this->ShotsLeft = this->ShotsCount;
 	this->InitialLocation = this->GetActorLocation();
 }
 

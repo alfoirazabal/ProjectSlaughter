@@ -9,6 +9,7 @@
 #include <PaperFlipbookComponent.h>
 
 #include "SemiSolidPlatform.h"
+#include "Characters/Skull.h"
 #include "Components/CapsuleComponent.h"
 #include "Components/WidgetComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
@@ -292,6 +293,7 @@ void AUConceptDemoPaperCharacter::TakeDamage(float DamageCount)
 	if (this->CurrentLifeSize <= 0) {
 		this->CurrentLives--;
 		this->UpdateHealthIndicator();
+		this->GetWorld()->SpawnActor<ASkull>(this->DeathSkull, this->GetActorLocation(), this->GetActorRotation());
 		if (this->CurrentLives == 0) {
 			this->Die();
 		}

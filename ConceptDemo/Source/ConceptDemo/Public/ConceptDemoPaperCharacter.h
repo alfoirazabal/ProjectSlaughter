@@ -8,6 +8,7 @@
 #include "Gun.h"
 #include "PaperCharacter.h"
 #include "PaperCharacterHUD.h"
+#include "Characters/Skull.h"
 #include "ConceptDemoPaperCharacter.generated.h"
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnPlayerDeath);
@@ -38,6 +39,7 @@ protected:
 	UPROPERTY(EditAnywhere, Category="Concept Demo Action Sprites") UPaperFlipbook* IdleFlipBook;
 	UPROPERTY(EditAnywhere, Category="Concept Demo Action Sprites") UPaperFlipbook* MovingFlipBook;
 	UPROPERTY(EditAnywhere, Category="Concept Demo Action Sprites") UPaperFlipbook* JumpingFlipBook;
+	UPROPERTY(EditAnywhere, Category="Concept Demo Drops") TSubclassOf<ASkull> DeathSkull;
 	UPROPERTY(EditAnywhere, Category="Character Asset Positions") int GunZRelativeLocation;
 
 	UPROPERTY(EditAnywhere, Category="Sounds") USoundBase* JumpSound;

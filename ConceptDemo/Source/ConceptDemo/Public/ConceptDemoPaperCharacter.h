@@ -55,6 +55,10 @@ protected:
 
 	UPROPERTY(BlueprintReadWrite) uint8 CurrentLives;
 	UPROPERTY(BlueprintReadWrite) float CurrentLifeSize;
+	
+	UPROPERTY(EditAnywhere) uint16 SpecialPowerLoadTime;
+	uint16 CurrentSpecialPowerLoadTime;
+	
 	virtual void BeginPlay() override;
 	void MakeFallingDeath();
 
@@ -72,6 +76,7 @@ public:
 	UFUNCTION(BlueprintCallable) void DropGun();
 	UFUNCTION() bool HasGun() const;
 	UFUNCTION(BlueprintCallable) void Fire();
+	UFUNCTION() virtual void UsePower();
 	UFUNCTION() void UpdateShotsCount();
 	UFUNCTION() void TakeDamage(float DamageCount);
 	UFUNCTION() void Die();

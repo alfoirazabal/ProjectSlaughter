@@ -31,6 +31,9 @@ AUConceptDemoPaperCharacter::AUConceptDemoPaperCharacter()
 	this->InitialPosition = FVector::ZeroVector;
 	this->bFallingDeath = false;
 
+	this->SpecialPowerLoadTime = 500;
+	this->CurrentSpecialPowerLoadTime = 0;
+
 	this->PlayerName = FText::FromString("Player");
 	
 	this->GetCharacterMovement()->JumpZVelocity = 700;
@@ -98,7 +101,7 @@ void AUConceptDemoPaperCharacter::BeginPlay()
 		}
 		else
 		{
-			this->CharacterHUD->SetNoGun();
+			this->CharacterHUD->SetGunAttached(false);
 		}
 	}
 	else {
@@ -127,6 +130,10 @@ void AUConceptDemoPaperCharacter::UpdateHealthIndicator() const
 	if (this->CharacterHUD) {
 		this->CharacterHUD->SetHealth(this->CurrentLifeSize);
 		this->CharacterHUD->SetLives(this->CurrentLives);
+		if (this->AttachedGun == nullptr)
+		{
+			this->CharacterHUD->SetStaminaBar(this->SpecialPowerLoadTime, this->CurrentSpecialPowerLoadTime);
+		}
 	}
 }
 
@@ -220,7 +227,8 @@ void AUConceptDemoPaperCharacter::AttachGun(AGun* Gun)
 	if (this->AttachedGun == nullptr) {
 		this->AttachedGun = Gun;
 		this->AttachedGun->SetAttached();
-		this->CharacterHUD->SetShotsLeft(Gun->ShotsCount, Gun->ShotsLeft);
+		this->CharacterHUD->SetGunAttached(true);
+		this->CharacterHUD->SetStaminaBar(Gun->ShotsCount, Gun->ShotsLeft);
 		this->AttachedGun->ShotLost.AddDynamic(this, &AUConceptDemoPaperCharacter::UpdateShotsCount);
 	}
 	else {
@@ -233,6 +241,7 @@ void AUConceptDemoPaperCharacter::DropGun()
 {
 	if (this->AttachedGun != nullptr) {
 		this->AttachedGun->SetDetached();
+		this->CharacterHUD->SetGunAttached(false);
 		FVector NewGunLocation;
 		if (this->bFallingDeath)
 		{
@@ -257,7 +266,7 @@ void AUConceptDemoPaperCharacter::DropGun()
 			this->MoveIgnoreActorRemove(this->GunsIgnored[i]);
 		}
 		this->GunsIgnored.Empty();
-		this->CharacterHUD->SetNoGun();
+		this->CharacterHUD->SetGunAttached(false);
 	}
 }
 
@@ -268,20 +277,24 @@ bool AUConceptDemoPaperCharacter::HasGun() const
 
 void AUConceptDemoPaperCharacter::Fire()
 {
-	if (IsValid(this->AttachedGun)) {
+	if (IsValid(this->AttachedGun))
+	{
 		this->AttachedGun->Fire();
+		this->CurrentSpecialPowerLoadTime = 0;
 	}
 	if (IsValid(this->AttachedGun))
 	{
-		this->CharacterHUD->SetShotsLeft(this->AttachedGun->ShotsCount, this->AttachedGun->ShotsLeft);
+		this->CharacterHUD->SetStaminaBar(this->AttachedGun->ShotsCount, this->AttachedGun->ShotsLeft);
 	}
 }
+
+void AUConceptDemoPaperCharacter::UsePower() { }
 
 void AUConceptDemoPaperCharacter::UpdateShotsCount()
 {
 	if (this->AttachedGun && this->CharacterHUD)
 	{
-		this->CharacterHUD->SetShotsLeft(this->AttachedGun->ShotsCount, this->AttachedGun->ShotsLeft);
+		this->CharacterHUD->SetStaminaBar(this->AttachedGun->ShotsCount, this->AttachedGun->ShotsLeft);
 	}
 }
 
@@ -319,6 +332,11 @@ void AUConceptDemoPaperCharacter::Tick(const float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 	EnsureXAxisLocation();
+	if (this->AttachedGun == nullptr && this->CurrentSpecialPowerLoadTime < this->SpecialPowerLoadTime)
+	{
+		this->CurrentSpecialPowerLoadTime++;
+		this->UpdateHealthIndicator();
+	}
 }
 
 void AUConceptDemoPaperCharacter::OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor* OtherActor,

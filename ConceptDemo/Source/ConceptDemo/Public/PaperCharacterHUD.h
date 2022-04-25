@@ -26,15 +26,19 @@ public:
 	UPROPERTY(meta = (BindWidget)) UProgressBar* ProgressBarCurrentLifeSize;
 	UPROPERTY(meta = (BindWidget)) UProgressBar* ProgressBarCurrentStamina;
 
+	UPROPERTY(EditAnywhere) FColor GunAttachedStaminaBarColor;
+	UPROPERTY(EditAnywhere) FColor NoGunAttachedStaminaBarColor;
+
 protected:
+	virtual void NativeConstruct() override;
 	virtual void NativeOnInitialized() override;
 
 public:
 	UFUNCTION() void SetHealth(float Health) const;
 	UFUNCTION() void SetLives(uint8 Lives) const;
-	UFUNCTION() void SetShotsLeft(const int32 ShotsTotal, const int32 ShotsLeft) const;
-	UFUNCTION() void SetNoGun() const;
+	UFUNCTION() void SetStaminaBar(const int32 StaminaTotal, const int32 StaminaLeft) const;
 	UFUNCTION() void SetPlayerName(FText Name) const;
+	UFUNCTION() void SetGunAttached(bool GunAttached) const;
 
 	void UpdateHealth(float LifeLeft, uint8 LivesLeft) const;
 	

@@ -3,6 +3,13 @@
 
 #include "PaperCharacterHUD.h"
 
+void UPaperCharacterHUD::NativeConstruct()
+{
+	this->GunAttachedStaminaBarColor = FColor(0, 0, 255, 255);
+	this->NoGunAttachedStaminaBarColor = FColor(0, 255, 0, 255);
+	Super::NativeConstruct();
+}
+
 void UPaperCharacterHUD::NativeOnInitialized()
 {
 	Super::NativeOnInitialized();
@@ -39,20 +46,27 @@ void UPaperCharacterHUD::SetLives(const uint8 Lives) const
 	}
 }
 
-void UPaperCharacterHUD::SetShotsLeft(const int32 ShotsTotal, const int32 ShotsLeft) const
+void UPaperCharacterHUD::SetStaminaBar(const int32 ShotsTotal, const int32 ShotsLeft) const
 {
 	const float ShotsPercent = static_cast<float>(ShotsLeft) / static_cast<float>(ShotsTotal);
 	this->ProgressBarCurrentStamina->SetPercent(ShotsPercent);
 }
 
-void UPaperCharacterHUD::SetNoGun() const
-{
-	this->ProgressBarCurrentStamina->SetPercent(0);
-}
-
 void UPaperCharacterHUD::SetPlayerName(const FText Name) const
 {
 	this->TextBlockPlayerName->SetText(Name);
+}
+
+void UPaperCharacterHUD::SetGunAttached(const bool GunAttached) const
+{
+	if (GunAttached)
+	{
+		this->ProgressBarCurrentStamina->SetFillColorAndOpacity(this->GunAttachedStaminaBarColor);
+	}
+	else
+	{
+		this->ProgressBarCurrentStamina->SetFillColorAndOpacity(this->NoGunAttachedStaminaBarColor);
+	}
 }
 
 void UPaperCharacterHUD::UpdateHealth(const float LifeLeft, const uint8 LivesLeft) const

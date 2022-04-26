@@ -25,7 +25,7 @@ public:
 
 	DECLARE_DYNAMIC_MULTICAST_DELEGATE(FBeginOverlapEvent);
 
-	TArray<FCharacterDefaultWalkSpeeds> OverlappingCharactersDefaultWalkSpeeds;
+	UPROPERTY() TArray<FCharacterDefaultWalkSpeeds> OverlappingCharactersDefaultWalkSpeeds;
 	UPROPERTY(EditAnywhere) float DamageHitDeltaSeconds;
 	UPROPERTY(EditAnywhere) float ZoneDamage;
 	UPROPERTY(EditAnywhere) float CharacterMovementSlowdownAmount;

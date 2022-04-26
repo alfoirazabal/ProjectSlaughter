@@ -83,13 +83,11 @@ void AGun::Tick(const float DeltaTime)
 void AGun::SetAttached() {
 	this->bRotate = false;
 	this->SetActorEnableCollision(false);
-	this->SetActorScale3D(FVector(0.7f, 0.7f, 0.7f));
 }
 
 void AGun::SetDetached() {
 	this->bRotate = true;
 	this->SetActorEnableCollision(true);
-	this->SetActorScale3D(FVector(1.0f, 1.0f, 1.0f));
 }
 
 void AGun::Fire() {

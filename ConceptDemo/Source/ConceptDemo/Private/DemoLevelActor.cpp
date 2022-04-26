@@ -12,6 +12,8 @@ ADemoLevelActor::ADemoLevelActor()
 	this->RandomPlayerSpawnLocations.Add(FVector(760, 370, 423));
 	this->RandomGunSpawnLocations.Add(FVector(760, -340, 920));
 	this->RandomGunSpawnLocations.Add(FVector(760, -60, 10));
+	this->SpecialGunSpawnLocations.Add(FVector(760, -1620, 1200));
+	this->SpecialGunsSpawnTime = 500;
 	this->ReservedGunsSpawnLocations.Reserve(this->RandomGunSpawnLocations.Num());
 	this->GunsSpawnCheckTimeInSeconds = 5;
 	this->LevelGunsCount = this->RandomGunSpawnLocations.Num();
@@ -38,7 +40,7 @@ void ADemoLevelActor::BeginPlay()
 	this->SetupInputs();
 	this->Player1->PlayerDeath.AddDynamic(this, &ADemoLevelActor::P1ReactToDeath);
 	this->Player2->PlayerDeath.AddDynamic(this, &ADemoLevelActor::P2ReactToDeath);
-	if (this->Guns.Num() == 0)
+	if (this->RandomGuns.Num() == 0)
 	{
 		GEngine->AddOnScreenDebugMessage(92576662, 2, FColor::Red, "Need to setup Demo Level guns!");
 	}
@@ -174,7 +176,7 @@ void ADemoLevelActor::SpawnGuns()
 		}
 		if (NewGunLocation != FVector::ZeroVector)
 		{
-			AGun* NewGun = this->GetWorld()->SpawnActor<AGun>(this->Guns[FMath::RandRange(0, this->Guns.Num() - 1)], NewGunLocation, FRotator(0, FMath::RandRange(0, 360), 0));
+			AGun* NewGun = this->GetWorld()->SpawnActor<AGun>(this->RandomGuns[FMath::RandRange(0, this->RandomGuns.Num() - 1)], NewGunLocation, FRotator(0, FMath::RandRange(0, 360), 0));
 			this->ReservedGunsSpawnLocations.Add(NewGunLocation);
 			this->LevelGuns.Add(NewGun);
 			NewGun->GunDead.AddDynamic(this, &ADemoLevelActor::ReactToGunDeath);

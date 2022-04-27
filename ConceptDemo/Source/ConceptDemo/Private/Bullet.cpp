@@ -66,7 +66,13 @@ void ABullet::DestroyOrExplodeBullet()
 	if (!this->ExplodingBullet && this->ExplodingBulletClass != nullptr)
 	{
 		this->ExplodingBullet = true;
-		this->GetWorld()->SpawnActor<AExplodingBullet>(this->ExplodingBulletClass, this->GetActorLocation(), this->GetActorRotation());
+		FRotator Rotator = this->GetActorRotation();
+		if (this->FacingDirection == Left)
+		{
+			Rotator.Roll = 180;
+			Rotator.Pitch = 180;
+		}
+		this->GetWorld()->SpawnActor<AExplodingBullet>(this->ExplodingBulletClass, this->GetActorLocation(), Rotator);
 	}
 	if (this->ShotSoundComponent) this->ShotSoundComponent->Stop();
 	this->Destroy();

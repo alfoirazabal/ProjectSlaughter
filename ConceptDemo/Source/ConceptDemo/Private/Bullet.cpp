@@ -3,6 +3,11 @@
 
 #include "Bullet.h"
 
+#include "Components/CapsuleComponent.h"
+#include "ConceptDemoPaperCharacter.h"
+#include "Components/SphereComponent.h"
+#include "SpecialZones/DangerZone.h"
+
 // Sets default values
 ABullet::ABullet()
 {
@@ -12,6 +17,14 @@ ABullet::ABullet()
 	this->TravelSpeed = 3;
 	this->TotalDistanceTraveled = 0;
 	this->MaxTravelDistance = 5000;
+
+	this->TriggerCapsule = CreateDefaultSubobject<UCapsuleComponent>(TEXT("Trigger Capsule"));
+	this->TriggerCapsule->InitCapsuleSize(13.45, 13.45);
+	this->TriggerCapsule->SetCollisionProfileName("Trigger");
+	this->TriggerCapsule->SetupAttachment(this->RootComponent);
+
+	this->TriggerCapsule->OnComponentBeginOverlap.AddDynamic(this, &ABullet::OnOverlapBegin);
+	this->TriggerCapsule->OnComponentEndOverlap.AddDynamic(this, &ABullet::OnOverlapEnd);
 }
 
 // Called when the game starts or when spawned
@@ -36,5 +49,35 @@ void ABullet::Tick(const float DeltaTime)
 	if (this->TotalDistanceTraveled >= this->MaxTravelDistance) {
 		this->Destroy();
 	}
+}
+
+void ABullet::OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp,
+	int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
+{
+	if (OtherComp)
+	{
+		AUConceptDemoPaperCharacter* Character = Cast<AUConceptDemoPaperCharacter>(OtherActor);
+		if (Character)
+		{
+			if (
+				(Character->AttachedGun != nullptr && this->FireSource != nullptr && this->FireSource != Character->AttachedGun) ||
+				Character->AttachedGun == nullptr
+			) {
+				Character->TakeDamage(this->BulletDamage);
+				this->Destroy();
+			}
+		}
+		else if (OtherActor != this && !Cast<ADangerZone>(OtherActor))
+		{
+			GEngine->AddOnScreenDebugMessage(189992511, 2, FColor::Red, "Bullet collided with: " + OtherComp->GetName());
+			this->Destroy();
+		}
+	}
+}
+
+void ABullet::OnOverlapEnd(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp,
+                           int32 OtherBodyIndex)
+{
+	
 }
 

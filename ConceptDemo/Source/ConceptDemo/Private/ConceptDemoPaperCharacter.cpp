@@ -344,20 +344,9 @@ void AUConceptDemoPaperCharacter::OnOverlapBegin(UPrimitiveComponent* Overlapped
 {
 	if (OtherComp)
 	{
-		ABullet* Bullet = Cast<ABullet>(OtherActor);
 		const ASpikesObject* Spikes = Cast<ASpikesObject>(OtherActor);
 		const ATrainAI* Train = Cast<ATrainAI>(OtherActor);
 		AGun* Gun = Cast<AGun>(OtherActor);
-		if (Bullet)
-		{
-			if (
-				(this->AttachedGun != nullptr && Bullet->FireSource != nullptr && Bullet->FireSource != this->AttachedGun) ||
-				this->AttachedGun == nullptr
-			) {
-				Bullet->Destroy();
-				this->TakeDamage(Bullet->BulletDamage);
-			}
-		}
 		if (Spikes)
 		{
 			this->MakeFallingDeath();

@@ -13,15 +13,21 @@ class CONCEPTDEMO_API AExplodingBullet : public AActor
 {
 	GENERATED_BODY()
 
+public:
+	
 	AExplodingBullet();
 	
 	UPROPERTY(EditAnywhere) float DamageRadiusSize;
 	UPROPERTY(EditAnywhere) bool DamageDecreasesWithRadius;
 	UPROPERTY(EditAnywhere) float InflationSpeed;
 	UPROPERTY(EditAnywhere) float ExplosionDamage;
+	UPROPERTY() TArray<AActor*> AffectedActors;
 	float InitialDamage;
 	float CurrentDamageRadiusSize;
 
 	virtual void Tick(float DeltaSeconds) override;
+	
+	UPROPERTY(VisibleAnywhere, Category = "Trigger Capsule")
+	class UCapsuleComponent* TriggerCapsule;
 	
 };

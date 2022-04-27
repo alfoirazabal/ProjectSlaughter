@@ -17,6 +17,8 @@ ABullet::ABullet()
 	this->TravelSpeed = 3;
 	this->TotalDistanceTraveled = 0;
 	this->MaxTravelDistance = 5000;
+	this->ExplodingBulletClass = nullptr;
+	this->ExplodingBullet = false;
 
 	this->TriggerCapsule = CreateDefaultSubobject<UCapsuleComponent>(TEXT("Trigger Capsule"));
 	this->TriggerCapsule->InitCapsuleSize(13.45, 13.45);
@@ -51,8 +53,18 @@ void ABullet::Tick(const float DeltaTime)
 	}
 }
 
+void ABullet::DestroyOrExplodeBullet()
+{
+	if (!this->ExplodingBullet && this->ExplodingBulletClass != nullptr)
+	{
+		this->ExplodingBullet = true;
+		this->GetWorld()->SpawnActor<AExplodingBullet>(this->ExplodingBulletClass, this->GetActorLocation(), this->GetActorRotation());
+	}
+	this->Destroy();
+}
+
 void ABullet::OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp,
-	int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
+                             int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
 	if (OtherComp)
 	{
@@ -64,13 +76,13 @@ void ABullet::OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor* OtherA
 				Character->AttachedGun == nullptr
 			) {
 				Character->TakeDamage(this->BulletDamage);
-				this->Destroy();
+				this->DestroyOrExplodeBullet();
 			}
 		}
 		else if (OtherActor != this && !Cast<ADangerZone>(OtherActor))
 		{
 			GEngine->AddOnScreenDebugMessage(189992511, 2, FColor::Red, "Bullet collided with: " + OtherComp->GetName());
-			this->Destroy();
+			this->DestroyOrExplodeBullet();
 		}
 	}
 }

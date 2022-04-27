@@ -31,6 +31,7 @@ protected:
 	virtual void BeginPlay() override;
 	FVector InitialPosition;
 	float TotalDistanceTraveled;
+	bool ExplodingBullet;
 
 public:	
 
@@ -38,6 +39,8 @@ public:
 	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
+
+	UFUNCTION() void DestroyOrExplodeBullet();
 	
 	UPROPERTY(VisibleAnywhere, Category = "Trigger Capsule")
 	class UCapsuleComponent* TriggerCapsule;

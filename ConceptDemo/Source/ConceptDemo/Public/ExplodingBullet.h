@@ -21,10 +21,12 @@ public:
 	UPROPERTY(EditAnywhere) bool DamageDecreasesWithRadius;
 	UPROPERTY(EditAnywhere) float InflationSpeed;
 	UPROPERTY(EditAnywhere) float ExplosionDamage;
+	UPROPERTY(EditAnywhere) USoundBase* ExplosionSound;
 	UPROPERTY() TArray<AActor*> AffectedActors;
 	float InitialDamage;
 	float CurrentDamageRadiusSize;
 
+	virtual void BeginPlay() override;
 	virtual void Tick(float DeltaSeconds) override;
 	
 	UPROPERTY(VisibleAnywhere, Category = "Trigger Capsule")

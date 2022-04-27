@@ -5,7 +5,9 @@
 
 #include "Components/CapsuleComponent.h"
 #include "ConceptDemoPaperCharacter.h"
+#include "Components/AudioComponent.h"
 #include "Components/SphereComponent.h"
+#include "Kismet/GameplayStatics.h"
 #include "SpecialZones/DangerZone.h"
 
 // Sets default values
@@ -33,6 +35,11 @@ ABullet::ABullet()
 void ABullet::BeginPlay()
 {
 	Super::BeginPlay();
+	if (this->ShotSound)
+	{
+		this->ShotSoundComponent = UGameplayStatics::SpawnSound2D(this->GetWorld(), this->ShotSound);
+		this->ShotSoundComponent->Play();
+	}
 }
 
 // Called every frame
@@ -49,6 +56,7 @@ void ABullet::Tick(const float DeltaTime)
 	this->SetActorLocation(CurrentPosition);
 	this->TotalDistanceTraveled += this->TravelSpeed;
 	if (this->TotalDistanceTraveled >= this->MaxTravelDistance) {
+		if (this->ShotSoundComponent) this->ShotSoundComponent->Stop();
 		this->Destroy();
 	}
 }
@@ -60,6 +68,7 @@ void ABullet::DestroyOrExplodeBullet()
 		this->ExplodingBullet = true;
 		this->GetWorld()->SpawnActor<AExplodingBullet>(this->ExplodingBulletClass, this->GetActorLocation(), this->GetActorRotation());
 	}
+	if (this->ShotSoundComponent) this->ShotSoundComponent->Stop();
 	this->Destroy();
 }
 
@@ -79,7 +88,7 @@ void ABullet::OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor* OtherA
 				this->DestroyOrExplodeBullet();
 			}
 		}
-		else if (OtherActor != this && !Cast<ADangerZone>(OtherActor))
+		else if (OtherActor != this && !Cast<ADangerZone>(OtherActor) && !Cast<AGun>(OtherActor))
 		{
 			GEngine->AddOnScreenDebugMessage(189992511, 2, FColor::Red, "Bullet collided with: " + OtherComp->GetName());
 			this->DestroyOrExplodeBullet();

@@ -21,6 +21,8 @@ public:
 	UPROPERTY(BlueprintReadWrite, EditAnywhere) uint8 TravelSpeed;
 	UPROPERTY(BlueprintReadWrite, EditAnywhere) int MaxTravelDistance;
 	UPROPERTY(EditAnywhere) TSubclassOf<AExplodingBullet> ExplodingBulletClass;
+	UPROPERTY(EditAnywhere) USoundBase* ShotSound;
+	UPROPERTY() UAudioComponent* ShotSoundComponent;
 
 	UPROPERTY() AActor* FireSource;
 

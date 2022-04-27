@@ -4,6 +4,7 @@
 #include "Gun.h"
 
 #include "ConceptDemoPaperCharacter.h"
+#include "Components/AudioComponent.h"
 #include "Components/CapsuleComponent.h"
 #include "Kismet/GameplayStatics.h"
 
@@ -102,7 +103,6 @@ void AGun::Fire() {
 			else if (this->FacingDirection == EFacing_Direction::Right) {
 				bulletLocation.Y += this->BulletSpawnRelativeLocation.Y;
 			}
-			UGameplayStatics::PlaySound2D(this->GetWorld(), this->ShotSound);
 			ABullet* Bullet = this->GetWorld()->SpawnActor<ABullet>(this->BulletClass, bulletLocation, this->GetActorRotation());
 			if (Bullet)
 			{

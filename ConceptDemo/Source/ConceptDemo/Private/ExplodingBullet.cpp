@@ -5,6 +5,7 @@
 
 #include "ConceptDemoPaperCharacter.h"
 #include "Components/CapsuleComponent.h"
+#include "Kismet/GameplayStatics.h"
 
 AExplodingBullet::AExplodingBullet()
 {
@@ -20,6 +21,19 @@ AExplodingBullet::AExplodingBullet()
 	this->TriggerCapsule->InitCapsuleSize(54.5, 54.5);
 	this->TriggerCapsule->SetCollisionProfileName("Trigger");
 	this->TriggerCapsule->SetupAttachment(this->RootComponent);
+}
+
+void AExplodingBullet::BeginPlay()
+{
+	Super::BeginPlay();
+	if (this->ExplosionSound)
+	{
+		UGameplayStatics::PlaySound2D(this->GetWorld(), this->ExplosionSound);
+	}
+	else
+	{
+		GEngine->AddOnScreenDebugMessage(28556112, 2, FColor::Yellow, "No Explosion Sound for ExplodingBullet: " + this->GetName());
+	}
 }
 
 void AExplodingBullet::Tick(const float DeltaSeconds)

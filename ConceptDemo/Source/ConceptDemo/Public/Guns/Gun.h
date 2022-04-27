@@ -10,6 +10,13 @@
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnShotLost);
 
+UENUM() enum ESpawnChance
+{
+	Common,
+	Rare,
+	Epic
+};
+
 UCLASS()
 class CONCEPTDEMO_API AGun final : public AActor
 {
@@ -30,6 +37,7 @@ public:
 	UPROPERTY(EditAnywhere) uint8 CartridgeSize;
 	UPROPERTY(EditAnywhere) int32 ReloadTimeInMilliseconds;
 	UPROPERTY(EditAnywhere) int32 ShotLossTime;	// Time by which a bullet is lost. If 0 the gun shall be destroyed
+	UPROPERTY(EditAnywhere) TEnumAsByte<ESpawnChance> SpawnChance;
 
 	UPROPERTY(EditAnywhere) FVector BulletSpawnRelativeLocation;
 

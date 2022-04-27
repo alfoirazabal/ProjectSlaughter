@@ -5,7 +5,7 @@
 #include "CoreMinimal.h"
 #include <PaperFlipbook.h>
 
-#include "Gun.h"
+#include "Guns/Gun.h"
 #include "PaperCharacter.h"
 #include "PaperCharacterHUD.h"
 #include "Characters/Skull.h"

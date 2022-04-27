@@ -3,7 +3,7 @@
 
 #include "ConceptDemoPaperCharacter.h"
 
-#include "Gun.h"
+#include "Guns/Gun.h"
 #include "SpikesObject.h"
 #include "Train/TrainAI.h"
 #include <PaperFlipbookComponent.h>

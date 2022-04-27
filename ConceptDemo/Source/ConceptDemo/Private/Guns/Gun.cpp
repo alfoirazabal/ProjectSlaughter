@@ -1,8 +1,5 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
-
-#include "Gun.h"
-
 #include "ConceptDemoPaperCharacter.h"
 #include "Components/AudioComponent.h"
 #include "Components/CapsuleComponent.h"
@@ -23,6 +20,7 @@ AGun::AGun()
 	this->ShotLossTime = 100;
 	this->CurrentShotLossTime = this->ShotLossTime;
 	this->ShotDamage = 0.035;
+	this->SpawnChance = Common;
 
 	this->BulletSpawnRelativeLocation = FVector(0.0f, 50.0f, 10.0f);
 

@@ -10,13 +10,8 @@ ADemoLevelActor::ADemoLevelActor()
 {
 	this->RandomPlayerSpawnLocations.Add(FVector(760, -650, 423));
 	this->RandomPlayerSpawnLocations.Add(FVector(760, 370, 423));
-	this->RandomGunSpawnLocations.Add(FVector(760, -340, 920));
-	this->RandomGunSpawnLocations.Add(FVector(760, -60, 10));
-	this->SpecialGunSpawnLocations.Add(FVector(760, -1620, 1200));
-	this->SpecialGunsSpawnTime = 500;
-	this->ReservedGunsSpawnLocations.Reserve(this->RandomGunSpawnLocations.Num());
+	this->LevelGunsCount = 2;
 	this->GunsSpawnCheckTimeInSeconds = 5;
-	this->LevelGunsCount = this->RandomGunSpawnLocations.Num();
 }
 
 
@@ -40,17 +35,23 @@ void ADemoLevelActor::BeginPlay()
 	this->SetupInputs();
 	this->Player1->PlayerDeath.AddDynamic(this, &ADemoLevelActor::P1ReactToDeath);
 	this->Player2->PlayerDeath.AddDynamic(this, &ADemoLevelActor::P2ReactToDeath);
-	if (this->RandomGuns.Num() == 0)
+	if (this->Guns.Num() == 0)
 	{
 		GEngine->AddOnScreenDebugMessage(92576662, 2, FColor::Red, "Need to setup Demo Level guns!");
 	}
 	else
 	{
-		FTimerHandle TimerHandle;
-		this->LevelGuns.Reserve(this->LevelGunsCount);
-		this->GetWorld()->GetTimerManager().SetTimer(
-			TimerHandle, this, &ADemoLevelActor::SpawnGuns, this->GunsSpawnCheckTimeInSeconds, true
-		);
+		if (this->LevelGunsCount > this->SpawnerGuns.Num())
+		{
+			GEngine->AddOnScreenDebugMessage(190275272, 2, FColor::Red, "Not enough SpawnerGuns for Level Guns Count");
+		}
+		else
+		{
+			FTimerHandle TimerHandle;
+			this->GetWorld()->GetTimerManager().SetTimer(
+				TimerHandle, this, &ADemoLevelActor::SpawnGuns, this->GunsSpawnCheckTimeInSeconds, true
+			);
+		}
 	}
 }
 
@@ -153,38 +154,45 @@ void ADemoLevelActor::SpawnPlayers()
 
 void ADemoLevelActor::SpawnGuns()
 {
-	bool NotEnoughSpawnLocations = false;
-	while (!NotEnoughSpawnLocations && this->LevelGuns.Num() < this->LevelGunsCount)
+	int GunsSpawned = 0;
+	for (int i = 0 ; i < this->SpawnerGuns.Num() ; i++)
 	{
-		FVector NewGunLocation = FVector::ZeroVector;
-		for (int i = 0 ; this->RandomGunSpawnLocations.Num() > 0 && i < this->RandomGunSpawnLocations.Num() ; i++)
+		const int RandomIndex = FMath::RandRange(0, this->SpawnerGuns.Num() - 1);
+		this->SpawnerGuns.Swap(i, RandomIndex);
+	}
+	TArray<ASpawnerGun*> CurrentFreeSpawners;
+	for (ASpawnerGun* SpawnerGun : this->SpawnerGuns)
+	{
+		if (!SpawnerGun->InUse)
 		{
-			const int RandomIndex = FMath::RandRange(0, this->RandomGunSpawnLocations.Num() - 1);
-			this->RandomGunSpawnLocations.Swap(i, RandomIndex);
-		}
-		for (int i = 0 ; NewGunLocation.Equals(FVector::ZeroVector) && i < this->LevelGunsCount ; i++)
-		{
-			if (i < this->RandomGunSpawnLocations.Num())
-			{
-				FVector CurrentRandomSpawnLocation = this->RandomGunSpawnLocations[i];
-				if (!this->ReservedGunsSpawnLocations.Contains(CurrentRandomSpawnLocation))
-				{
-					NewGunLocation = CurrentRandomSpawnLocation;
-					this->ReservedGunsSpawnLocations.Add(NewGunLocation);
-				}
-			}
-		}
-		if (NewGunLocation != FVector::ZeroVector)
-		{
-			AGun* NewGun = this->GetWorld()->SpawnActor<AGun>(this->RandomGuns[FMath::RandRange(0, this->RandomGuns.Num() - 1)], NewGunLocation, FRotator(0, FMath::RandRange(0, 360), 0));
-			this->ReservedGunsSpawnLocations.Add(NewGunLocation);
-			this->LevelGuns.Add(NewGun);
-			NewGun->GunDead.AddDynamic(this, &ADemoLevelActor::ReactToGunDeath);
+			CurrentFreeSpawners.Add(SpawnerGun);
 		}
 		else
 		{
-			GEngine->AddOnScreenDebugMessage(1985721, 2, FColor::Red, "Not enough gun spawn locations!");
-			NotEnoughSpawnLocations = true;
+			GunsSpawned++;
+		}
+	}
+	for (ASpawnerGun* SpawnerGun : CurrentFreeSpawners)
+	{
+		TArray<TSubclassOf<AGun>> AvailableGunsOfSpawnType;
+		for (TSubclassOf<AGun> AvailableGunClass : this->Guns)
+		{
+			if (AvailableGunClass.GetDefaultObject()->SpawnChance == SpawnerGun->GunSpawnRarity)
+			{
+				AvailableGunsOfSpawnType.Add(AvailableGunClass);
+			}
+		}
+		if (AvailableGunsOfSpawnType.Num() > 0)
+		{
+			TSubclassOf<AGun> GunClassToSpawn = AvailableGunsOfSpawnType[FMath::RandRange(0, AvailableGunsOfSpawnType.Num() - 1)];
+			if (GunsSpawned <= this->LevelGunsCount)
+			{
+				FRotator RandomRotation = FRotator(0, FMath::RandRange(0, 360), 0);
+				AGun* NewGun = this->GetWorld()->SpawnActor<AGun>(GunClassToSpawn, SpawnerGun->GetActorLocation(), RandomRotation);
+				SpawnerGun->InUse = true;
+				NewGun->GunDead.AddDynamic(this, &ADemoLevelActor::ReactToGunDeath);
+				GunsSpawned++;
+			}
 		}
 	}
 }
@@ -206,8 +214,18 @@ void ADemoLevelActor::P2ReactToDeath()
 
 void ADemoLevelActor::ReactToGunDeath(AGun* Gun)
 {
-	this->LevelGuns.Remove(Gun);
-	this->ReservedGunsSpawnLocations.Remove(Gun->InitialLocation);
+	ASpawnerGun* SpawnerGunFound = nullptr;
+	for (int i = 0 ; SpawnerGunFound == nullptr && i < this->SpawnerGuns.Num() ; i++)
+	{
+		if (this->SpawnerGuns[i]->GetActorLocation() == Gun->InitialLocation)
+		{
+			SpawnerGunFound = this->SpawnerGuns[i];
+		}
+	}
+	if (SpawnerGunFound)
+	{
+		SpawnerGunFound->InUse = false;
+	}
 	if (this->Player1->AttachedGun == Gun) this->Player1->DropGun();
 	if (this->Player2->AttachedGun == Gun) this->Player2->DropGun();
 	Gun->Destroy();

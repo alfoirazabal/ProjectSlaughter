@@ -6,6 +6,7 @@
 #include "ConceptDemoPaperCharacter.h"
 #include "DemoGameInstance.h"
 #include "Engine/LevelScriptActor.h"
+#include "Guns/SpawnerGun.h"
 #include "DemoLevelActor.generated.h"
 
 /**
@@ -22,13 +23,10 @@ public:
 
 	UPROPERTY() UDemoGameInstance* GameInstance;
 	UPROPERTY(EditAnywhere, Category = "Players") TArray<FVector> RandomPlayerSpawnLocations;
-	UPROPERTY(EditAnywhere, Category = "Guns") TArray<TSubclassOf<AGun>> RandomGuns;
-	UPROPERTY(EditAnywhere, Category = "Guns") TArray<FVector> RandomGunSpawnLocations;
-	UPROPERTY(EditAnywhere, Category = "SpecialGuns") TArray<TSubclassOf<AGun>> SpecialGuns;
-	UPROPERTY(EditAnywhere, Category = "SpecialGuns") TArray<FVector> SpecialGunSpawnLocations;
-	UPROPERTY(EditAnywhere, Category = "SpecialGuns") float SpecialGunsSpawnTime;
+	UPROPERTY(EditAnywhere, Category = "Guns") TArray<TSubclassOf<AGun>> Guns;
+	UPROPERTY(EditAnywhere, Category = "Guns") TArray<ASpawnerGun*> SpawnerGuns;
+	UPROPERTY(EditAnywhere, Category = "Guns") uint8 LevelGunsCount;
 	UPROPERTY(EditAnywhere, Category = "Guns") float GunsSpawnCheckTimeInSeconds;
-	UPROPERTY(EditAnywhere, Category = "Guns") int8 LevelGunsCount;
 	UPROPERTY(EditAnywhere, Category = "Players") TSubclassOf<AUConceptDemoPaperCharacter> Player1Type;
 	UPROPERTY(EditAnywhere, Category = "Players") TSubclassOf<AUConceptDemoPaperCharacter> Player2Type;
 	UPROPERTY() AUConceptDemoPaperCharacter* Player1;
@@ -52,9 +50,6 @@ protected:
 	void P2DropDownPressed();
 	void P2Fire(const float AxisValue);
 	void P2DropGun();
-
-	UPROPERTY() TArray<AGun*> LevelGuns;
-	UPROPERTY() TArray<FVector> ReservedGunsSpawnLocations;
 
 	UFUNCTION() void SpawnPlayers();
 	UFUNCTION() void SpawnGuns();

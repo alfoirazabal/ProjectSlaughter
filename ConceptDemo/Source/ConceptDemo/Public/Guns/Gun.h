@@ -10,7 +10,7 @@
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnShotLost);
 
-UENUM() enum ESpawnChance
+UENUM() enum EGunType
 {
 	Common,
 	Rare,
@@ -18,12 +18,12 @@ UENUM() enum ESpawnChance
 };
 
 UCLASS()
-class CONCEPTDEMO_API AGun final : public AActor
+class CONCEPTDEMO_API AGun : public AActor
 {
 	GENERATED_BODY()
 	
 public:	
-
+	
 	DECLARE_DYNAMIC_MULTICAST_DELEGATE(FBeginOverlapEvent);
 	DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnGunDead, AGun*, Gun);
 	
@@ -37,11 +37,12 @@ public:
 	UPROPERTY(EditAnywhere) uint8 CartridgeSize;
 	UPROPERTY(EditAnywhere) int32 ReloadTimeInMilliseconds;
 	UPROPERTY(EditAnywhere) int32 ShotLossTime;	// Time by which a bullet is lost. If 0 the gun shall be destroyed
-	UPROPERTY(EditAnywhere) TEnumAsByte<ESpawnChance> SpawnChance;
 
 	UPROPERTY(EditAnywhere) FVector BulletSpawnRelativeLocation;
 
 	UPROPERTY(EditAnywhere) TSubclassOf<ABullet> BulletClass;
+
+	UPROPERTY() TEnumAsByte<EGunType> GunType;
 
 	UPROPERTY(VisibleAnywhere, Category = "Trigger Capsule")
 	class UCapsuleComponent* TriggerCapsule;

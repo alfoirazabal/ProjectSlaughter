@@ -166,44 +166,40 @@ void ADemoLevelActor::SpawnPlayers()
 
 void ADemoLevelActor::SpawnGuns()
 {
-	int GunsSpawned = 0;
+	int CurrentGunsInLevel = 0;
 	for (int i = 0 ; i < this->SpawnerGuns.Num() ; i++)
 	{
-		const int RandomIndex = FMath::RandRange(0, this->SpawnerGuns.Num() - 1);
-		this->SpawnerGuns.Swap(i, RandomIndex);
+		const ASpawnerGun* SpawnerGun = this->SpawnerGuns[i];
+		if (SpawnerGun->InUse) CurrentGunsInLevel++;
 	}
-	TArray<ASpawnerGun*> CurrentFreeSpawners;
-	for (ASpawnerGun* SpawnerGun : this->SpawnerGuns)
+	for (int i = CurrentGunsInLevel ; i < this->LevelGunsCount ; i++)
 	{
-		if (!SpawnerGun->InUse)
+		TArray<ASpawnerGun*> FreeSpawnSlots;
+		for (int j = 0 ; j < this->SpawnerGuns.Num() ; j++)
 		{
-			CurrentFreeSpawners.Add(SpawnerGun);
+			ASpawnerGun* SpawnerGun = this->SpawnerGuns[j];
+			if (!SpawnerGun->InUse) FreeSpawnSlots.Add(SpawnerGun);
 		}
-		else
+		if (FreeSpawnSlots.Num() > 0)
 		{
-			GunsSpawned++;
-		}
-	}
-	for (ASpawnerGun* SpawnerGun : CurrentFreeSpawners)
-	{
-		TArray<TSubclassOf<AGun>> AvailableGunsOfSpawnType;
-		for (TSubclassOf<AGun> AvailableGunClass : this->Guns)
-		{
-			if (AvailableGunClass.GetDefaultObject()->SpawnChance == SpawnerGun->GunSpawnRarity)
+			ASpawnerGun* RandomFreeSpawner = FreeSpawnSlots[FMath::RandRange(0, FreeSpawnSlots.Num() - 1)];
+			TArray<TSubclassOf<AGun>> AvailableGuns;
+			for (int j = 0 ; j < this->Guns.Num() ; j++)
 			{
-				AvailableGunsOfSpawnType.Add(AvailableGunClass);
+				if (RandomFreeSpawner->GunSpawnType.GetDefaultObject()->GunType == this->Guns[j].GetDefaultObject()->GunType)
+				{
+					AvailableGuns.Add(this->Guns[j]);
+				}
 			}
-		}
-		if (AvailableGunsOfSpawnType.Num() > 0)
-		{
-			TSubclassOf<AGun> GunClassToSpawn = AvailableGunsOfSpawnType[FMath::RandRange(0, AvailableGunsOfSpawnType.Num() - 1)];
-			if (GunsSpawned <= this->LevelGunsCount)
+			if (AvailableGuns.Num() > 0)
 			{
-				FRotator RandomRotation = FRotator(0, FMath::RandRange(0, 360), 0);
-				AGun* NewGun = this->GetWorld()->SpawnActor<AGun>(GunClassToSpawn, SpawnerGun->GetActorLocation(), RandomRotation);
-				SpawnerGun->InUse = true;
-				NewGun->GunDead.AddDynamic(this, &ADemoLevelActor::ReactToGunDeath);
-				GunsSpawned++;
+				TSubclassOf<AGun> RandomAvailableGun = AvailableGuns[FMath::RandRange(0, AvailableGuns.Num() - 1)];
+				FRotator RandomGunRotation = this->GetActorRotation();
+				RandomGunRotation.Yaw = FMath::RandRange(0, 360);
+				AGun* Gun = this->GetWorld()->SpawnActor<AGun>(RandomAvailableGun, RandomFreeSpawner->GetActorLocation(), RandomGunRotation);
+				RandomFreeSpawner->InUse = true;
+				Gun->GunDead.AddDynamic(this, &ADemoLevelActor::ReactToGunDeath);
+				CurrentGunsInLevel++;
 			}
 		}
 	}

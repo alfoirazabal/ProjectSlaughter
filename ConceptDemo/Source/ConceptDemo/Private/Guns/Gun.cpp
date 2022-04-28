@@ -21,11 +21,12 @@ AGun::AGun()
 	this->ShotLossTime = 100;
 	this->CurrentShotLossTime = this->ShotLossTime;
 	this->ShotDamage = 0.035;
-	this->SpawnChance = Common;
 
 	this->BulletSpawnRelativeLocation = FVector(0.0f, 50.0f, 10.0f);
 
 	this->BulletClass = nullptr;
+
+	this->GunType = Common;
 
 	this->TriggerCapsule = CreateDefaultSubobject<UCapsuleComponent>(TEXT("Trigger Capsule"));
 	this->TriggerCapsule->InitCapsuleSize(67.68, 67.68);

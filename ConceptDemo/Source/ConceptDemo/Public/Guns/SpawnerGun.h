@@ -16,7 +16,7 @@ public:
 	// Sets default values for this actor's properties
 	ASpawnerGun();
 
-	UPROPERTY(EditAnywhere) TEnumAsByte<ESpawnChance> GunSpawnRarity;
+	UPROPERTY(EditAnywhere) TSubclassOf<AGun> GunSpawnType;
 	UPROPERTY() bool InUse;
 
 protected:

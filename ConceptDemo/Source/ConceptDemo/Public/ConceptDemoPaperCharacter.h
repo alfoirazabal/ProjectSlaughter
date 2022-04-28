@@ -75,7 +75,7 @@ public:
 	UFUNCTION() void AttachGun(AGun* Gun);
 	UFUNCTION(BlueprintCallable) void DropGun();
 	UFUNCTION() bool HasGun() const;
-	UFUNCTION(BlueprintCallable) void Fire();
+	UFUNCTION(BlueprintCallable) virtual void Fire();
 	UFUNCTION() virtual void UsePower();
 	UFUNCTION() void UpdateShotsCount();
 	UFUNCTION() void TakeDamage(float DamageCount);
@@ -94,4 +94,10 @@ public:
 	UFUNCTION() void OnOverlapBegin(class UPrimitiveComponent* OverlappedComp, class AActor* OtherActor, class UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
 	UFUNCTION() void OnOverlapEnd(class UPrimitiveComponent* OverlappedComp, class AActor* OtherActor, class UPrimitiveComponent* OtherComp, int32 OtherBodyIndex);
 	
+};
+
+USTRUCT() struct FCharacterDefaultWalkSpeeds {
+	GENERATED_BODY()
+	UPROPERTY() AUConceptDemoPaperCharacter* Character;
+	float DefaultWalkSpeed;
 };

@@ -64,6 +64,7 @@ void ADemoLevelActor::SetupInputs()
 	this->InputComponent->BindAction(TEXT("P1 Drop Down"), IE_Pressed, this, &ADemoLevelActor::P1DropDownPressed);
 	this->InputComponent->BindAxis(TEXT("P1 Fire"), this, &ADemoLevelActor::P1Fire);
 	this->InputComponent->BindAction(TEXT("P1 Drop Gun"), IE_Pressed, this, &ADemoLevelActor::P1DropGun);
+	this->InputComponent->BindAction(TEXT("P1 Use Power"), IE_Pressed, this, &ADemoLevelActor::P1UsePower);
 	
 	this->InputComponent->BindAxis(TEXT("P2 HorizontalMovement"), this, &ADemoLevelActor::P2HorizontalMovement);
 	this->InputComponent->BindAction(TEXT("P2 Jump"), IE_Pressed, this, &ADemoLevelActor::P2JumpPressed);
@@ -71,6 +72,7 @@ void ADemoLevelActor::SetupInputs()
 	this->InputComponent->BindAction(TEXT("P2 Drop Down"), IE_Pressed, this, &ADemoLevelActor::P2DropDownPressed);
 	this->InputComponent->BindAxis(TEXT("P2 Fire"), this, &ADemoLevelActor::P2Fire);
 	this->InputComponent->BindAction(TEXT("P2 Drop Gun"), IE_Pressed, this, &ADemoLevelActor::P2DropGun);
+	this->InputComponent->BindAction(TEXT("P1 Use Power"), IE_Pressed, this, &ADemoLevelActor::P2UsePower);
 
 	this->InputComponent->BindAction(TEXT("Level Exit"), IE_Pressed, this, &ADemoLevelActor::ExitLevel);
 
@@ -108,6 +110,11 @@ void ADemoLevelActor::P1DropGun()
 	if (IsValid(this->Player1)) this->Player1->DropGun();
 }
 
+void ADemoLevelActor::P1UsePower()
+{
+	if (IsValid(this->Player1)) this->Player1->UsePower();
+}
+
 void ADemoLevelActor::P2HorizontalMovement(const float AxisValue)
 {
 	if (IsValid(this->Player2)) this->Player2->HandleMovement(AxisValue);
@@ -136,6 +143,11 @@ void ADemoLevelActor::P2Fire(const float AxisValue)
 void ADemoLevelActor::P2DropGun()
 {
 	if (IsValid(this->Player2)) this->Player2->DropGun();
+}
+
+void ADemoLevelActor::P2UsePower()
+{
+	if (IsValid(this->Player2)) this->Player2->UsePower();
 }
 
 void ADemoLevelActor::SpawnPlayers()

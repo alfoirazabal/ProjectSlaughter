@@ -43,6 +43,7 @@ protected:
 	void P1DropDownPressed();
 	void P1Fire(const float AxisValue);
 	void P1DropGun();
+	void P1UsePower();
 
 	void P2HorizontalMovement(float AxisValue);
 	void P2JumpPressed();
@@ -50,6 +51,7 @@ protected:
 	void P2DropDownPressed();
 	void P2Fire(const float AxisValue);
 	void P2DropGun();
+	void P2UsePower();
 
 	UFUNCTION() void SpawnPlayers();
 	UFUNCTION() void SpawnGuns();

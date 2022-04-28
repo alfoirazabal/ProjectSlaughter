@@ -292,7 +292,10 @@ void AUConceptDemoPaperCharacter::Fire()
 	}
 }
 
-void AUConceptDemoPaperCharacter::UsePower() { }
+void AUConceptDemoPaperCharacter::UsePower()
+{
+	this->CurrentSpecialPowerLoadTime = 0;
+}
 
 void AUConceptDemoPaperCharacter::UpdateShotsCount()
 {

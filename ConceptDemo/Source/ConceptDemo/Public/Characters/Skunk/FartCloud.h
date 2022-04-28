@@ -4,36 +4,44 @@
 
 #include "CoreMinimal.h"
 #include "ConceptDemoPaperCharacter.h"
-#include "Engine/StaticMeshActor.h"
-#include "DangerZone.generated.h"
+#include "GameFramework/Actor.h"
+#include "FartCloud.generated.h"
 
-/**
- * 
- */
 UCLASS()
-class CONCEPTDEMO_API ADangerZone : public AStaticMeshActor
+class CONCEPTDEMO_API AFartCloud : public AActor
 {
 	GENERATED_BODY()
+	
+public:	
+	// Sets default values for this actor's properties
+	AFartCloud();
+	
+	UPROPERTY(EditAnywhere) float AliveTime;
+	UPROPERTY() float AliveTimeLeft;
+	UPROPERTY(EditAnywhere) float InitialMovementSlowdownRatio;
+	UPROPERTY(EditAnywhere) float FinalMovementSlowdownRatio;
+	UPROPERTY() float CurrentMovementSlowdownRatio;
+
+protected:
+	// Called when the game starts or when spawned
+	virtual void BeginPlay() override;
+
+	UPROPERTY() float MovementSlowdownDifference;
 
 public:
 
 	DECLARE_DYNAMIC_MULTICAST_DELEGATE(FBeginOverlapEvent);
 
 	UPROPERTY() TArray<FCharacterDefaultWalkSpeeds> OverlappingCharactersDefaultWalkSpeeds;
-	UPROPERTY(EditAnywhere) float DamageHitDeltaSeconds;
-	UPROPERTY(EditAnywhere) float ZoneDamage;
-	UPROPERTY(EditAnywhere) float CharacterMovementSlowdownAmount;
-	float CurrentDamageHitDeltaSeconds;
 	
-	virtual void Tick(float DeltaSeconds) override;
+	// Called every frame
+	virtual void Tick(float DeltaTime) override;
 
 	int FindCharacterWalkSpeedIndex(const AUConceptDemoPaperCharacter* Character);
-	
-	ADangerZone();
 
-	UPROPERTY(VisibleAnywhere, Category = "Trigger Box")
-	class UBoxComponent* TriggerBox;
+	UPROPERTY(VisibleAnywhere, Category = "Trigger Capsule")
+	class UCapsuleComponent* TriggerCapsule;
 	UFUNCTION() void OnOverlapBegin(class UPrimitiveComponent* OverlappedComp, class AActor* OtherActor, class UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
 	UFUNCTION() void OnOverlapEnd(class UPrimitiveComponent* OverlappedComp, class AActor* OtherActor, class UPrimitiveComponent* OtherComp, int32 OtherBodyIndex);
-	
+
 };

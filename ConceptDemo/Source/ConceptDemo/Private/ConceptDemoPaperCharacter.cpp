@@ -38,6 +38,9 @@ AUConceptDemoPaperCharacter::AUConceptDemoPaperCharacter()
 	
 	this->GetCharacterMovement()->JumpZVelocity = 700;
 	this->AutoPossessAI = EAutoPossessAI::PlacedInWorldOrSpawned;
+	
+	this->GetCharacterMovement()->GravityScale = 3;
+	this->GetCharacterMovement()->JumpZVelocity = 1190;
 
 	this->TriggerCapsule = CreateDefaultSubobject<UCapsuleComponent>(TEXT("Trigger Capsule"));
 	this->TriggerCapsule->InitCapsuleSize(38.59, 89.37);

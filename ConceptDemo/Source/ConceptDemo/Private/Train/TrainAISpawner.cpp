@@ -3,6 +3,9 @@
 
 #include "Train/TrainAISpawner.h"
 
+#include "Components/AudioComponent.h"
+#include "Kismet/GameplayStatics.h"
+
 // Sets default values
 ATrainAISpawner::ATrainAISpawner()
 {
@@ -58,6 +61,15 @@ void ATrainAISpawner::BeginPlay()
 {
 	Super::BeginPlay();
 	this->SetGreenLight();
+
+	if (this->TrainArrivalSound)
+	{
+		this->TrainArrivalSoundComponent = UGameplayStatics::SpawnSound2D(this->GetWorld(), this->TrainArrivalSound);
+	}
+	else
+	{
+		GEngine->AddOnScreenDebugMessage(189522350, 2, FColor::Yellow, "Train arrival sound not set");
+	}
 }
 
 void ATrainAISpawner::SpawnVehicle()
@@ -96,7 +108,16 @@ void ATrainAISpawner::Tick(const float DeltaTime)
 			}
 			else {
 				this->SetGreenLight();
+				if (this->TrainArrivalSoundComponent) this->TrainArrivalSoundComponent->Stop();
 			}
 		}
+	}
+	if (this->trainTrafficLights->bRedLightOn || this->trainTrafficLights->bYellowLightOn)
+	{
+		if (this->TrainArrivalSound && !this->TrainArrivalSoundComponent)
+		{
+			this->TrainArrivalSoundComponent = UGameplayStatics::SpawnSound2D(this->GetWorld(), this->TrainArrivalSound);
+		}
+		if (!this->TrainArrivalSoundComponent->IsPlaying()) this->TrainArrivalSoundComponent->Play();
 	}
 }

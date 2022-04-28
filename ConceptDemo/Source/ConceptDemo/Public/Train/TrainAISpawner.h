@@ -29,6 +29,9 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite) TSubclassOf<ATrainAI> trainClass;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite) AElevatorLightAI* trainTrafficLights;
 
+	UPROPERTY(EditAnywhere) USoundBase* TrainArrivalSound;
+	UPROPERTY() UAudioComponent* TrainArrivalSoundComponent;
+
 private:
 	void SetRedLight() const;
 	void SetYellowLight() const;
@@ -41,7 +44,7 @@ protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
-	virtual void SpawnVehicle();
+	void SpawnVehicle();
 
 	float randSpawnTime;
 	float currentSpawnTime;

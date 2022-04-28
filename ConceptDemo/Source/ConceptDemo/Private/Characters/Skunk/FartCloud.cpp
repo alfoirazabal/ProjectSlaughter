@@ -4,7 +4,6 @@
 #include "Characters/Skunk/FartCloud.h"
 
 #include "ConceptDemoPaperCharacter.h"
-#include "Characters/Skunk/SkunkPaperCharacter.h"
 #include "Components/CapsuleComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
 
@@ -19,9 +18,10 @@ AFartCloud::AFartCloud()
 	this->FinalMovementSlowdownRatio = 0.25;
 	this->MovementSlowdownDifference = this->FinalMovementSlowdownRatio - this->InitialMovementSlowdownRatio;
 	this->CurrentMovementSlowdownRatio = this->InitialMovementSlowdownRatio;
+	this->SkunkFartSource = nullptr;
 
 	this->TriggerCapsule = CreateDefaultSubobject<UCapsuleComponent>(TEXT("Trigger Capsule"));
-	this->TriggerCapsule->InitCapsuleSize(13.45, 13.45);
+	this->TriggerCapsule->InitCapsuleSize(155, 155);
 	this->TriggerCapsule->SetCollisionProfileName("Trigger");
 	this->TriggerCapsule->SetupAttachment(this->RootComponent);
 
@@ -33,7 +33,10 @@ AFartCloud::AFartCloud()
 void AFartCloud::BeginPlay()
 {
 	Super::BeginPlay();
-	
+	if (this->SkunkFartSource == nullptr)
+	{
+		GEngine->AddOnScreenDebugMessage(298662235, 2, FColor::Red, "Programming error: SKUNK Fart source not set");
+	}
 }
 
 // Called every frame
@@ -73,7 +76,7 @@ void AFartCloud::OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor* Oth
 		AUConceptDemoPaperCharacter* Character = Cast<AUConceptDemoPaperCharacter>(OtherActor);
 		if (Character)
 		{
-			if (!Cast<ASkunkPaperCharacter>(Character))
+			if (this->SkunkFartSource != nullptr && Character != this->SkunkFartSource)
 			{
 				if (this->FindCharacterWalkSpeedIndex(Character) == -1)
 				{
@@ -96,7 +99,7 @@ void AFartCloud::OnOverlapEnd(UPrimitiveComponent* OverlappedComp, AActor* Other
 		const AUConceptDemoPaperCharacter* Character = Cast<AUConceptDemoPaperCharacter>(OtherActor);
 		if (Character)
 		{
-			if (!Cast<ASkunkPaperCharacter>(Character))
+			if (this->SkunkFartSource != nullptr && Character != this->SkunkFartSource)
 			{
 				const int CharacterDefaultWalkSpeedIndex = this->FindCharacterWalkSpeedIndex(Character);
 				if (CharacterDefaultWalkSpeedIndex != -1)

@@ -15,7 +15,8 @@ class CONCEPTDEMO_API AFartCloud : public AActor
 public:	
 	// Sets default values for this actor's properties
 	AFartCloud();
-	
+
+	UPROPERTY() AUConceptDemoPaperCharacter* SkunkFartSource;
 	UPROPERTY(EditAnywhere) float AliveTime;
 	UPROPERTY() float AliveTimeLeft;
 	UPROPERTY(EditAnywhere) float InitialMovementSlowdownRatio;

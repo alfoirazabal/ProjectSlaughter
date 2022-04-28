@@ -48,8 +48,15 @@ void UPaperCharacterHUD::SetLives(const uint8 Lives) const
 
 void UPaperCharacterHUD::SetStaminaBar(const int32 ShotsTotal, const int32 ShotsLeft) const
 {
-	const float ShotsPercent = static_cast<float>(ShotsLeft) / static_cast<float>(ShotsTotal);
-	this->ProgressBarCurrentStamina->SetPercent(ShotsPercent);
+	if (ShotsTotal != 0)
+	{
+		const float ShotsPercent = static_cast<float>(ShotsLeft) / static_cast<float>(ShotsTotal);
+		this->ProgressBarCurrentStamina->SetPercent(ShotsPercent);
+	}
+	else
+	{
+		this->ProgressBarCurrentStamina->SetPercent(1);
+	}
 }
 
 void UPaperCharacterHUD::SetPlayerName(const FText Name) const

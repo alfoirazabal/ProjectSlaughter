@@ -72,7 +72,7 @@ void ADemoLevelActor::SetupInputs()
 	this->InputComponent->BindAction(TEXT("P2 Drop Down"), IE_Pressed, this, &ADemoLevelActor::P2DropDownPressed);
 	this->InputComponent->BindAxis(TEXT("P2 Fire"), this, &ADemoLevelActor::P2Fire);
 	this->InputComponent->BindAction(TEXT("P2 Drop Gun"), IE_Pressed, this, &ADemoLevelActor::P2DropGun);
-	this->InputComponent->BindAction(TEXT("P1 Use Power"), IE_Pressed, this, &ADemoLevelActor::P2UsePower);
+	this->InputComponent->BindAction(TEXT("P2 Use Power"), IE_Pressed, this, &ADemoLevelActor::P2UsePower);
 
 	this->InputComponent->BindAction(TEXT("Level Exit"), IE_Pressed, this, &ADemoLevelActor::ExitLevel);
 

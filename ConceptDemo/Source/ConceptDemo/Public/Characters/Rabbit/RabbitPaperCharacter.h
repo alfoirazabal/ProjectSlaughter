@@ -19,6 +19,8 @@ class CONCEPTDEMO_API ARabbitPaperCharacter : public AUConceptDemoPaperCharacter
 public:
 	ARabbitPaperCharacter();
 	UPROPERTY(EditAnywhere) uint8 SequentialJumps;
+	virtual void DropGun() override;
+	virtual void Fire() override;
 	virtual void Landed(const FHitResult& Hit) override;
 	virtual void Jump() override;
 	virtual bool CanJumpInternal_Implementation() const override;

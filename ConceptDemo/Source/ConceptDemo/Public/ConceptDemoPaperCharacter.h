@@ -73,7 +73,7 @@ public:
 	UFUNCTION(BlueprintCallable) void DropDown();
 	virtual void Jump() override;
 	UFUNCTION() void AttachGun(AGun* Gun);
-	UFUNCTION(BlueprintCallable) void DropGun();
+	UFUNCTION(BlueprintCallable) virtual void DropGun();
 	UFUNCTION() bool HasGun() const;
 	UFUNCTION(BlueprintCallable) virtual void Fire();
 	UFUNCTION() virtual void UsePower();

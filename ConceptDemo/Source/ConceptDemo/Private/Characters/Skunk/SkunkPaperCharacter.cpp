@@ -28,7 +28,8 @@ void ASkunkPaperCharacter::UsePower()
 		{
 			FVector SpawnLocation = this->GetActorLocation();
 			SpawnLocation.X += 10;
-			this->GetWorld()->SpawnActor<AFartCloud>(this->SkunkFartCloud, SpawnLocation, this->GetActorRotation());
+			AFartCloud* FartCloud = this->GetWorld()->SpawnActor<AFartCloud>(this->SkunkFartCloud, SpawnLocation, this->GetActorRotation());
+			FartCloud->SkunkFartSource = this;
 		}
 		else
 		{

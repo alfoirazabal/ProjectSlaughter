@@ -5,6 +5,7 @@
 
 #include "Components/CapsuleComponent.h"
 #include "ConceptDemoPaperCharacter.h"
+#include "Characters/CharacterPowerProp.h"
 #include "Components/AudioComponent.h"
 #include "Components/SphereComponent.h"
 #include "Kismet/GameplayStatics.h"
@@ -94,7 +95,7 @@ void ABullet::OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor* OtherA
 				this->DestroyOrExplodeBullet();
 			}
 		}
-		else if (OtherActor != this && !Cast<ADangerZone>(OtherActor) && !Cast<AGun>(OtherActor))
+		else if (OtherActor != this && !Cast<ADangerZone>(OtherActor) && !Cast<AGun>(OtherActor) && !Cast<ACharacterPowerProp>(OtherActor))
 		{
 			GEngine->AddOnScreenDebugMessage(189992511, 2, FColor::Red, "Bullet collided with: " + OtherComp->GetName());
 			this->DestroyOrExplodeBullet();

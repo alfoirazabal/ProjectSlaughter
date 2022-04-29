@@ -4,11 +4,11 @@
 
 #include "CoreMinimal.h"
 #include "ConceptDemoPaperCharacter.h"
-#include "GameFramework/Actor.h"
+#include "Characters/CharacterPowerProp.h"
 #include "FartCloud.generated.h"
 
 UCLASS()
-class CONCEPTDEMO_API AFartCloud : public AActor
+class CONCEPTDEMO_API AFartCloud : public ACharacterPowerProp
 {
 	GENERATED_BODY()
 	

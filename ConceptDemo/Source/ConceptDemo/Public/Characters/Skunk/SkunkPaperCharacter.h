@@ -20,5 +20,7 @@ class CONCEPTDEMO_API ASkunkPaperCharacter : public AUConceptDemoPaperCharacter
 	ASkunkPaperCharacter();
 	virtual void Fire() override;
 	virtual void UsePower() override;
+	virtual void DropGun() override;
+	virtual void Tick(float DeltaTime) override;
 	
 };

@@ -38,3 +38,19 @@ void ASkunkPaperCharacter::UsePower()
 		this->CurrentSpecialPowerLoadTime = 0;
 	}
 }
+
+void ASkunkPaperCharacter::DropGun()
+{
+	Super::DropGun();
+	this->UpdateHealthIndicator();
+}
+
+void ASkunkPaperCharacter::Tick(const float DeltaTime)
+{
+	Super::Tick(DeltaTime);
+	if (this->AttachedGun != nullptr && this->CurrentSpecialPowerLoadTime < this->SpecialPowerLoadTime)
+	{
+		this->CurrentSpecialPowerLoadTime++;
+		this->UpdateHealthIndicator();
+	}
+}

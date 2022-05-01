@@ -18,11 +18,21 @@ class CONCEPTDEMO_API UGameOverWidget : public UUserWidget
 	GENERATED_BODY()
 
 public:
+	UPROPERTY(EditAnywhere) TArray<UTexture2D*> BackgroundTextureSequence;
+	UPROPERTY(EditAnywhere) float BackgroundTextureSequenceFlipTime;
+
+	UPROPERTY(meta = (BindWidget)) UImage* BackgroundImage;
 	UPROPERTY(meta = (BindWidget)) UImage* WinnerPlayerImage;
 	UPROPERTY(meta = (BindWidget)) UTextBlock* TextBlockWinnerPlayerName;
 	UPROPERTY(meta = (BindWidget)) UButton* ButtonContinue;
 
 	virtual void NativeConstruct() override;
+	virtual void NativeDestruct() override;
 
 	UFUNCTION() void ContinueToMainMenu();
+
+protected:
+	UPROPERTY() int CurrentFlippingImageIndex;
+	UPROPERTY() FTimerHandle BackgroundImageFlippingTimer; 
+	UFUNCTION() void SetBackgroundImageFlipping();
 };

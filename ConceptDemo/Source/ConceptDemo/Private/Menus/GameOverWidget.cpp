@@ -48,11 +48,34 @@ void UGameOverWidget::NativeConstruct()
 				break;
 		}
 		this->TextBlockWinnerPlayerName->SetText(WinnerPlayerName);
+		this->GetWorld()->GetTimerManager().SetTimer(
+			this->BackgroundImageFlippingTimer, this, &UGameOverWidget::SetBackgroundImageFlipping,
+			this->BackgroundTextureSequenceFlipTime, true
+		);
 	}
 	this->ButtonContinue->OnClicked.AddDynamic(this, &UGameOverWidget::ContinueToMainMenu);
+}
+
+void UGameOverWidget::NativeDestruct()
+{
+	this->GetWorld()->GetTimerManager().ClearTimer(this->BackgroundImageFlippingTimer);
+	Super::NativeDestruct();
 }
 
 void UGameOverWidget::ContinueToMainMenu()
 {
 	UGameplayStatics::OpenLevel(this, "MainMenu");
+}
+
+void UGameOverWidget::SetBackgroundImageFlipping()
+{
+	if (this->BackgroundTextureSequence.Num() > 0)
+	{
+		this->CurrentFlippingImageIndex++;
+		if (this->CurrentFlippingImageIndex > this->BackgroundTextureSequence.Num() - 1)
+		{
+			this->CurrentFlippingImageIndex = 0;
+		}
+		this->BackgroundImage->SetBrushFromTexture(this->BackgroundTextureSequence[this->CurrentFlippingImageIndex]);
+	}
 }

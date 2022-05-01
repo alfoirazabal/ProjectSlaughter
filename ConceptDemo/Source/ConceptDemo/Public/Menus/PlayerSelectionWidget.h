@@ -26,6 +26,10 @@ class CONCEPTDEMO_API UPlayerSelectionWidget : public UUserWidget
 	uint16 Player2CharacterIndex;
 
 public:
+	UPROPERTY(EditAnywhere) TArray<UTexture2D*> BackgroundTextureSequence;
+	UPROPERTY(EditAnywhere) float BackgroundTextureSequenceFlipTime;
+
+    UPROPERTY(meta = (BindWidget)) UImage* BackgroundImage;
 	UPROPERTY(meta = (BindWidget)) UButton* ButtonGoBack;
 	UPROPERTY(meta = (BindWidget)) UButton* ButtonBegin;
 	UPROPERTY(meta = (BindWidget)) UButton* Player1ChangeButton;
@@ -36,6 +40,7 @@ public:
 	UPROPERTY(meta = (BindWidget)) UEditableTextBox* EditableTextBoxPlayer2Name;
 
 	virtual void NativeConstruct() override;
+	virtual void NativeDestruct() override;
 
 	UFUNCTION() void ChangePlayer1();
 	UFUNCTION() void ChangePlayer2();
@@ -43,5 +48,10 @@ public:
 	void UpdatePlayer2();
 	UFUNCTION() void GoBack();
 	UFUNCTION() void BeginGame();
+
+protected:
+	UPROPERTY() int CurrentFlippingImageIndex;
+	UPROPERTY() FTimerHandle BackgroundImageFlippingTimer; 
+	UFUNCTION() void SetBackgroundImageFlipping();
 	
 };

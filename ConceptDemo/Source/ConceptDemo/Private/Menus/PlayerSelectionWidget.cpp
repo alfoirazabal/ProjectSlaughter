@@ -9,6 +9,7 @@
 
 void UPlayerSelectionWidget::NativeConstruct()
 {
+	this->BackgroundTextureSequenceFlipTime = 0.2;
 	if (this->CharacterTypes.Num() == 0)
 	{
 		GEngine->AddOnScreenDebugMessage(19576223, 2, FColor::Red, "Need to setup character types for PlayerSelectionWidget");
@@ -30,7 +31,17 @@ void UPlayerSelectionWidget::NativeConstruct()
 		this->ButtonBegin->OnClicked.AddUniqueDynamic(this, &UPlayerSelectionWidget::BeginGame);
 		this->UpdatePlayer1();
 		this->UpdatePlayer2();
+		this->GetWorld()->GetTimerManager().SetTimer(
+			this->BackgroundImageFlippingTimer, this, &UPlayerSelectionWidget::SetBackgroundImageFlipping,
+			this->BackgroundTextureSequenceFlipTime, true
+		);
 	}
+}
+
+void UPlayerSelectionWidget::NativeDestruct()
+{
+	this->GetWorld()->GetTimerManager().ClearTimer(this->BackgroundImageFlippingTimer);
+	Super::NativeDestruct();
 }
 
 void UPlayerSelectionWidget::ChangePlayer1()
@@ -86,4 +97,17 @@ void UPlayerSelectionWidget::BeginGame()
 	GameInstance->Player1Name = this->EditableTextBoxPlayer1Name->Text;
 	GameInstance->Player2Name = this->EditableTextBoxPlayer2Name->Text;
 	UGameplayStatics::OpenLevel(this, "/Game/DemoLevel");
+}
+
+void UPlayerSelectionWidget::SetBackgroundImageFlipping()
+{
+	if (this->BackgroundTextureSequence.Num() > 0)
+	{
+		this->CurrentFlippingImageIndex++;
+		if (this->CurrentFlippingImageIndex > this->BackgroundTextureSequence.Num() - 1)
+		{
+			this->CurrentFlippingImageIndex = 0;
+		}
+		this->BackgroundImage->SetBrushFromTexture(this->BackgroundTextureSequence[this->CurrentFlippingImageIndex]);
+	}
 }

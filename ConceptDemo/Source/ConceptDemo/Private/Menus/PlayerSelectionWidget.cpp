@@ -73,7 +73,7 @@ void UPlayerSelectionWidget::UpdatePlayer2()
 
 void UPlayerSelectionWidget::GoBack()
 {
-	UGameplayStatics::OpenLevel(this, "/Game/Menus/MainMenu/MainMenu");
+	GEngine->AddOnScreenDebugMessage(287572113, 2, FColor::Green, "Implemented on Blueprints");
 }
 
 void UPlayerSelectionWidget::BeginGame()

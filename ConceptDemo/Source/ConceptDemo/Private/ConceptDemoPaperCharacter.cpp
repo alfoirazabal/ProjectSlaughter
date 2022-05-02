@@ -117,7 +117,7 @@ void AUConceptDemoPaperCharacter::MakeFallingDeath()
 {
 	this->bFallingDeath = true;
 	FVector CurrentPosition = this->GetActorLocation();
-	CurrentPosition.X -= 250;
+	CurrentPosition.X -= 500;
 	this->SetActorLocation(CurrentPosition);
 }
 

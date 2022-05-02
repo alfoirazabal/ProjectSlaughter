@@ -75,11 +75,13 @@ void UPlayerSelectionWidget::ChangePlayer2()
 void UPlayerSelectionWidget::UpdatePlayer1()
 {
 	this->Player1CharacterImage->SetBrushFromTexture(this->Player1Character->CharacterImage);
+	this->RichTextBlockPlayer1Description->SetText(FText::FromString(this->Player1Character->PlayerDescription));
 }
 
 void UPlayerSelectionWidget::UpdatePlayer2()
 {
 	this->Player2CharacterImage->SetBrushFromTexture(this->Player2Character->CharacterImage);
+	this->RichTextBlockPlayer2Description->SetText(FText::FromString(this->Player2Character->PlayerDescription));
 }
 
 void UPlayerSelectionWidget::GoBack()

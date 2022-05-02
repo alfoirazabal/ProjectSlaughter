@@ -8,6 +8,7 @@
 #include "Components/Button.h"
 #include "Components/EditableTextBox.h"
 #include "Components/Image.h"
+#include "Components/RichTextBlock.h"
 #include "PlayerSelectionWidget.generated.h"
 
 /**
@@ -36,6 +37,8 @@ public:
 	UPROPERTY(meta = (BindWidget)) UButton* Player2ChangeButton;
 	UPROPERTY(meta = (BindWidget)) UImage* Player1CharacterImage;
 	UPROPERTY(meta = (BindWidget)) UImage* Player2CharacterImage;
+	UPROPERTY(meta = (BindWidget)) URichTextBlock* RichTextBlockPlayer1Description;
+	UPROPERTY(meta = (BindWidget)) URichTextBlock* RichTextBlockPlayer2Description;
 	UPROPERTY(meta = (BindWidget)) UEditableTextBox* EditableTextBoxPlayer1Name;
 	UPROPERTY(meta = (BindWidget)) UEditableTextBox* EditableTextBoxPlayer2Name;
 

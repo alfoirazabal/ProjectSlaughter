@@ -33,6 +33,7 @@ public:
 	AUConceptDemoPaperCharacter();
 
 	UPROPERTY(EditAnywhere) UTexture2D* CharacterImage;
+	UPROPERTY(EditAnywhere) FString PlayerDescription;
 
 protected:
 	// Called when the game starts

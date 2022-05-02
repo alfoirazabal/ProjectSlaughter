@@ -2,6 +2,8 @@
 
 #pragma once
 
+#include <Components/AudioComponent.h>
+
 #include "CoreMinimal.h"
 #include "ConceptDemoPaperCharacter.h"
 #include "DemoGameInstance.h"
@@ -31,7 +33,10 @@ public:
 	UPROPERTY(EditAnywhere, Category = "Players") TSubclassOf<AUConceptDemoPaperCharacter> Player2Type;
 	UPROPERTY() AUConceptDemoPaperCharacter* Player1;
 	UPROPERTY() AUConceptDemoPaperCharacter* Player2;
-
+	UPROPERTY(EditAnywhere, Category = "Music") TArray<USoundBase*> LevelMusic;
+	UPROPERTY(EditAnywhere, Category = "Music") UAudioComponent* LevelMusicComponent;
+	UPROPERTY() int CurrentBackgroundMusicPlayingIndex;
+	
 	virtual void BeginPlay() override;
 	
 	UFUNCTION() void SetupInputs();

@@ -3,7 +3,11 @@
 
 #include "DemoLevelActor.h"
 
+#include <Components/AudioComponent.h>
+
 #include "DemoGameInstance.h"
+#include "Characters/Skunk/SkunkPaperCharacter.h"
+#include "Characters/Skunk/SkunkPaperCharacter.h"
 #include "Kismet/GameplayStatics.h"
 
 ADemoLevelActor::ADemoLevelActor()
@@ -13,7 +17,6 @@ ADemoLevelActor::ADemoLevelActor()
 	this->LevelGunsCount = 2;
 	this->GunsSpawnCheckTimeInSeconds = 5;
 }
-
 
 void ADemoLevelActor::BeginPlay()
 {
@@ -52,6 +55,25 @@ void ADemoLevelActor::BeginPlay()
 				TimerHandle, this, &ADemoLevelActor::SpawnGuns, this->GunsSpawnCheckTimeInSeconds, true
 			);
 		}
+	}
+	if (this->LevelMusic.Num() > 0)
+	{
+		for (int i = 0 ; i < this->LevelMusic.Num() ; i++)
+		{
+			const int RandIndex = FMath::RandRange(0, this->LevelMusic.Num() - 1);
+			this->LevelMusic.Swap(i, RandIndex);
+		}
+		this->CurrentBackgroundMusicPlayingIndex = 0;
+		this->LevelMusicComponent = NewObject<UAudioComponent>(this->GetWorld());
+		if (this->LevelMusicComponent)
+		{
+			this->LevelMusicComponent->SetSound(this->LevelMusic[0]);
+			this->LevelMusicComponent->Play();
+		}
+	}
+	else
+	{
+		GEngine->AddOnScreenDebugMessage(28611252, 2, FColor::Red, "Level has no music! Can be changed in the editor");
 	}
 }
 

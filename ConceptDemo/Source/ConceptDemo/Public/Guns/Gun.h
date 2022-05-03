@@ -51,6 +51,8 @@ public:
 	EFacing_Direction FacingDirection;
 	int32 ShotsLeft;
 
+	UPROPERTY(EditAnywhere, Category="Sounds") USoundBase* GunGrabSound;
+
 	FOnShotLost ShotLost;
 	FOnGunDead GunDead;
 

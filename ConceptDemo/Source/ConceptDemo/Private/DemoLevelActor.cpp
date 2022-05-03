@@ -6,8 +6,6 @@
 #include <Components/AudioComponent.h>
 
 #include "DemoGameInstance.h"
-#include "Characters/Skunk/SkunkPaperCharacter.h"
-#include "Characters/Skunk/SkunkPaperCharacter.h"
 #include "Kismet/GameplayStatics.h"
 
 ADemoLevelActor::ADemoLevelActor()

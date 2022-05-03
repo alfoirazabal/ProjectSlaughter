@@ -44,6 +44,8 @@ protected:
 	UPROPERTY(EditAnywhere, Category="Character Asset Positions") int GunZRelativeLocation;
 
 	UPROPERTY(EditAnywhere, Category="Sounds") USoundBase* JumpSound;
+	UPROPERTY(EditAnywhere, Category="Sounds") USoundBase* PowerSound;
+	UPROPERTY(EditAnywhere, Category="Sounds") USoundBase* DamageReceivedSound;
 	
 	UPROPERTY(EditAnywhere) FText PlayerName;
 	

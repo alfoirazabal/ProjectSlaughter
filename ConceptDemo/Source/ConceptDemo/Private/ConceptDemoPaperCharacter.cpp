@@ -295,6 +295,7 @@ void AUConceptDemoPaperCharacter::Fire()
 void AUConceptDemoPaperCharacter::UsePower()
 {
 	this->CurrentSpecialPowerLoadTime = 0;
+	UGameplayStatics::SpawnSound2D(this->GetWorld(), this->PowerSound);
 }
 
 void AUConceptDemoPaperCharacter::UpdateShotsCount()
@@ -324,6 +325,7 @@ void AUConceptDemoPaperCharacter::TakeDamage(float DamageCount)
 			this->Respawn();
 		}
 	}
+	UGameplayStatics::SpawnSound2D(this->GetWorld(), this->DamageReceivedSound);
 }
 
 void AUConceptDemoPaperCharacter::Die()

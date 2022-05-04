@@ -18,7 +18,7 @@ void UCreditsWidget::NativeConstruct()
 			this->BackgroundTextureSequenceFlipTime, true
 		);
 	}
-	this->ButtonGoBack->OnClicked.AddDynamic(this, &UCreditsWidget::GoBack);
+	this->ButtonNext->OnClicked.AddDynamic(this, &UCreditsWidget::GoToNextWidget);
 }
 
 void UCreditsWidget::NativeDestruct()
@@ -27,12 +27,12 @@ void UCreditsWidget::NativeDestruct()
 	Super::NativeDestruct();
 }
 
-void UCreditsWidget::GoBack()
+void UCreditsWidget::GoToNextWidget()
 {
-	UGameplayStatics::PlaySound2D(this->GetWorld(), this->GoBackSound);
+	UGameplayStatics::PlaySound2D(this->GetWorld(), this->NextWidgetSound);
 	this->GetWorld()->GetTimerManager().ClearTimer(this->BackgroundImageFlippingTimer);
-	UUserWidget* MainMenuWidget = CreateWidget<UUserWidget>(this->GetWorld(), this->BackWidget);
-	MainMenuWidget->AddToViewport();
+	UUserWidget* NextWidget = CreateWidget<UUserWidget>(this->GetWorld(), this->NextWidgetClass);
+	NextWidget->AddToViewport();
 }
 
 void UCreditsWidget::SetBackgroundImageFlipping()

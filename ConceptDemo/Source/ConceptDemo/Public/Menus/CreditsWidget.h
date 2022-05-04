@@ -19,16 +19,16 @@ class CONCEPTDEMO_API UCreditsWidget : public UUserWidget
 public:
 	UPROPERTY(EditAnywhere) TArray<UTexture2D*> BackgroundTextureSequence;
 	UPROPERTY(EditAnywhere) float BackgroundTextureSequenceFlipTime;
-	UPROPERTY(EditAnywhere) TSubclassOf<UUserWidget> BackWidget;
-	UPROPERTY(EditAnywhere) USoundBase* GoBackSound;
+	UPROPERTY(EditAnywhere) TSubclassOf<UUserWidget> NextWidgetClass;
+	UPROPERTY(EditAnywhere) USoundBase* NextWidgetSound;
 
 	UPROPERTY(meta = (BindWidget)) UImage* BackgroundImage;
-	UPROPERTY(meta = (BindWidget)) UButton* ButtonGoBack;
+	UPROPERTY(meta = (BindWidget)) UButton* ButtonNext;
 
 	virtual void NativeConstruct() override;
 	virtual void NativeDestruct() override;
 	
-	UFUNCTION() void GoBack();
+	UFUNCTION() void GoToNextWidget();
 	
 protected:
 	UPROPERTY() int CurrentFlippingImageIndex;

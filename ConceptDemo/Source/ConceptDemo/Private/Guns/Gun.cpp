@@ -28,6 +28,9 @@ AGun::AGun()
 
 	this->GunType = Common;
 
+	static ConstructorHelpers::FObjectFinder<USoundWave> GunGrabObject(TEXT("/Game/Props/Guns/GunGrab"));
+	this->GunGrabSound = GunGrabObject.Object;
+
 	this->TriggerCapsule = CreateDefaultSubobject<UCapsuleComponent>(TEXT("Trigger Capsule"));
 	this->TriggerCapsule->InitCapsuleSize(67.68, 67.68);
 	this->TriggerCapsule->SetCollisionProfileName(TEXT("Trigger"));
@@ -84,6 +87,7 @@ void AGun::Tick(const float DeltaTime)
 void AGun::SetAttached() {
 	this->bRotate = false;
 	this->SetActorEnableCollision(false);
+	UGameplayStatics::SpawnSound2D(this->GetWorld(), this->GunGrabSound);
 }
 
 void AGun::SetDetached() {

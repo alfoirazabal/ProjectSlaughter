@@ -14,6 +14,8 @@ ADemoLevelActor::ADemoLevelActor()
 	this->RandomPlayerSpawnLocations.Add(FVector(760, 370, 423));
 	this->LevelGunsCount = 2;
 	this->GunsSpawnCheckTimeInSeconds = 5;
+	this->LifeCollectibleSpawnTimeInSeconds = 15;
+	this->LifeCollectibleSpawnChance = 0.95;
 }
 
 void ADemoLevelActor::BeginPlay()
@@ -53,6 +55,13 @@ void ADemoLevelActor::BeginPlay()
 				TimerHandle, this, &ADemoLevelActor::SpawnGuns, this->GunsSpawnCheckTimeInSeconds, true
 			);
 		}
+	}
+	if (this->LifeCollectiblesSpawners.Num() > 0)
+	{
+		FTimerHandle TimerHandle;
+		this->GetWorld()->GetTimerManager().SetTimer(
+			TimerHandle, this, &ADemoLevelActor::SpawnCollectibles, this->LifeCollectibleSpawnTimeInSeconds, true
+		);
 	}
 	if (this->LevelMusic.Num() > 0)
 	{
@@ -222,6 +231,26 @@ void ADemoLevelActor::SpawnGuns()
 				CurrentGunsInLevel++;
 			}
 		}
+	}
+}
+
+void ADemoLevelActor::SpawnCollectibles()
+{
+	if (this->LifeCollectiblesType)
+	{
+		const float RandomSpawnChance = FMath::FRandRange(0, 1);
+		if (RandomSpawnChance <= this->LifeCollectibleSpawnChance)
+		{
+			const uint16 RandomPosition = FMath::RandRange(0, this->LifeCollectiblesSpawners.Num() - 1);
+			const AActor* RandomSpawnPosition = this->LifeCollectiblesSpawners[RandomPosition];
+			this->GetWorld()->SpawnActor<ALifeCollectible>(
+				this->LifeCollectiblesType, RandomSpawnPosition->GetActorLocation(), FRotator::ZeroRotator
+			);
+		}
+	}
+	else
+	{
+		GEngine->AddOnScreenDebugMessage(129762361, 2, FColor::Red, "Can't spawn life collectible! Type not set on editor settings!");
 	}
 }
 

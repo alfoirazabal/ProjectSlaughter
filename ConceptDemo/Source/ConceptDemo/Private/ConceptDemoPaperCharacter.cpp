@@ -328,6 +328,19 @@ void AUConceptDemoPaperCharacter::TakeDamage(float DamageCount)
 	UGameplayStatics::SpawnSound2D(this->GetWorld(), this->DamageReceivedSound);
 }
 
+void AUConceptDemoPaperCharacter::AddLife(float Life)
+{
+	if (this->CurrentLifeSize + Life < 1)
+	{
+		this->CurrentLifeSize += Life;
+	}
+	else
+	{
+		this->CurrentLifeSize = 1;
+	}
+	this->UpdateHealthIndicator();
+}
+
 void AUConceptDemoPaperCharacter::Die()
 {
 	this->DropGun();

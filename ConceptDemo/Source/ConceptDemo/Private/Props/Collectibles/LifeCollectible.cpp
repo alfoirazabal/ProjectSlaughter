@@ -14,6 +14,7 @@ ALifeCollectible::ALifeCollectible()
 	
 	this->LifeBarFill = 0.4;
 	this->SpawnTime = 10;
+	this->RotationSpeed = 3;
 
 	this->TriggerCapsule = CreateDefaultSubobject<UCapsuleComponent>(TEXT("Trigger Capsule"));
 	this->TriggerCapsule->InitCapsuleSize(50.3, 59.1);
@@ -42,6 +43,14 @@ void ALifeCollectible::SpawnTimeExpired()
 void ALifeCollectible::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
+	FRotator CurrentRotation = this->GetActorRotation();
+	float CurrentRotationYaw = CurrentRotation.Yaw;
+	CurrentRotationYaw += this->RotationSpeed;
+	if (CurrentRotationYaw > 360) {
+		CurrentRotationYaw = CurrentRotationYaw - 360;
+	}
+	CurrentRotation.Yaw = CurrentRotationYaw;
+	this->SetActorRotation(CurrentRotation);
 }
 
 void ALifeCollectible::OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor* OtherActor,

@@ -17,6 +17,7 @@ public:
 
 	UPROPERTY(EditAnywhere) float LifeBarFill;
 	UPROPERTY(EditAnywhere) float SpawnTime;
+	UPROPERTY(EditAnywhere) float RotationSpeed;
 
 protected:
 	// Called when the game starts or when spawned

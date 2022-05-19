@@ -9,6 +9,7 @@
 #include "DemoGameInstance.h"
 #include "Engine/LevelScriptActor.h"
 #include "Guns/SpawnerGun.h"
+#include "Props/Collectibles/LifeCollectible.h"
 #include "DemoLevelActor.generated.h"
 
 /**
@@ -29,6 +30,10 @@ public:
 	UPROPERTY(EditAnywhere, Category = "Guns") TArray<ASpawnerGun*> SpawnerGuns;
 	UPROPERTY(EditAnywhere, Category = "Guns") uint8 LevelGunsCount;
 	UPROPERTY(EditAnywhere, Category = "Guns") float GunsSpawnCheckTimeInSeconds;
+	UPROPERTY(EditAnywhere, Category = "Collectibles") TArray<AActor*> LifeCollectiblesSpawners;
+	UPROPERTY(EditAnywhere, Category = "Collectibles") TSubclassOf<ALifeCollectible> LifeCollectiblesType;
+	UPROPERTY(EditAnywhere, Category = "Collectibles") float LifeCollectibleSpawnTimeInSeconds;
+	UPROPERTY(EditAnywhere, Category = "Collectibles") float LifeCollectibleSpawnChance;
 	UPROPERTY(EditAnywhere, Category = "Players") TSubclassOf<AUConceptDemoPaperCharacter> Player1Type;
 	UPROPERTY(EditAnywhere, Category = "Players") TSubclassOf<AUConceptDemoPaperCharacter> Player2Type;
 	UPROPERTY() AUConceptDemoPaperCharacter* Player1;
@@ -60,6 +65,7 @@ protected:
 
 	UFUNCTION() void SpawnPlayers();
 	UFUNCTION() void SpawnGuns();
+	UFUNCTION() void SpawnCollectibles();
 	UFUNCTION() void P1ReactToDeath();
 	UFUNCTION() void P2ReactToDeath();
 	UFUNCTION() void ReactToGunDeath(AGun* Gun);

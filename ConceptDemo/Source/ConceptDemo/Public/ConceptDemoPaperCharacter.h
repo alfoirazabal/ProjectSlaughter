@@ -82,6 +82,7 @@ public:
 	UFUNCTION() virtual void UsePower();
 	UFUNCTION() void UpdateShotsCount();
 	UFUNCTION() void TakeDamage(float DamageCount);
+	UFUNCTION() void AddLife(float Life);
 	UFUNCTION() void Die();
 	
 	FOnPlayerDeath PlayerDeath;

@@ -8,6 +8,7 @@ AHedgePaperCharacter::AHedgePaperCharacter()
 {
 	Super::SpecialPowerLoadTime = 2500;
 	this->ThornDamage = 0.035;
+	this->ThornSpawnRelativeLocation = FVector(0.0f, 50.0f, 10.0f);
 
 	this->PlayerDescription = FString("HEDGE").Append(LINE_TERMINATOR).Append("Can throw thorns from his back and damage enemies");
 }
@@ -29,8 +30,29 @@ void AHedgePaperCharacter::UsePower()
     if (this->HedgeThorn != nullptr) {
         if (this->CurrentSpecialPowerLoadTime == this->SpecialPowerLoadTime)
         {
-	        const FVector ThornLocation = this->GetActorLocation();
-            
+	        FVector ThornLocation = this->GetActorLocation();
+			ThornLocation.Z += this->ThornSpawnRelativeLocation.Z;
+			if (this->FacingDirection == EFacing_Direction::Left) {
+				ThornLocation.Y -= this->ThornSpawnRelativeLocation.Y;
+			}
+			else if (this->FacingDirection == EFacing_Direction::Right) {
+				ThornLocation.Y += this->ThornSpawnRelativeLocation.Y;
+			}
+            AHedgeThorn* HedgeThorn = this->GetWorld()->SpawnActor<AHedgeThorn>(this->HedgeThorn, ThornLocation, this->GetActorRotation());
+            if (HedgeThorn)
+			{
+				HedgeThorn->HedgeThornSource = this;
+				HedgeThorn->FacingDirection = this->FacingDirection;
+				HedgeThorn->TravelSpeed = 15;
+				HedgeThorn->MaxTravelDistance = 5000;
+				HedgeThorn->HedgeThornDamage = this->ThornDamage;
+			}
+			else
+			{
+				GEngine->AddOnScreenDebugMessage(18572334, 2, FColor::Red, "Thorn not set for Hedge: " + this->GetName());
+			}
+            UGameplayStatics::SpawnSound2D(this->GetWorld(), this->PowerSound);
+            this->CurrentSpecialPowerLoadTime = 0;
         }
     }
 	else {

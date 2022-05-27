@@ -42,6 +42,8 @@ AUConceptDemoPaperCharacter::AUConceptDemoPaperCharacter()
 	this->GetCharacterMovement()->GravityScale = 3;
 	this->GetCharacterMovement()->JumpZVelocity = 1190;
 
+	//this->SpawnSprite = CreateDefaultSubobject<UPaperSprite>(TEXT("Spawn Sprite"));
+
 	this->TriggerCapsule = CreateDefaultSubobject<UCapsuleComponent>(TEXT("Trigger Capsule"));
 	this->TriggerCapsule->InitCapsuleSize(38.59, 89.37);
 	this->TriggerCapsule->SetCollisionProfileName("Trigger");

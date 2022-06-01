@@ -5,7 +5,6 @@
 
 #include "ConceptDemoPaperCharacter.h"
 #include "Components/CapsuleComponent.h"
-#include "ConceptDemoPaperCharacter.h"
 #include "Characters/CharacterPowerProp.h"
 #include "Components/AudioComponent.h"
 #include "Components/SphereComponent.h"
@@ -29,7 +28,7 @@ AHedgeThorn::AHedgeThorn()
 
 	this->TriggerCapsule = CreateDefaultSubobject<UCapsuleComponent>(TEXT("Trigger Capsule"));
 	this->TriggerCapsule->InitCapsuleSize(35, 35);
-	this->TriggerCapsule->SetCollisionProfileName("NoCollision");
+	this->TriggerCapsule->SetCollisionProfileName("Trigger");
 	this->TriggerCapsule->SetupAttachment(this->RootComponent);
 
 	this->TriggerCapsule->OnComponentBeginOverlap.AddDynamic(this, &AHedgeThorn::OnOverlapBegin);
@@ -95,7 +94,7 @@ void AHedgeThorn::OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor* Ot
 	if (OtherComp)
 	{
 		AUConceptDemoPaperCharacter* Character = Cast<AUConceptDemoPaperCharacter>(OtherActor);
-		if (Character)
+		if (Character && Character != this->HedgeThornSource)
 		{
 			Character->TakeDamage(this->HedgeThornDamage);
 			this->DestroyOrExplodeBullet();

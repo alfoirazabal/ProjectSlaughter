@@ -7,8 +7,9 @@
 
 AHedgePaperCharacter::AHedgePaperCharacter()
 {
-	this->SpecialPowerLoadTime = 0;
-	this->ThornDamage = 0.035;
+	this->SpecialPowerLoadTime = 1000;
+	this->ThornDamage = 0.25;
+	this->ThornSpawnDistance = 75;
 
 	this->PlayerDescription = FString("HEDGE").Append(LINE_TERMINATOR).Append("Can throw thorns from his back and damage enemies");
 }
@@ -33,9 +34,9 @@ void AHedgePaperCharacter::UsePower()
         	for (uint8 i = 0 ; i < 3 ; i++)
         	{
         		AHedgeThorn* HedgeThorn = this->GetWorld()->SpawnActorDeferred<AHedgeThorn>(this->HedgeThornType, FTransform::Identity, this, this, ESpawnActorCollisionHandlingMethod::AlwaysSpawn);
-        		HedgeThorn->SetActorLocation(this->GetActorLocation());
         		if (HedgeThorn)
         		{
+        			float SpawnDistance = 0;
         			HedgeThorn->HedgeThornSource = this;
         			FRotator CurrentThornRotation = FRotator(0, 90, 0);
         			if (i == 0)
@@ -52,14 +53,19 @@ void AHedgePaperCharacter::UsePower()
         			{
         				HedgeThorn->FacingDirection = EFacing_Direction::Right;
         				CurrentThornRotation.Yaw += 180;
+        				SpawnDistance = this->ThornSpawnDistance;
         			}
         			if (this->FacingDirection == EFacing_Direction::Right)
         			{
         				HedgeThorn->FacingDirection = EFacing_Direction::Left;
+        				SpawnDistance = -this->ThornSpawnDistance;
         			}
         			HedgeThorn->SetActorRotation(CurrentThornRotation);
         			HedgeThorn->TravelSpeed = 15;
         			HedgeThorn->HedgeThornDamage = this->ThornDamage;
+        			FVector HedgeThornLocation = this->GetActorLocation();
+        			HedgeThornLocation.Y += SpawnDistance;
+        			HedgeThorn->SetActorLocation(HedgeThornLocation);
         			UGameplayStatics::FinishSpawningActor(HedgeThorn, FTransform::Identity);
         		}
         		else

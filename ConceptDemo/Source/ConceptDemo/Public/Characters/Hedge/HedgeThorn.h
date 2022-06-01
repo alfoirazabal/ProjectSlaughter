@@ -30,6 +30,8 @@ public:
 	UPROPERTY(EditAnywhere) USoundBase* ShotSound;
 	UPROPERTY(EditAnywhere) UAudioComponent* ShotSoundComponent;
 	UPROPERTY() float HedgeThornDamage;
+	UPROPERTY() float PythagoreanHickRelativeSize;
+	UPROPERTY() float PythagoreanHick;
 
 protected:
 	// Called when the game starts or when spawned

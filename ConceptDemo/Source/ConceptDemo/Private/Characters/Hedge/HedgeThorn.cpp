@@ -22,12 +22,13 @@ AHedgeThorn::AHedgeThorn()
 	this->InitialPosition = this->GetActorLocation();
 	this->TravelSpeed = 3;
 	this->TotalDistanceTraveled = 0;
-	this->MaxTravelDistance = 5000;
+	this->MaxTravelDistance = 3000;
 	this->ExplodingBulletClass = nullptr;
 	this->ExplodingBullet = false;
+	this->PythagoreanHickRelativeSize = 0;
 
 	this->TriggerCapsule = CreateDefaultSubobject<UCapsuleComponent>(TEXT("Trigger Capsule"));
-	this->TriggerCapsule->InitCapsuleSize(13.45, 13.45);
+	this->TriggerCapsule->InitCapsuleSize(35, 35);
 	this->TriggerCapsule->SetCollisionProfileName("NoCollision");
 	this->TriggerCapsule->SetupAttachment(this->RootComponent);
 
@@ -39,6 +40,7 @@ AHedgeThorn::AHedgeThorn()
 void AHedgeThorn::BeginPlay()
 {
 	Super::BeginPlay();
+	this->PythagoreanHick = this->TravelSpeed * this->PythagoreanHickRelativeSize;
     if (this->HedgeThornSource == nullptr)
 	{
 		GEngine->AddOnScreenDebugMessage(298662235, 2, FColor::Red, "Programming error: Hedge Thorn source not set");
@@ -61,6 +63,7 @@ void AHedgeThorn::Tick(const float DeltaTime)
 	else if (this->FacingDirection == EFacing_Direction::Left) {
 		CurrentPosition.Y -= this->TravelSpeed;
 	}
+	CurrentPosition.Z += this->PythagoreanHick;
 	this->SetActorLocation(CurrentPosition);
 	this->TotalDistanceTraveled += this->TravelSpeed;
 	if (this->TotalDistanceTraveled >= this->MaxTravelDistance) {

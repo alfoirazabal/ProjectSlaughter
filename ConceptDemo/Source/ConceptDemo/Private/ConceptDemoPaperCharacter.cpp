@@ -147,6 +147,7 @@ void AUConceptDemoPaperCharacter::UpdateHealthIndicator() const
 
 void AUConceptDemoPaperCharacter::Respawn()
 {
+	this->SetActorHiddenInGame(false);
 	this->Immune = true;
 	if (this->AttachedGun != nullptr) {
 		AGun* Gun = this->AttachedGun;
@@ -330,7 +331,8 @@ void AUConceptDemoPaperCharacter::TakeDamage(float DamageCount)
 				this->CurrentLifeSize = this->LifeSize;
 				this->DropGun();
 				this->UpdateHealthIndicator();
-				this->Respawn();
+				this->SetActorHiddenInGame(true);
+				this->MakeFallingDeath();
 			}
 		}
 		UGameplayStatics::SpawnSound2D(this->GetWorld(), this->DamageReceivedSound);

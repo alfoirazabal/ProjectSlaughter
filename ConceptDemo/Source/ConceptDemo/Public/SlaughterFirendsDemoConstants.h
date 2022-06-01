@@ -10,7 +10,7 @@ enum EFacing_Direction {
 	Left	UMETA(DisplayName = "Left")
 };
 
-constexpr int GLevelsZFallLimit = -1000;
+constexpr int GLevelsZFallLimit = -5000;
 
 /**
  * 

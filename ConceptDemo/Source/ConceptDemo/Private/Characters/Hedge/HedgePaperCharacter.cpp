@@ -4,9 +4,10 @@
 
 #include <Kismet/GameplayStatics.h>
 
+
 AHedgePaperCharacter::AHedgePaperCharacter()
 {
-	Super::SpecialPowerLoadTime = 2500;
+	this->SpecialPowerLoadTime = 250;
 	this->ThornDamage = 0.035;
 	this->ThornSpawnRelativeLocation = FVector(0.0f, 50.0f, 10.0f);
 
@@ -27,22 +28,25 @@ void AHedgePaperCharacter::Fire()
 
 void AHedgePaperCharacter::UsePower()
 {
-    if (this->HedgeThorn != nullptr) {
+    if (this->HedgeThornType != nullptr) {
         if (this->CurrentSpecialPowerLoadTime == this->SpecialPowerLoadTime)
         {
 	        FVector ThornLocation = this->GetActorLocation();
-			ThornLocation.Z += this->ThornSpawnRelativeLocation.Z;
+			ThornLocation.Y += this->ThornSpawnRelativeLocation.Y;
 			if (this->FacingDirection == EFacing_Direction::Left) {
 				ThornLocation.Y -= this->ThornSpawnRelativeLocation.Y;
 			}
 			else if (this->FacingDirection == EFacing_Direction::Right) {
 				ThornLocation.Y += this->ThornSpawnRelativeLocation.Y;
 			}
-            AHedgeThorn* HedgeThorn = this->GetWorld()->SpawnActor<AHedgeThorn>(this->HedgeThorn, ThornLocation, this->GetActorRotation());
+            AHedgeThorn* HedgeThorn = this->GetWorld()->SpawnActor<AHedgeThorn>(this->HedgeThornType, ThornLocation, this->GetActorRotation());
             if (HedgeThorn)
 			{
-				HedgeThorn->HedgeThornSource = this;
-				HedgeThorn->FacingDirection = this->FacingDirection;
+        		HedgeThorn->HedgeThornSource = this;
+            	if (this->FacingDirection == EFacing_Direction::Left)
+            		HedgeThorn->FacingDirection = EFacing_Direction::Right;
+            	if (this->FacingDirection == EFacing_Direction::Right)
+            		HedgeThorn->FacingDirection = EFacing_Direction::Left;
 				HedgeThorn->TravelSpeed = 15;
 				HedgeThorn->MaxTravelDistance = 5000;
 				HedgeThorn->HedgeThornDamage = this->ThornDamage;

@@ -28,7 +28,7 @@ AHedgeThorn::AHedgeThorn()
 
 	this->TriggerCapsule = CreateDefaultSubobject<UCapsuleComponent>(TEXT("Trigger Capsule"));
 	this->TriggerCapsule->InitCapsuleSize(13.45, 13.45);
-	this->TriggerCapsule->SetCollisionProfileName("Trigger");
+	this->TriggerCapsule->SetCollisionProfileName("NoCollision");
 	this->TriggerCapsule->SetupAttachment(this->RootComponent);
 
 	this->TriggerCapsule->OnComponentBeginOverlap.AddDynamic(this, &AHedgeThorn::OnOverlapBegin);

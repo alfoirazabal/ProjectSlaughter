@@ -15,12 +15,10 @@ class CONCEPTDEMO_API AHedgePaperCharacter : public AUConceptDemoPaperCharacter
 {
 	GENERATED_BODY()
 	
-	UPROPERTY(EditAnywhere) TSubclassOf<AHedgeThorn> HedgeThorn;
+	UPROPERTY(EditAnywhere) TSubclassOf<AHedgeThorn> HedgeThornType;
 	UPROPERTY(EditAnywhere, Category="Sounds") USoundBase* HedgeThornSound;
 	UPROPERTY(EditAnywhere) float ThornDamage;
 	UPROPERTY(EditAnywhere) FVector ThornSpawnRelativeLocation;
-	
-	EFacing_Direction FacingDirection;
 
 	AHedgePaperCharacter();
 	virtual void Fire() override;

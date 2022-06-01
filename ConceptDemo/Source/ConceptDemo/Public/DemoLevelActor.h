@@ -41,6 +41,8 @@ public:
 	UPROPERTY(EditAnywhere, Category = "Music") TArray<USoundBase*> LevelMusic;
 	UPROPERTY(EditAnywhere, Category = "Music") UAudioComponent* LevelMusicComponent;
 	UPROPERTY() int CurrentBackgroundMusicPlayingIndex;
+
+	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable) void OnGunSpawned(AGun* Gun);
 	
 	virtual void BeginPlay() override;
 	

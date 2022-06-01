@@ -229,6 +229,7 @@ void ADemoLevelActor::SpawnGuns()
 				RandomFreeSpawner->InUse = true;
 				Gun->GunDead.AddDynamic(this, &ADemoLevelActor::ReactToGunDeath);
 				CurrentGunsInLevel++;
+				this->OnGunSpawned(Gun);
 			}
 		}
 	}

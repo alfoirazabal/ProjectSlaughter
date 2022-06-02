@@ -126,10 +126,17 @@ void ATrainAISpawner::Tick(const float DeltaTime)
 	}
 	if (this->trainTrafficLights->bRedLightOn || this->trainTrafficLights->bYellowLightOn)
 	{
-		if (this->TrainArrivalSound && !this->TrainArrivalSoundComponent)
+		if (this->TrainArrivalSound)
 		{
-			this->TrainArrivalSoundComponent = UGameplayStatics::SpawnSound2D(this->GetWorld(), this->TrainArrivalSound);
+			if (!this->TrainArrivalSoundComponent)
+			{
+				this->TrainArrivalSoundComponent = UGameplayStatics::SpawnSound2D(this->GetWorld(), this->TrainArrivalSound);
+			}
+			if (!this->TrainArrivalSoundComponent->IsPlaying()) this->TrainArrivalSoundComponent->Play();
 		}
-		if (!this->TrainArrivalSoundComponent->IsPlaying()) this->TrainArrivalSoundComponent->Play();
+		else
+		{
+			GEngine->AddOnScreenDebugMessage(236723334, 2, FColor::Yellow, "Train arrival sound not set for TrainAISpawner");
+		}
 	}
 }

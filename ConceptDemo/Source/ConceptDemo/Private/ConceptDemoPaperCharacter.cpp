@@ -147,6 +147,7 @@ void AUConceptDemoPaperCharacter::UpdateHealthIndicator() const
 
 void AUConceptDemoPaperCharacter::Respawn()
 {
+	if (this->RespawnSound) UGameplayStatics::SpawnSound2D(this->GetWorld(), this->RespawnSound);
 	this->SetActorHiddenInGame(false);
 	this->Immune = true;
 	if (this->AttachedGun != nullptr) {
@@ -241,6 +242,7 @@ void AUConceptDemoPaperCharacter::AttachGun(AGun* Gun)
 		this->CharacterHUD->SetGunAttached(true);
 		this->CharacterHUD->SetStaminaBar(Gun->ShotsCount, Gun->ShotsLeft);
 		this->AttachedGun->ShotLost.AddDynamic(this, &AUConceptDemoPaperCharacter::UpdateShotsCount);
+		if (this->AttachGunSound) UGameplayStatics::SpawnSound2D(this->GetWorld(), this->AttachGunSound);
 	}
 	else {
 		this->GunsIgnored.Add(Gun);

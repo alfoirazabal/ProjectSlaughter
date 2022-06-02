@@ -82,6 +82,14 @@ void ADemoLevelActor::BeginPlay()
 	{
 		GEngine->AddOnScreenDebugMessage(28611252, 2, FColor::Red, "Level has no music! Can be changed in the editor");
 	}
+	if (this->BackgroundMusic)
+	{
+		UGameplayStatics::PlaySound2D(this->GetWorld(), this->BackgroundMusic);
+	}
+	else
+	{
+		GEngine->AddOnScreenDebugMessage(28611253, 5, FColor::Yellow, "Level has no background music! Can be changed in editor");
+	}
 }
 
 

@@ -42,6 +42,10 @@ AUConceptDemoPaperCharacter::AUConceptDemoPaperCharacter()
 	this->GetCharacterMovement()->GravityScale = 3;
 	this->GetCharacterMovement()->JumpZVelocity = 1190;
 
+	this->Immune = false;
+	this->TimeBetweenActorRespawnBlink = 0.15;
+	this->RespawnBlinkCount = 20;
+
 	this->TriggerCapsule = CreateDefaultSubobject<UCapsuleComponent>(TEXT("Trigger Capsule"));
 	this->TriggerCapsule->InitCapsuleSize(38.59, 89.37);
 	this->TriggerCapsule->SetCollisionProfileName("Trigger");
@@ -143,6 +147,9 @@ void AUConceptDemoPaperCharacter::UpdateHealthIndicator() const
 
 void AUConceptDemoPaperCharacter::Respawn()
 {
+	if (this->RespawnSound) UGameplayStatics::SpawnSound2D(this->GetWorld(), this->RespawnSound);
+	this->SetActorHiddenInGame(false);
+	this->Immune = true;
 	if (this->AttachedGun != nullptr) {
 		AGun* Gun = this->AttachedGun;
 		this->DropGun();
@@ -150,9 +157,10 @@ void AUConceptDemoPaperCharacter::Respawn()
 	}
 	this->bFallingDeath = false;
 	this->SetActorLocation(this->InitialPosition);
+	this->GetWorld()->GetTimerManager().SetTimer(
+		this->RespawnTimer, this, &AUConceptDemoPaperCharacter::ProcessRespawning, this->TimeBetweenActorRespawnBlink, true
+	);
 }
-
-
 
 bool AUConceptDemoPaperCharacter::IsOnTheAir() const
 {
@@ -234,6 +242,7 @@ void AUConceptDemoPaperCharacter::AttachGun(AGun* Gun)
 		this->CharacterHUD->SetGunAttached(true);
 		this->CharacterHUD->SetStaminaBar(Gun->ShotsCount, Gun->ShotsLeft);
 		this->AttachedGun->ShotLost.AddDynamic(this, &AUConceptDemoPaperCharacter::UpdateShotsCount);
+		if (this->AttachGunSound) UGameplayStatics::SpawnSound2D(this->GetWorld(), this->AttachGunSound);
 	}
 	else {
 		this->GunsIgnored.Add(Gun);
@@ -309,23 +318,27 @@ void AUConceptDemoPaperCharacter::UpdateShotsCount()
 
 void AUConceptDemoPaperCharacter::TakeDamage(float DamageCount)
 {
-	this->CurrentLifeSize -= DamageCount;
-	this->UpdateHealthIndicator();
-	if (this->CurrentLifeSize <= 0) {
-		this->CurrentLives--;
+	if (!this->Immune)
+	{
+		this->CurrentLifeSize -= DamageCount;
 		this->UpdateHealthIndicator();
-		this->GetWorld()->SpawnActor<ASkull>(this->DeathSkull, this->GetActorLocation(), this->GetActorRotation());
-		if (this->CurrentLives == 0) {
-			this->Die();
-		}
-		else {
-			this->CurrentLifeSize = this->LifeSize;
-			this->DropGun();
+		if (this->CurrentLifeSize <= 0) {
+			this->CurrentLives--;
 			this->UpdateHealthIndicator();
-			this->Respawn();
+			this->GetWorld()->SpawnActor<ASkull>(this->DeathSkull, this->GetActorLocation(), this->GetActorRotation());
+			if (this->CurrentLives == 0) {
+				this->Die();
+			}
+			else {
+				this->CurrentLifeSize = this->LifeSize;
+				this->DropGun();
+				this->UpdateHealthIndicator();
+				this->SetActorHiddenInGame(true);
+				this->MakeFallingDeath();
+			}
 		}
+		UGameplayStatics::SpawnSound2D(this->GetWorld(), this->DamageReceivedSound);
 	}
-	UGameplayStatics::SpawnSound2D(this->GetWorld(), this->DamageReceivedSound);
 }
 
 void AUConceptDemoPaperCharacter::AddLife(float Life)
@@ -339,6 +352,19 @@ void AUConceptDemoPaperCharacter::AddLife(float Life)
 		this->CurrentLifeSize = 1;
 	}
 	this->UpdateHealthIndicator();
+}
+
+void AUConceptDemoPaperCharacter::ProcessRespawning()
+{
+	this->SetActorHiddenInGame(!this->IsHidden());
+	this->CurrentHideAndShowCount++;
+	if (this->CurrentHideAndShowCount >= this->RespawnBlinkCount)
+	{
+		this->CurrentHideAndShowCount = 0;
+		this->Immune = false;
+		this->SetActorHiddenInGame(false);
+		this->GetWorld()->GetTimerManager().ClearTimer(this->RespawnTimer);
+	}
 }
 
 void AUConceptDemoPaperCharacter::Die()

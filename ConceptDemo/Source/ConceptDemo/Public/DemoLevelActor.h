@@ -40,7 +40,10 @@ public:
 	UPROPERTY() AUConceptDemoPaperCharacter* Player2;
 	UPROPERTY(EditAnywhere, Category = "Music") TArray<USoundBase*> LevelMusic;
 	UPROPERTY(EditAnywhere, Category = "Music") UAudioComponent* LevelMusicComponent;
+	UPROPERTY(EditAnywhere, Category = "Music") USoundBase* BackgroundMusic;
 	UPROPERTY() int CurrentBackgroundMusicPlayingIndex;
+
+	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable) void OnGunSpawned(AGun* Gun);
 	
 	virtual void BeginPlay() override;
 	

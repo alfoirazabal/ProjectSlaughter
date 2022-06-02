@@ -88,11 +88,13 @@ void AGun::SetAttached() {
 	this->bRotate = false;
 	this->SetActorEnableCollision(false);
 	UGameplayStatics::SpawnSound2D(this->GetWorld(), this->GunGrabSound);
+	this->OnGunAttatched();
 }
 
 void AGun::SetDetached() {
 	this->bRotate = true;
 	this->SetActorEnableCollision(true);
+	this->OnGunDetached();
 }
 
 void AGun::Fire() {

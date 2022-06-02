@@ -33,7 +33,19 @@ void UGameOverWidget::NativeConstruct()
 				{
 					GEngine->AddOnScreenDebugMessage(129576123, 2, FColor::Red, "PaperCharacter Object texture invalid for winning player");
 				}
+				if (DefaultObject->WinSound)
+				{
+					UGameplayStatics::PlaySound2D(this->GetWorld(), DefaultObject->WinSound);
+				}
+				else
+				{
+					GEngine->AddOnScreenDebugMessage(284662666, 2, FColor::Red, "Player " + DefaultObject->GetName() + " has no Win Sound!");
+				}
 			}
+		}
+		else
+		{
+			GEngine->AddOnScreenDebugMessage(277177122, 2, FColor::Red, "Can't find SelectedPlayerType variable (Winning player)");
 		}
 		FText WinnerPlayerName;
 		switch (GameInstance->WinningPlayerNumber)

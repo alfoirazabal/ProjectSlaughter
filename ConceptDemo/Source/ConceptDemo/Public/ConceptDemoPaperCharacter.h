@@ -35,6 +35,13 @@ public:
 	UPROPERTY(EditAnywhere) UTexture2D* CharacterImage;
 	UPROPERTY(EditAnywhere) FString PlayerDescription;
 
+	UPROPERTY(EditAnywhere, Category="Sounds") USoundBase* JumpSound;
+	UPROPERTY(EditAnywhere, Category="Sounds") USoundBase* PowerSound;
+	UPROPERTY(EditAnywhere, Category="Sounds") USoundBase* DamageReceivedSound;
+	UPROPERTY(EditAnywhere, Category="Sounds") USoundBase* AttachGunSound;
+	UPROPERTY(EditAnywhere, Category="Sounds") USoundBase* RespawnSound;
+	UPROPERTY(EditAnywhere, Category="Sounds") USoundBase* WinSound;
+
 protected:
 	// Called when the game starts
 	UPROPERTY(EditAnywhere, Category="Concept Demo Action Sprites") UPaperFlipbook* IdleFlipBook;
@@ -43,9 +50,9 @@ protected:
 	UPROPERTY(EditAnywhere, Category="Concept Demo Drops") TSubclassOf<ASkull> DeathSkull;
 	UPROPERTY(EditAnywhere, Category="Character Asset Positions") int GunZRelativeLocation;
 
-	UPROPERTY(EditAnywhere, Category="Sounds") USoundBase* JumpSound;
-	UPROPERTY(EditAnywhere, Category="Sounds") USoundBase* PowerSound;
-	UPROPERTY(EditAnywhere, Category="Sounds") USoundBase* DamageReceivedSound;
+	UPROPERTY(EditAnywhere, Category="Respawning") float TimeBetweenActorRespawnBlink;
+	UPROPERTY(EditAnywhere, Category="Respawning") float RespawnBlinkCount;
+	UPROPERTY() uint16 CurrentHideAndShowCount;
 	
 	UPROPERTY(EditAnywhere) FText PlayerName;
 	
@@ -61,6 +68,9 @@ protected:
 	
 	UPROPERTY(EditAnywhere) uint16 SpecialPowerLoadTime;
 	uint16 CurrentSpecialPowerLoadTime;
+	
+	UPROPERTY() bool Immune;
+	UPROPERTY() FTimerHandle RespawnTimer;
 	
 	virtual void BeginPlay() override;
 	void MakeFallingDeath();
@@ -83,6 +93,7 @@ public:
 	UFUNCTION() void UpdateShotsCount();
 	UFUNCTION() void TakeDamage(float DamageCount);
 	UFUNCTION() void AddLife(float Life);
+	UFUNCTION() void ProcessRespawning();
 	UFUNCTION() void Die();
 	
 	FOnPlayerDeath PlayerDeath;
@@ -92,6 +103,8 @@ public:
 	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
+
+	//UPROPERTY(EditAnywhere, Category = "Spawn Sprite") class UPaperSprite* SpawnSprite;
 
 	UPROPERTY(VisibleAnywhere, Category = "Trigger Capsule")
 	class UCapsuleComponent* TriggerCapsule;

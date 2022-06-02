@@ -31,6 +31,8 @@ public:
 
 	UPROPERTY(EditAnywhere) USoundBase* TrainArrivalSound;
 	UPROPERTY() UAudioComponent* TrainArrivalSoundComponent;
+	UPROPERTY(EditAnywhere) USoundBase* TrainPassingSound;
+	UPROPERTY(EditAnywhere) USoundBase* TrainOnStationSound;
 
 private:
 	void SetRedLight() const;

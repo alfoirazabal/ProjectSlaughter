@@ -73,8 +73,7 @@ void AHedgePaperCharacter::UsePower()
         			GEngine->AddOnScreenDebugMessage(18572334, 2, FColor::Red, "Thorn not set for Hedge: " + this->GetName());
         		}
         	}
-            UGameplayStatics::SpawnSound2D(this->GetWorld(), this->PowerSound);
-            this->CurrentSpecialPowerLoadTime = 0;
+            Super::UsePower();
         }
     }
 	else {

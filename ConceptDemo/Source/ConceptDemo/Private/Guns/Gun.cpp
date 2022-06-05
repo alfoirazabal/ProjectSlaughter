@@ -43,6 +43,28 @@ void AGun::BeginPlay()
 	Super::BeginPlay();
 	this->ShotsLeft = this->ShotsCount;
 	this->InitialLocation = this->GetActorLocation();
+	if (!this->SparklesType)
+	{
+		GEngine->AddOnScreenDebugMessage(FMath::Rand(), 2, FColor::Yellow, "Sparkles not set fun gun: " + this->GetName());
+	}
+	this->SpawnSparkles();
+}
+
+void AGun::SpawnSparkles()
+{
+	if (this->SparklesType)
+	{
+		this->Sparkles =
+			this->GetWorld()->SpawnActor<AActor>(this->SparklesType, GetActorLocation(), FRotator(90, 0, 90));
+	}
+}
+
+void AGun::DestroySparkles() const
+{
+	if (this->Sparkles)
+	{
+		this->Sparkles->Destroy();
+	}
 }
 
 // Called every frame
@@ -80,6 +102,10 @@ void AGun::Tick(const float DeltaTime)
 		if (this->ShotsLeft == 0)
 		{
 			this->GunDead.Broadcast(this);
+			if (this->Sparkles)
+			{
+				this->Sparkles->Destroy();
+			}
 		}
 	}
 }
@@ -88,12 +114,15 @@ void AGun::SetAttached() {
 	this->bRotate = false;
 	this->SetActorEnableCollision(false);
 	UGameplayStatics::SpawnSound2D(this->GetWorld(), this->GunGrabSound);
+	this->DestroySparkles();
 	this->OnGunAttatched();
 }
 
 void AGun::SetDetached() {
 	this->bRotate = true;
 	this->SetActorEnableCollision(true);
+	FTimerHandle TimerHandle;
+	this->GetWorld()->GetTimerManager().SetTimer(TimerHandle, this, &AGun::SpawnSparkles, 0.1, false);
 	this->OnGunDetached();
 }
 

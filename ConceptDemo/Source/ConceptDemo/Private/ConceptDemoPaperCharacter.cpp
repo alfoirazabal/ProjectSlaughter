@@ -14,6 +14,7 @@
 #include "Components/WidgetComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "Kismet/GameplayStatics.h"
+#include "Props/Death/DeathIndicator.h"
 
 constexpr float GDefault_Character_Plane_X_Position = 760;
 
@@ -45,6 +46,11 @@ AUConceptDemoPaperCharacter::AUConceptDemoPaperCharacter()
 	this->Immune = false;
 	this->TimeBetweenActorRespawnBlink = 0.15;
 	this->RespawnBlinkCount = 20;
+	
+	static ConstructorHelpers::FClassFinder<ADeathIndicator> DeathIndicatorObject(TEXT("/Game/Props/Death/DeathIndicator"));
+	this->DeathIndicatorType = DeathIndicatorObject.Class;
+	static ConstructorHelpers::FClassFinder<APowerupReadyProp> PowerUpReadyObject(TEXT("/Game/Props/VFX/CharacterPowerupReady/PowerupReady"));
+	this->PowerUpReadyPropType = PowerUpReadyObject.Class;
 
 	this->TriggerCapsule = CreateDefaultSubobject<UCapsuleComponent>(TEXT("Trigger Capsule"));
 	this->TriggerCapsule->InitCapsuleSize(38.59, 89.37);
@@ -115,6 +121,15 @@ void AUConceptDemoPaperCharacter::BeginPlay()
 	else {
 		GEngine->AddOnScreenDebugMessage(564564, 2, FColor::Red, "HealthHUD not found!");
 	}
+}
+
+void AUConceptDemoPaperCharacter::MakeFallingDeathWithIndicator()
+{
+	const FTransform Transform = this->GetActorTransform();
+	ADeathIndicator* DeathIndicator = this->GetWorld()->SpawnActorDeferred<ADeathIndicator>(this->DeathIndicatorType, Transform, this, nullptr, ESpawnActorCollisionHandlingMethod::AlwaysSpawn);
+	this->bFallingDeath = true;
+	DeathIndicator->DeadCharacter = this;
+	UGameplayStatics::FinishSpawningActor(DeathIndicator, Transform);
 }
 
 void AUConceptDemoPaperCharacter::MakeFallingDeath()
@@ -305,6 +320,7 @@ void AUConceptDemoPaperCharacter::UsePower()
 {
 	this->CurrentSpecialPowerLoadTime = 0;
 	UGameplayStatics::SpawnSound2D(this->GetWorld(), this->PowerSound);
+	this->SpecialPowerReadyPropShown = false;
 }
 
 void AUConceptDemoPaperCharacter::UpdateShotsCount()
@@ -323,19 +339,13 @@ void AUConceptDemoPaperCharacter::TakeDamage(float DamageCount)
 		this->CurrentLifeSize -= DamageCount;
 		this->UpdateHealthIndicator();
 		if (this->CurrentLifeSize <= 0) {
-			this->CurrentLives--;
 			this->UpdateHealthIndicator();
 			this->GetWorld()->SpawnActor<ASkull>(this->DeathSkull, this->GetActorLocation(), this->GetActorRotation());
-			if (this->CurrentLives == 0) {
-				this->Die();
-			}
-			else {
-				this->CurrentLifeSize = this->LifeSize;
-				this->DropGun();
-				this->UpdateHealthIndicator();
-				this->SetActorHiddenInGame(true);
-				this->MakeFallingDeath();
-			}
+			this->CurrentLifeSize = this->LifeSize;
+			this->DropGun();
+			this->UpdateHealthIndicator();
+			this->SetActorHiddenInGame(true);
+			this->MakeFallingDeath();
 		}
 		UGameplayStatics::SpawnSound2D(this->GetWorld(), this->DamageReceivedSound);
 	}
@@ -385,6 +395,21 @@ void AUConceptDemoPaperCharacter::Tick(const float DeltaTime)
 		this->CurrentSpecialPowerLoadTime++;
 		this->UpdateHealthIndicator();
 	}
+	if (CurrentSpecialPowerLoadTime >= this->SpecialPowerLoadTime)
+	{
+		if (!this->SpecialPowerReadyPropShown)
+		{
+			const FVector PowerUpReadyPropPosition = this->GetActorLocation();
+			FTransform Transform = this->GetTransform();
+			Transform.SetLocation(PowerUpReadyPropPosition);
+			APowerupReadyProp* PowerUpReadyProp = this->GetWorld()->SpawnActorDeferred<APowerupReadyProp>(
+				this->PowerUpReadyPropType, Transform, this, this, ESpawnActorCollisionHandlingMethod::AlwaysSpawn
+			);
+			PowerUpReadyProp->ActorToFollow = this;
+			UGameplayStatics::FinishSpawningActor(PowerUpReadyProp, Transform);
+			this->SpecialPowerReadyPropShown = true;
+		}
+	}
 }
 
 void AUConceptDemoPaperCharacter::OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor* OtherActor,
@@ -397,11 +422,11 @@ void AUConceptDemoPaperCharacter::OnOverlapBegin(UPrimitiveComponent* Overlapped
 		AGun* Gun = Cast<AGun>(OtherActor);
 		if (Spikes)
 		{
-			this->MakeFallingDeath();
+			this->MakeFallingDeathWithIndicator();
 		}
 		if (Train)
 		{
-			this->MakeFallingDeath();
+			this->MakeFallingDeathWithIndicator();
 		}
 		if (Gun)
 		{

@@ -14,17 +14,23 @@ ADeathIndicator::ADeathIndicator()
 
 	this->PlayerMoveXDistance = -1;
 	this->PlayerMoveYDistance = 0;
-	this->SpawnXDistance = -500;
+	this->SpawnXDistance = -175;
 	this->SpawnYDistance = 0;
-	this->DisplayTime = 3;
+	this->DisplayTime = 1.5;
+	this->PlayerMoveXOnDestroyDistance = -500;
+	this->PlayerMoveYOnDestroyDistance = 0;
 }
 
 void ADeathIndicator::Disappear()
 {
 	if (this->DeadCharacter)
 	{
+		FVector CurrentCharacterLocation = this->DeadCharacter->GetActorLocation();
+		CurrentCharacterLocation.X += this->PlayerMoveXOnDestroyDistance;
+		CurrentCharacterLocation.Y += this->PlayerMoveYOnDestroyDistance;
+		this->DeadCharacter->SetActorLocation(CurrentCharacterLocation);
 		this->DeadCharacter->GetCharacterMovement()->MovementMode = EMovementMode::MOVE_Walking;
-		this->PlayerController->Possess(this->DeadCharacter);
+		this->PlayerController->SetIgnoreMoveInput(false);
 	}
 	this->Destroy();
 }
@@ -46,9 +52,10 @@ void ADeathIndicator::BeginPlay()
 		CurrentCharacterPosition.Y += this->PlayerMoveYDistance;
 		this->DeadCharacter->SetActorLocation(CurrentCharacterPosition);
 		this->PlayerController = this->DeadCharacter->GetController();
-		this->PlayerController->UnPossess();
-		this->DeadCharacter->GetCharacterMovement()->StopMovementImmediately();
-		this->DeadCharacter->GetCharacterMovement()->MovementMode = EMovementMode::MOVE_Flying;
+		this->PlayerController->SetIgnoreMoveInput(true);
+		UCharacterMovementComponent* DeadCharacterMovement = this->DeadCharacter->GetCharacterMovement();
+		DeadCharacterMovement->StopMovementImmediately();
+		DeadCharacterMovement->MovementMode = EMovementMode::MOVE_Flying;
 	}
 	
 	FTimerHandle TimerHandle;

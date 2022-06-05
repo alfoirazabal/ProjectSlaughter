@@ -21,6 +21,8 @@ public:
 	UPROPERTY(EditAnywhere) float PlayerMoveYDistance;
 	UPROPERTY(EditAnywhere) float SpawnXDistance;
 	UPROPERTY(EditAnywhere) float SpawnYDistance;
+	UPROPERTY(EditAnywhere) float PlayerMoveXOnDestroyDistance;
+	UPROPERTY(EditAnywhere) float PlayerMoveYOnDestroyDistance;
 
 	void Disappear();
 

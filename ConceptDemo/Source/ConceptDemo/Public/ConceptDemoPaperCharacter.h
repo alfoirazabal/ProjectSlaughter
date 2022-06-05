@@ -78,6 +78,7 @@ protected:
 	UPROPERTY() FTimerHandle RespawnTimer;
 	
 	virtual void BeginPlay() override;
+	void MakeFallingDeathWithIndicator();
 	void MakeFallingDeath();
 
 public:

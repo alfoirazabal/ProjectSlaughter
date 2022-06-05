@@ -14,7 +14,7 @@ ADeathIndicator::ADeathIndicator()
 
 	this->PlayerMoveXDistance = -1;
 	this->PlayerMoveYDistance = 0;
-	this->SpawnXDistance = -175;
+	this->SpawnXDistance = -190;
 	this->SpawnYDistance = 0;
 	this->DisplayTime = 1.5;
 	this->PlayerMoveXOnDestroyDistance = -500;

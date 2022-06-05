@@ -123,13 +123,21 @@ void AUConceptDemoPaperCharacter::BeginPlay()
 	}
 }
 
-void AUConceptDemoPaperCharacter::MakeFallingDeath()
+void AUConceptDemoPaperCharacter::MakeFallingDeathWithIndicator()
 {
 	const FTransform Transform = this->GetActorTransform();
 	ADeathIndicator* DeathIndicator = this->GetWorld()->SpawnActorDeferred<ADeathIndicator>(this->DeathIndicatorType, Transform, this, nullptr, ESpawnActorCollisionHandlingMethod::AlwaysSpawn);
 	this->bFallingDeath = true;
 	DeathIndicator->DeadCharacter = this;
 	UGameplayStatics::FinishSpawningActor(DeathIndicator, Transform);
+}
+
+void AUConceptDemoPaperCharacter::MakeFallingDeath()
+{
+	this->bFallingDeath = true;
+	FVector CurrentPosition = this->GetActorLocation();
+	CurrentPosition.X -= 500;
+	this->SetActorLocation(CurrentPosition);
 }
 
 void AUConceptDemoPaperCharacter::SetPlayerName(const FText NewPlayerName) const
@@ -331,19 +339,13 @@ void AUConceptDemoPaperCharacter::TakeDamage(float DamageCount)
 		this->CurrentLifeSize -= DamageCount;
 		this->UpdateHealthIndicator();
 		if (this->CurrentLifeSize <= 0) {
-			this->CurrentLives--;
 			this->UpdateHealthIndicator();
 			this->GetWorld()->SpawnActor<ASkull>(this->DeathSkull, this->GetActorLocation(), this->GetActorRotation());
-			if (this->CurrentLives == 0) {
-				this->Die();
-			}
-			else {
-				this->CurrentLifeSize = this->LifeSize;
-				this->DropGun();
-				this->UpdateHealthIndicator();
-				this->SetActorHiddenInGame(true);
-				this->MakeFallingDeath();
-			}
+			this->CurrentLifeSize = this->LifeSize;
+			this->DropGun();
+			this->UpdateHealthIndicator();
+			this->SetActorHiddenInGame(true);
+			this->MakeFallingDeath();
 		}
 		UGameplayStatics::SpawnSound2D(this->GetWorld(), this->DamageReceivedSound);
 	}
@@ -420,11 +422,11 @@ void AUConceptDemoPaperCharacter::OnOverlapBegin(UPrimitiveComponent* Overlapped
 		AGun* Gun = Cast<AGun>(OtherActor);
 		if (Spikes)
 		{
-			this->MakeFallingDeath();
+			this->MakeFallingDeathWithIndicator();
 		}
 		if (Train)
 		{
-			this->MakeFallingDeath();
+			this->MakeFallingDeathWithIndicator();
 		}
 		if (Gun)
 		{

@@ -14,6 +14,7 @@
 #include "Components/WidgetComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "Kismet/GameplayStatics.h"
+#include "Props/Death/DeathIndicator.h"
 
 constexpr float GDefault_Character_Plane_X_Position = 760;
 
@@ -45,6 +46,9 @@ AUConceptDemoPaperCharacter::AUConceptDemoPaperCharacter()
 	this->Immune = false;
 	this->TimeBetweenActorRespawnBlink = 0.15;
 	this->RespawnBlinkCount = 20;
+	
+	static ConstructorHelpers::FClassFinder<ADeathIndicator> DeathIndicatorObject(TEXT("/Game/Props/Death/DeathIndicator"));
+	this->DeathIndicatorType = DeathIndicatorObject.Class;
 
 	this->TriggerCapsule = CreateDefaultSubobject<UCapsuleComponent>(TEXT("Trigger Capsule"));
 	this->TriggerCapsule->InitCapsuleSize(38.59, 89.37);
@@ -119,10 +123,11 @@ void AUConceptDemoPaperCharacter::BeginPlay()
 
 void AUConceptDemoPaperCharacter::MakeFallingDeath()
 {
+	const FTransform Transform = this->GetActorTransform();
+	ADeathIndicator* DeathIndicator = this->GetWorld()->SpawnActorDeferred<ADeathIndicator>(this->DeathIndicatorType, Transform, this, nullptr, ESpawnActorCollisionHandlingMethod::AlwaysSpawn);
 	this->bFallingDeath = true;
-	FVector CurrentPosition = this->GetActorLocation();
-	CurrentPosition.X -= 500;
-	this->SetActorLocation(CurrentPosition);
+	DeathIndicator->DeadCharacter = this;
+	UGameplayStatics::FinishSpawningActor(DeathIndicator, Transform);
 }
 
 void AUConceptDemoPaperCharacter::SetPlayerName(const FText NewPlayerName) const

@@ -9,6 +9,7 @@
 #include "PaperCharacter.h"
 #include "PaperCharacterHUD.h"
 #include "Characters/Skull.h"
+#include "Props/Death/DeathIndicator.h"
 #include "ConceptDemoPaperCharacter.generated.h"
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnPlayerDeath);
@@ -52,6 +53,7 @@ protected:
 
 	UPROPERTY(EditAnywhere, Category="Respawning") float TimeBetweenActorRespawnBlink;
 	UPROPERTY(EditAnywhere, Category="Respawning") float RespawnBlinkCount;
+	UPROPERTY(EditAnywhere, Category="Death") TSubclassOf<ADeathIndicator> DeathIndicatorType;
 	UPROPERTY() uint16 CurrentHideAndShowCount;
 	
 	UPROPERTY(EditAnywhere) FText PlayerName;

@@ -38,8 +38,7 @@ void ASkunkPaperCharacter::UsePower()
 		{
 			GEngine->AddOnScreenDebugMessage(18572334, 2, FColor::Red, "Fart cloud not set for Skunk: " + this->GetName());
 		}
-		UGameplayStatics::SpawnSound2D(this->GetWorld(), this->PowerSound);
-		this->CurrentSpecialPowerLoadTime = 0;
+		Super::UsePower();
 	}
 }
 

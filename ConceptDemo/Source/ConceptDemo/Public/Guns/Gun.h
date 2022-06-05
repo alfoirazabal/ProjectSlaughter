@@ -53,6 +53,9 @@ public:
 
 	UPROPERTY(EditAnywhere, Category="Sounds") USoundBase* GunGrabSound;
 
+	UPROPERTY(EditAnywhere, Category="GunProps") TSubclassOf<AActor> SparklesType;
+	UPROPERTY() AActor* Sparkles;
+
 	FOnShotLost ShotLost;
 	FOnGunDead GunDead;
 
@@ -61,6 +64,9 @@ protected:
 	virtual void BeginPlay() override;
 	int32 CurrentTimeBetweenShots;
 	int32 CurrentShotLossTime;
+
+	UFUNCTION() void SpawnSparkles();
+	UFUNCTION() void DestroySparkles() const;
 
 public:	
 	// Called every frame

@@ -49,6 +49,8 @@ AUConceptDemoPaperCharacter::AUConceptDemoPaperCharacter()
 	
 	static ConstructorHelpers::FClassFinder<ADeathIndicator> DeathIndicatorObject(TEXT("/Game/Props/Death/DeathIndicator"));
 	this->DeathIndicatorType = DeathIndicatorObject.Class;
+	static ConstructorHelpers::FClassFinder<APowerupReadyProp> PowerUpReadyObject(TEXT("/Game/Props/VFX/CharacterPowerupReady/PowerupReady"));
+	this->PowerUpReadyPropType = PowerUpReadyObject.Class;
 
 	this->TriggerCapsule = CreateDefaultSubobject<UCapsuleComponent>(TEXT("Trigger Capsule"));
 	this->TriggerCapsule->InitCapsuleSize(38.59, 89.37);
@@ -310,6 +312,7 @@ void AUConceptDemoPaperCharacter::UsePower()
 {
 	this->CurrentSpecialPowerLoadTime = 0;
 	UGameplayStatics::SpawnSound2D(this->GetWorld(), this->PowerSound);
+	this->SpecialPowerReadyPropShown = false;
 }
 
 void AUConceptDemoPaperCharacter::UpdateShotsCount()
@@ -389,6 +392,21 @@ void AUConceptDemoPaperCharacter::Tick(const float DeltaTime)
 	{
 		this->CurrentSpecialPowerLoadTime++;
 		this->UpdateHealthIndicator();
+	}
+	if (CurrentSpecialPowerLoadTime >= this->SpecialPowerLoadTime)
+	{
+		if (!this->SpecialPowerReadyPropShown)
+		{
+			const FVector PowerUpReadyPropPosition = this->GetActorLocation();
+			FTransform Transform = this->GetTransform();
+			Transform.SetLocation(PowerUpReadyPropPosition);
+			APowerupReadyProp* PowerUpReadyProp = this->GetWorld()->SpawnActorDeferred<APowerupReadyProp>(
+				this->PowerUpReadyPropType, Transform, this, this, ESpawnActorCollisionHandlingMethod::AlwaysSpawn
+			);
+			PowerUpReadyProp->ActorToFollow = this;
+			UGameplayStatics::FinishSpawningActor(PowerUpReadyProp, Transform);
+			this->SpecialPowerReadyPropShown = true;
+		}
 	}
 }
 

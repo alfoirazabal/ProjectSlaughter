@@ -10,6 +10,7 @@ AHedgePaperCharacter::AHedgePaperCharacter()
 	this->SpecialPowerLoadTime = 1000;
 	this->ThornDamage = 0.25;
 	this->ThornSpawnDistance = 75;
+	this->RelativeGunAttachLocation = FVector(-5, -35, -45);
 
 	this->PlayerDescription = FString("HEDGE").Append(LINE_TERMINATOR).Append("Can throw thorns from his back and damage enemies");
 }

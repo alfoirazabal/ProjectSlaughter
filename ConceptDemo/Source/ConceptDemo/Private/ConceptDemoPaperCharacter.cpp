@@ -51,6 +51,8 @@ AUConceptDemoPaperCharacter::AUConceptDemoPaperCharacter()
 	this->DeathIndicatorType = DeathIndicatorObject.Class;
 	static ConstructorHelpers::FClassFinder<APowerupReadyProp> PowerUpReadyObject(TEXT("/Game/Props/VFX/CharacterPowerupReady/PowerupReady"));
 	this->PowerUpReadyPropType = PowerUpReadyObject.Class;
+	
+	this->RelativeGunAttachLocation = FVector(-5, -30, -30);
 
 	this->TriggerCapsule = CreateDefaultSubobject<UCapsuleComponent>(TEXT("Trigger Capsule"));
 	this->TriggerCapsule->InitCapsuleSize(38.59, 89.37);
@@ -65,9 +67,18 @@ void AUConceptDemoPaperCharacter::MoveGun() const
 {
 	if (this->AttachedGun != nullptr) {
 		this->AttachedGun->FacingDirection = this->FacingDirection;
-		FVector ActorLocation = this->GetActorLocation();
-		ActorLocation.Z += this->GunZRelativeLocation;
-		this->AttachedGun->SetActorLocation(ActorLocation);
+		FVector GunLocation = this->GetActorLocation();
+		GunLocation.X += this->RelativeGunAttachLocation.X;
+		GunLocation.Z += this->RelativeGunAttachLocation.Z;
+		if (this->AttachedGun->FacingDirection == EFacing_Direction::Left)
+		{
+			GunLocation.Y += this->RelativeGunAttachLocation.Y;
+		}
+		else if (this->AttachedGun->FacingDirection == EFacing_Direction::Right)
+		{
+			GunLocation.Y -= this->RelativeGunAttachLocation.Y;
+		}
+		this->AttachedGun->SetActorLocation(GunLocation);
 	}
 }
 

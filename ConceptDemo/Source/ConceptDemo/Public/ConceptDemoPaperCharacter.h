@@ -8,6 +8,7 @@
 #include "Guns/Gun.h"
 #include "PaperCharacter.h"
 #include "PaperCharacterHUD.h"
+#include "UConceptDemoPaperPawn.h"
 #include "Characters/PowerupReadyProp.h"
 #include "Characters/Skull.h"
 #include "Props/Death/DeathIndicator.h"
@@ -16,7 +17,7 @@
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnPlayerDeath);
 
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
-class CONCEPTDEMO_API AUConceptDemoPaperCharacter : public APaperCharacter
+class CONCEPTDEMO_API AUConceptDemoPaperCharacter : public AUConceptDemoPaperPawn
 {
 	GENERATED_BODY()
 
@@ -33,6 +34,8 @@ class CONCEPTDEMO_API AUConceptDemoPaperCharacter : public APaperCharacter
 public:	
 	// Sets default values for this component's properties
 	AUConceptDemoPaperCharacter();
+
+	UFUNCTION() void BindInputs();
 
 	UPROPERTY(EditAnywhere) UTexture2D* CharacterImage;
 	UPROPERTY(EditAnywhere) FString PlayerDescription;
@@ -95,6 +98,7 @@ public:
 	UFUNCTION(BlueprintCallable) virtual void DropGun();
 	UFUNCTION() bool HasGun() const;
 	UFUNCTION(BlueprintCallable) virtual void Fire();
+	UFUNCTION() void FireAxis(const float AxisValue);
 	UFUNCTION() virtual void UsePower();
 	UFUNCTION() void UpdateShotsCount();
 	UFUNCTION() void TakeDamage(float DamageCount);

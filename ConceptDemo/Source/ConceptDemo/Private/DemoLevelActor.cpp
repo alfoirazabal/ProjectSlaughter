@@ -198,6 +198,10 @@ void ADemoLevelActor::SpawnPlayers()
 	this->Player2 = this->GetWorld()->SpawnActor<AUConceptDemoPaperCharacter>(this->Player2Type, P2Location, PlayerSpawnRotation);
 	this->Player1->SetPlayerName(this->GameInstance->Player1Name);
 	this->Player2->SetPlayerName(this->GameInstance->Player2Name);
+	
+	this->Player2->SetPlayerNumber(EAutoReceiveInput::Player1);
+	this->Player2->InputComponent = this->InputComponent;
+	this->Player2->BindInputs();
 }
 
 

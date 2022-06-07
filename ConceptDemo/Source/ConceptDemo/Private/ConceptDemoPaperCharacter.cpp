@@ -107,6 +107,23 @@ void AUConceptDemoPaperCharacter::EnsureXAxisLocation()
 	}
 }
 
+void AUConceptDemoPaperCharacter::BindInputs()
+{
+	if (this->InputComponent)
+	{
+		this->InputComponent->BindAxis(TEXT("C HorizontalMovement"), this, &AUConceptDemoPaperCharacter::HandleMovement);
+		this->InputComponent->BindAction(TEXT("C Jump"), IE_Pressed, this, &AUConceptDemoPaperCharacter::Jump);
+		this->InputComponent->BindAction(TEXT("C Drop Down"), IE_Pressed, this, &AUConceptDemoPaperCharacter::DropDown);
+		this->InputComponent->BindAxis(TEXT("C Fire"), this, &AUConceptDemoPaperCharacter::FireAxis);
+		this->InputComponent->BindAction(TEXT("C Drop Gun"), IE_Pressed, this, &AUConceptDemoPaperCharacter::DropGun);
+		this->InputComponent->BindAction(TEXT("C Use Power"), IE_Pressed, this, &AUConceptDemoPaperCharacter::UsePower);
+	}
+	else
+	{
+		GEngine->AddOnScreenDebugMessage(FMath::Rand(), 5, FColor::Red, "ICNotSet");
+	}
+}
+
 // Called when the game starts
 void AUConceptDemoPaperCharacter::BeginPlay()
 {
@@ -325,6 +342,11 @@ void AUConceptDemoPaperCharacter::Fire()
 	{
 		this->CharacterHUD->SetStaminaBar(this->AttachedGun->ShotsCount, this->AttachedGun->ShotsLeft);
 	}
+}
+
+void AUConceptDemoPaperCharacter::FireAxis(const float AxisValue)
+{
+	if (AxisValue > 0) this->Fire();
 }
 
 void AUConceptDemoPaperCharacter::UsePower()

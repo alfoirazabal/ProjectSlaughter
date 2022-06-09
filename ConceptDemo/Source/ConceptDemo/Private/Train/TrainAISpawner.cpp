@@ -70,6 +70,10 @@ void ATrainAISpawner::BeginPlay()
 	{
 		GEngine->AddOnScreenDebugMessage(189522350, 2, FColor::Yellow, "Train arrival sound not set");
 	}
+	if (!this->TrainPassingSound) 
+	{
+		GEngine->AddOnScreenDebugMessage(189522351, 2, FColor::Yellow, "Train passing sound not set");
+	}
 }
 
 void ATrainAISpawner::SpawnVehicle()
@@ -99,12 +103,20 @@ void ATrainAISpawner::Tick(const float DeltaTime)
 	else {
 		this->currentSpawnTime++;
 		if (this->redLightTimeLeft > 0) {
-			this->SetRedLight();
+			if (this->trainTrafficLights && !this->trainTrafficLights->bRedLightOn)
+			{
+				this->SetRedLight();
+				if (this->TrainOnStationSound) UGameplayStatics::PlaySound2D(this->GetWorld(), this->TrainOnStationSound);
+			}
 			this->redLightTimeLeft--;
 		}
 		else {
 			if (this->randSpawnTime - this->currentSpawnTime < this->trainDistanceOnYellowLight) {
-				this->SetYellowLight();
+				if (this->trainTrafficLights && !this->trainTrafficLights->bYellowLightOn)
+				{
+					this->SetYellowLight();
+					if (this->TrainPassingSound) UGameplayStatics::PlaySound2D(this->GetWorld(), this->TrainPassingSound);
+				}
 			}
 			else {
 				this->SetGreenLight();
@@ -114,10 +126,17 @@ void ATrainAISpawner::Tick(const float DeltaTime)
 	}
 	if (this->trainTrafficLights->bRedLightOn || this->trainTrafficLights->bYellowLightOn)
 	{
-		if (this->TrainArrivalSound && !this->TrainArrivalSoundComponent)
+		if (this->TrainArrivalSound)
 		{
-			this->TrainArrivalSoundComponent = UGameplayStatics::SpawnSound2D(this->GetWorld(), this->TrainArrivalSound);
+			if (!this->TrainArrivalSoundComponent)
+			{
+				this->TrainArrivalSoundComponent = UGameplayStatics::SpawnSound2D(this->GetWorld(), this->TrainArrivalSound);
+			}
+			if (!this->TrainArrivalSoundComponent->IsPlaying()) this->TrainArrivalSoundComponent->Play();
 		}
-		if (!this->TrainArrivalSoundComponent->IsPlaying()) this->TrainArrivalSoundComponent->Play();
+		else
+		{
+			GEngine->AddOnScreenDebugMessage(236723334, 2, FColor::Yellow, "Train arrival sound not set for TrainAISpawner");
+		}
 	}
 }

@@ -82,6 +82,14 @@ void ADemoLevelActor::BeginPlay()
 	{
 		GEngine->AddOnScreenDebugMessage(28611252, 2, FColor::Red, "Level has no music! Can be changed in the editor");
 	}
+	if (this->BackgroundMusic)
+	{
+		UGameplayStatics::PlaySound2D(this->GetWorld(), this->BackgroundMusic);
+	}
+	else
+	{
+		GEngine->AddOnScreenDebugMessage(28611253, 5, FColor::Yellow, "Level has no background music! Can be changed in editor");
+	}
 }
 
 
@@ -190,6 +198,10 @@ void ADemoLevelActor::SpawnPlayers()
 	this->Player2 = this->GetWorld()->SpawnActor<AUConceptDemoPaperCharacter>(this->Player2Type, P2Location, PlayerSpawnRotation);
 	this->Player1->SetPlayerName(this->GameInstance->Player1Name);
 	this->Player2->SetPlayerName(this->GameInstance->Player2Name);
+	
+	this->Player2->SetPlayerNumber(EAutoReceiveInput::Player1);
+	this->Player2->InputComponent = this->InputComponent;
+	this->Player2->BindInputs();
 }
 
 
@@ -229,6 +241,7 @@ void ADemoLevelActor::SpawnGuns()
 				RandomFreeSpawner->InUse = true;
 				Gun->GunDead.AddDynamic(this, &ADemoLevelActor::ReactToGunDeath);
 				CurrentGunsInLevel++;
+				this->OnGunSpawned(Gun);
 			}
 		}
 	}

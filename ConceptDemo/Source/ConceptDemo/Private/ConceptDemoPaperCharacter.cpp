@@ -14,6 +14,7 @@
 #include "Components/WidgetComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "Kismet/GameplayStatics.h"
+#include "Props/Death/DeathIndicator.h"
 
 constexpr float GDefault_Character_Plane_X_Position = 760;
 
@@ -42,6 +43,18 @@ AUConceptDemoPaperCharacter::AUConceptDemoPaperCharacter()
 	this->GetCharacterMovement()->GravityScale = 3;
 	this->GetCharacterMovement()->JumpZVelocity = 1190;
 
+	this->Immune = false;
+	this->TimeBetweenActorRespawnBlink = 0.15;
+	this->RespawnBlinkCount = 20;
+	
+	static ConstructorHelpers::FClassFinder<ADeathIndicator> DeathIndicatorObject(TEXT("/Game/Props/Death/DeathIndicator"));
+	this->DeathIndicatorType = DeathIndicatorObject.Class;
+	static ConstructorHelpers::FClassFinder<APowerupReadyProp> PowerUpReadyObject(TEXT("/Game/Props/VFX/CharacterPowerupReady/PowerupReady"));
+	this->PowerUpReadyPropType = PowerUpReadyObject.Class;
+	
+	this->RelativeGunAttachLocation = FVector(-5, -30, -30);
+	this->RelativeGunDropDistance = 150;
+
 	this->TriggerCapsule = CreateDefaultSubobject<UCapsuleComponent>(TEXT("Trigger Capsule"));
 	this->TriggerCapsule->InitCapsuleSize(38.59, 89.37);
 	this->TriggerCapsule->SetCollisionProfileName("Trigger");
@@ -55,9 +68,18 @@ void AUConceptDemoPaperCharacter::MoveGun() const
 {
 	if (this->AttachedGun != nullptr) {
 		this->AttachedGun->FacingDirection = this->FacingDirection;
-		FVector ActorLocation = this->GetActorLocation();
-		ActorLocation.Z += this->GunZRelativeLocation;
-		this->AttachedGun->SetActorLocation(ActorLocation);
+		FVector GunLocation = this->GetActorLocation();
+		GunLocation.X += this->RelativeGunAttachLocation.X;
+		GunLocation.Z += this->RelativeGunAttachLocation.Z;
+		if (this->AttachedGun->FacingDirection == EFacing_Direction::Left)
+		{
+			GunLocation.Y += this->RelativeGunAttachLocation.Y;
+		}
+		else if (this->AttachedGun->FacingDirection == EFacing_Direction::Right)
+		{
+			GunLocation.Y -= this->RelativeGunAttachLocation.Y;
+		}
+		this->AttachedGun->SetActorLocation(GunLocation);
 	}
 }
 
@@ -86,6 +108,23 @@ void AUConceptDemoPaperCharacter::EnsureXAxisLocation()
 	}
 }
 
+void AUConceptDemoPaperCharacter::BindInputs()
+{
+	if (this->InputComponent)
+	{
+		this->InputComponent->BindAxis(TEXT("C HorizontalMovement"), this, &AUConceptDemoPaperCharacter::HandleMovement);
+		this->InputComponent->BindAction(TEXT("C Jump"), IE_Pressed, this, &AUConceptDemoPaperCharacter::Jump);
+		this->InputComponent->BindAction(TEXT("C Drop Down"), IE_Pressed, this, &AUConceptDemoPaperCharacter::DropDown);
+		this->InputComponent->BindAxis(TEXT("C Fire"), this, &AUConceptDemoPaperCharacter::FireAxis);
+		this->InputComponent->BindAction(TEXT("C Drop Gun"), IE_Pressed, this, &AUConceptDemoPaperCharacter::DropGun);
+		this->InputComponent->BindAction(TEXT("C Use Power"), IE_Pressed, this, &AUConceptDemoPaperCharacter::UsePower);
+	}
+	else
+	{
+		GEngine->AddOnScreenDebugMessage(FMath::Rand(), 5, FColor::Red, "ICNotSet");
+	}
+}
+
 // Called when the game starts
 void AUConceptDemoPaperCharacter::BeginPlay()
 {
@@ -111,6 +150,15 @@ void AUConceptDemoPaperCharacter::BeginPlay()
 	else {
 		GEngine->AddOnScreenDebugMessage(564564, 2, FColor::Red, "HealthHUD not found!");
 	}
+}
+
+void AUConceptDemoPaperCharacter::MakeFallingDeathWithIndicator()
+{
+	const FTransform Transform = this->GetActorTransform();
+	ADeathIndicator* DeathIndicator = this->GetWorld()->SpawnActorDeferred<ADeathIndicator>(this->DeathIndicatorType, Transform, this, nullptr, ESpawnActorCollisionHandlingMethod::AlwaysSpawn);
+	this->bFallingDeath = true;
+	DeathIndicator->DeadCharacter = this;
+	UGameplayStatics::FinishSpawningActor(DeathIndicator, Transform);
 }
 
 void AUConceptDemoPaperCharacter::MakeFallingDeath()
@@ -143,6 +191,9 @@ void AUConceptDemoPaperCharacter::UpdateHealthIndicator() const
 
 void AUConceptDemoPaperCharacter::Respawn()
 {
+	if (this->RespawnSound) UGameplayStatics::SpawnSound2D(this->GetWorld(), this->RespawnSound);
+	this->SetActorHiddenInGame(false);
+	this->Immune = true;
 	if (this->AttachedGun != nullptr) {
 		AGun* Gun = this->AttachedGun;
 		this->DropGun();
@@ -150,9 +201,10 @@ void AUConceptDemoPaperCharacter::Respawn()
 	}
 	this->bFallingDeath = false;
 	this->SetActorLocation(this->InitialPosition);
+	this->GetWorld()->GetTimerManager().SetTimer(
+		this->RespawnTimer, this, &AUConceptDemoPaperCharacter::ProcessRespawning, this->TimeBetweenActorRespawnBlink, true
+	);
 }
-
-
 
 bool AUConceptDemoPaperCharacter::IsOnTheAir() const
 {
@@ -234,6 +286,7 @@ void AUConceptDemoPaperCharacter::AttachGun(AGun* Gun)
 		this->CharacterHUD->SetGunAttached(true);
 		this->CharacterHUD->SetStaminaBar(Gun->ShotsCount, Gun->ShotsLeft);
 		this->AttachedGun->ShotLost.AddDynamic(this, &AUConceptDemoPaperCharacter::UpdateShotsCount);
+		if (this->AttachGunSound) UGameplayStatics::SpawnSound2D(this->GetWorld(), this->AttachGunSound);
 	}
 	else {
 		this->GunsIgnored.Add(Gun);
@@ -257,10 +310,10 @@ void AUConceptDemoPaperCharacter::DropGun()
 		}
 		switch (this->FacingDirection) {
 		case EFacing_Direction::Left:
-			NewGunLocation.Y += 125;
+			NewGunLocation.Y += this->RelativeGunDropDistance;
 			break;
 		case EFacing_Direction::Right:
-			NewGunLocation.Y -= 125;
+			NewGunLocation.Y -= this->RelativeGunDropDistance;
 			break;
 		}
 		this->AttachedGun->SetActorLocation(NewGunLocation);
@@ -292,10 +345,16 @@ void AUConceptDemoPaperCharacter::Fire()
 	}
 }
 
+void AUConceptDemoPaperCharacter::FireAxis(const float AxisValue)
+{
+	if (AxisValue > 0) this->Fire();
+}
+
 void AUConceptDemoPaperCharacter::UsePower()
 {
 	this->CurrentSpecialPowerLoadTime = 0;
 	UGameplayStatics::SpawnSound2D(this->GetWorld(), this->PowerSound);
+	this->SpecialPowerReadyPropShown = false;
 }
 
 void AUConceptDemoPaperCharacter::UpdateShotsCount()
@@ -309,23 +368,21 @@ void AUConceptDemoPaperCharacter::UpdateShotsCount()
 
 void AUConceptDemoPaperCharacter::TakeDamage(float DamageCount)
 {
-	this->CurrentLifeSize -= DamageCount;
-	this->UpdateHealthIndicator();
-	if (this->CurrentLifeSize <= 0) {
-		this->CurrentLives--;
+	if (!this->Immune)
+	{
+		this->CurrentLifeSize -= DamageCount;
 		this->UpdateHealthIndicator();
-		this->GetWorld()->SpawnActor<ASkull>(this->DeathSkull, this->GetActorLocation(), this->GetActorRotation());
-		if (this->CurrentLives == 0) {
-			this->Die();
-		}
-		else {
+		if (this->CurrentLifeSize <= 0) {
+			this->UpdateHealthIndicator();
+			this->GetWorld()->SpawnActor<ASkull>(this->DeathSkull, this->GetActorLocation(), this->GetActorRotation());
 			this->CurrentLifeSize = this->LifeSize;
 			this->DropGun();
 			this->UpdateHealthIndicator();
-			this->Respawn();
+			this->SetActorHiddenInGame(true);
+			this->MakeFallingDeath();
 		}
+		UGameplayStatics::SpawnSound2D(this->GetWorld(), this->DamageReceivedSound);
 	}
-	UGameplayStatics::SpawnSound2D(this->GetWorld(), this->DamageReceivedSound);
 }
 
 void AUConceptDemoPaperCharacter::AddLife(float Life)
@@ -339,6 +396,19 @@ void AUConceptDemoPaperCharacter::AddLife(float Life)
 		this->CurrentLifeSize = 1;
 	}
 	this->UpdateHealthIndicator();
+}
+
+void AUConceptDemoPaperCharacter::ProcessRespawning()
+{
+	this->SetActorHiddenInGame(!this->IsHidden());
+	this->CurrentHideAndShowCount++;
+	if (this->CurrentHideAndShowCount >= this->RespawnBlinkCount)
+	{
+		this->CurrentHideAndShowCount = 0;
+		this->Immune = false;
+		this->SetActorHiddenInGame(false);
+		this->GetWorld()->GetTimerManager().ClearTimer(this->RespawnTimer);
+	}
 }
 
 void AUConceptDemoPaperCharacter::Die()
@@ -359,6 +429,21 @@ void AUConceptDemoPaperCharacter::Tick(const float DeltaTime)
 		this->CurrentSpecialPowerLoadTime++;
 		this->UpdateHealthIndicator();
 	}
+	if (CurrentSpecialPowerLoadTime >= this->SpecialPowerLoadTime)
+	{
+		if (!this->SpecialPowerReadyPropShown)
+		{
+			const FVector PowerUpReadyPropPosition = this->GetActorLocation();
+			FTransform Transform = this->GetTransform();
+			Transform.SetLocation(PowerUpReadyPropPosition);
+			APowerupReadyProp* PowerUpReadyProp = this->GetWorld()->SpawnActorDeferred<APowerupReadyProp>(
+				this->PowerUpReadyPropType, Transform, this, this, ESpawnActorCollisionHandlingMethod::AlwaysSpawn
+			);
+			PowerUpReadyProp->ActorToFollow = this;
+			UGameplayStatics::FinishSpawningActor(PowerUpReadyProp, Transform);
+			this->SpecialPowerReadyPropShown = true;
+		}
+	}
 }
 
 void AUConceptDemoPaperCharacter::OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor* OtherActor,
@@ -371,11 +456,11 @@ void AUConceptDemoPaperCharacter::OnOverlapBegin(UPrimitiveComponent* Overlapped
 		AGun* Gun = Cast<AGun>(OtherActor);
 		if (Spikes)
 		{
-			this->MakeFallingDeath();
+			this->MakeFallingDeathWithIndicator();
 		}
 		if (Train)
 		{
-			this->MakeFallingDeath();
+			this->MakeFallingDeathWithIndicator();
 		}
 		if (Gun)
 		{

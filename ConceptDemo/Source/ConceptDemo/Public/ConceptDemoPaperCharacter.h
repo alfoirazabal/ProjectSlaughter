@@ -8,13 +8,16 @@
 #include "Guns/Gun.h"
 #include "PaperCharacter.h"
 #include "PaperCharacterHUD.h"
+#include "UConceptDemoPaperPawn.h"
+#include "Characters/PowerupReadyProp.h"
 #include "Characters/Skull.h"
+#include "Props/Death/DeathIndicator.h"
 #include "ConceptDemoPaperCharacter.generated.h"
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnPlayerDeath);
 
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
-class CONCEPTDEMO_API AUConceptDemoPaperCharacter : public APaperCharacter
+class CONCEPTDEMO_API AUConceptDemoPaperCharacter : public AUConceptDemoPaperPawn
 {
 	GENERATED_BODY()
 
@@ -32,8 +35,17 @@ public:
 	// Sets default values for this component's properties
 	AUConceptDemoPaperCharacter();
 
+	UFUNCTION() void BindInputs();
+
 	UPROPERTY(EditAnywhere) UTexture2D* CharacterImage;
 	UPROPERTY(EditAnywhere) FString PlayerDescription;
+
+	UPROPERTY(EditAnywhere, Category="Sounds") USoundBase* JumpSound;
+	UPROPERTY(EditAnywhere, Category="Sounds") USoundBase* PowerSound;
+	UPROPERTY(EditAnywhere, Category="Sounds") USoundBase* DamageReceivedSound;
+	UPROPERTY(EditAnywhere, Category="Sounds") USoundBase* AttachGunSound;
+	UPROPERTY(EditAnywhere, Category="Sounds") USoundBase* RespawnSound;
+	UPROPERTY(EditAnywhere, Category="Sounds") USoundBase* WinSound;
 
 protected:
 	// Called when the game starts
@@ -41,11 +53,14 @@ protected:
 	UPROPERTY(EditAnywhere, Category="Concept Demo Action Sprites") UPaperFlipbook* MovingFlipBook;
 	UPROPERTY(EditAnywhere, Category="Concept Demo Action Sprites") UPaperFlipbook* JumpingFlipBook;
 	UPROPERTY(EditAnywhere, Category="Concept Demo Drops") TSubclassOf<ASkull> DeathSkull;
-	UPROPERTY(EditAnywhere, Category="Character Asset Positions") int GunZRelativeLocation;
+	UPROPERTY(EditAnywhere, Category="Character Asset Positions") FVector RelativeGunAttachLocation;
+	UPROPERTY(EditAnywhere, Category="Character Asset Positions") float RelativeGunDropDistance;
 
-	UPROPERTY(EditAnywhere, Category="Sounds") USoundBase* JumpSound;
-	UPROPERTY(EditAnywhere, Category="Sounds") USoundBase* PowerSound;
-	UPROPERTY(EditAnywhere, Category="Sounds") USoundBase* DamageReceivedSound;
+	UPROPERTY(EditAnywhere, Category="Respawning") float TimeBetweenActorRespawnBlink;
+	UPROPERTY(EditAnywhere, Category="Respawning") float RespawnBlinkCount;
+	UPROPERTY(EditAnywhere, Category="Death") TSubclassOf<ADeathIndicator> DeathIndicatorType;
+	UPROPERTY(EditAnywhere, Category="PowerUp") TSubclassOf<APowerupReadyProp> PowerUpReadyPropType;
+	UPROPERTY() uint16 CurrentHideAndShowCount;
 	
 	UPROPERTY(EditAnywhere) FText PlayerName;
 	
@@ -61,8 +76,13 @@ protected:
 	
 	UPROPERTY(EditAnywhere) uint16 SpecialPowerLoadTime;
 	uint16 CurrentSpecialPowerLoadTime;
+	UPROPERTY() bool SpecialPowerReadyPropShown;
+	
+	UPROPERTY() bool Immune;
+	UPROPERTY() FTimerHandle RespawnTimer;
 	
 	virtual void BeginPlay() override;
+	void MakeFallingDeathWithIndicator();
 	void MakeFallingDeath();
 
 public:
@@ -79,10 +99,12 @@ public:
 	UFUNCTION(BlueprintCallable) virtual void DropGun();
 	UFUNCTION() bool HasGun() const;
 	UFUNCTION(BlueprintCallable) virtual void Fire();
+	UFUNCTION() void FireAxis(const float AxisValue);
 	UFUNCTION() virtual void UsePower();
 	UFUNCTION() void UpdateShotsCount();
 	UFUNCTION() void TakeDamage(float DamageCount);
 	UFUNCTION() void AddLife(float Life);
+	UFUNCTION() void ProcessRespawning();
 	UFUNCTION() void Die();
 	
 	FOnPlayerDeath PlayerDeath;
@@ -92,6 +114,8 @@ public:
 	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
+
+	//UPROPERTY(EditAnywhere, Category = "Spawn Sprite") class UPaperSprite* SpawnSprite;
 
 	UPROPERTY(VisibleAnywhere, Category = "Trigger Capsule")
 	class UCapsuleComponent* TriggerCapsule;

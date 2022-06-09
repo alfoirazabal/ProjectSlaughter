@@ -14,6 +14,7 @@ AGun::AGun()
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 	this->bRotate = true;
+	this->ShouldRotate = false;
 	this->RotationSpeed = 1;
 	this->TimeBetweenShots = 10;
 	this->ShotsCount = 50;
@@ -31,6 +32,8 @@ AGun::AGun()
 	static ConstructorHelpers::FObjectFinder<USoundWave> GunGrabObject(TEXT("/Game/Props/Guns/GunGrab"));
 	this->GunGrabSound = GunGrabObject.Object;
 
+	this->RelativeAttachedSize = FVector(0.8, 0.8, 0.8);
+
 	this->TriggerCapsule = CreateDefaultSubobject<UCapsuleComponent>(TEXT("Trigger Capsule"));
 	this->TriggerCapsule->InitCapsuleSize(67.68, 67.68);
 	this->TriggerCapsule->SetCollisionProfileName(TEXT("Trigger"));
@@ -43,13 +46,35 @@ void AGun::BeginPlay()
 	Super::BeginPlay();
 	this->ShotsLeft = this->ShotsCount;
 	this->InitialLocation = this->GetActorLocation();
+	if (!this->SparklesType)
+	{
+		GEngine->AddOnScreenDebugMessage(FMath::Rand(), 2, FColor::Yellow, "Sparkles not set fun gun: " + this->GetName());
+	}
+	this->SpawnSparkles();
+}
+
+void AGun::SpawnSparkles()
+{
+	if (this->SparklesType)
+	{
+		this->Sparkles =
+			this->GetWorld()->SpawnActor<AActor>(this->SparklesType, GetActorLocation(), FRotator(90, 0, 90));
+	}
+}
+
+void AGun::DestroySparkles() const
+{
+	if (this->Sparkles)
+	{
+		this->Sparkles->Destroy();
+	}
 }
 
 // Called every frame
 void AGun::Tick(const float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-	if (bRotate) {
+	if (this->ShouldRotate && this->bRotate) {
 		const int RotationTime = (DeltaTime * GRotation_Time_DS) * RotationSpeed;
 		FRotator Rotator = FRotator::ZeroRotator;
 		Rotator.Yaw = RotationTime;
@@ -80,19 +105,30 @@ void AGun::Tick(const float DeltaTime)
 		if (this->ShotsLeft == 0)
 		{
 			this->GunDead.Broadcast(this);
+			if (this->Sparkles)
+			{
+				this->Sparkles->Destroy();
+			}
 		}
 	}
 }
 
 void AGun::SetAttached() {
-	this->bRotate = false;
+	if (this->ShouldRotate) this->bRotate = false;
 	this->SetActorEnableCollision(false);
 	UGameplayStatics::SpawnSound2D(this->GetWorld(), this->GunGrabSound);
+	this->DestroySparkles();
+	this->SetActorScale3D(this->RelativeAttachedSize);
+	this->OnGunAttatched();
 }
 
 void AGun::SetDetached() {
-	this->bRotate = true;
+	if (this->ShouldRotate) this->bRotate = true;
 	this->SetActorEnableCollision(true);
+	FTimerHandle TimerHandle;
+	this->GetWorld()->GetTimerManager().SetTimer(TimerHandle, this, &AGun::SpawnSparkles, 0.1, false);
+	this->SetActorScale3D(FVector(1, 1, 1));
+	this->OnGunDetached();
 }
 
 void AGun::Fire() {

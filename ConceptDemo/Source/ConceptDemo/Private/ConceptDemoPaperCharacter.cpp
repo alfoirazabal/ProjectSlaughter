@@ -53,6 +53,7 @@ AUConceptDemoPaperCharacter::AUConceptDemoPaperCharacter()
 	this->PowerUpReadyPropType = PowerUpReadyObject.Class;
 	
 	this->RelativeGunAttachLocation = FVector(-5, -30, -30);
+	this->RelativeGunDropDistance = 150;
 
 	this->TriggerCapsule = CreateDefaultSubobject<UCapsuleComponent>(TEXT("Trigger Capsule"));
 	this->TriggerCapsule->InitCapsuleSize(38.59, 89.37);
@@ -309,10 +310,10 @@ void AUConceptDemoPaperCharacter::DropGun()
 		}
 		switch (this->FacingDirection) {
 		case EFacing_Direction::Left:
-			NewGunLocation.Y += 125;
+			NewGunLocation.Y += this->RelativeGunDropDistance;
 			break;
 		case EFacing_Direction::Right:
-			NewGunLocation.Y -= 125;
+			NewGunLocation.Y -= this->RelativeGunDropDistance;
 			break;
 		}
 		this->AttachedGun->SetActorLocation(NewGunLocation);

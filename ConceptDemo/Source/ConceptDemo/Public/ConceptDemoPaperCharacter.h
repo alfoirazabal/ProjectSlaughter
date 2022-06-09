@@ -54,6 +54,7 @@ protected:
 	UPROPERTY(EditAnywhere, Category="Concept Demo Action Sprites") UPaperFlipbook* JumpingFlipBook;
 	UPROPERTY(EditAnywhere, Category="Concept Demo Drops") TSubclassOf<ASkull> DeathSkull;
 	UPROPERTY(EditAnywhere, Category="Character Asset Positions") FVector RelativeGunAttachLocation;
+	UPROPERTY(EditAnywhere, Category="Character Asset Positions") float RelativeGunDropDistance;
 
 	UPROPERTY(EditAnywhere, Category="Respawning") float TimeBetweenActorRespawnBlink;
 	UPROPERTY(EditAnywhere, Category="Respawning") float RespawnBlinkCount;

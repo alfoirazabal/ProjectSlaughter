@@ -51,6 +51,9 @@ AUConceptDemoPaperCharacter::AUConceptDemoPaperCharacter()
 	this->DeathIndicatorType = DeathIndicatorObject.Class;
 	static ConstructorHelpers::FClassFinder<APowerupReadyProp> PowerUpReadyObject(TEXT("/Game/Props/VFX/CharacterPowerupReady/PowerupReady"));
 	this->PowerUpReadyPropType = PowerUpReadyObject.Class;
+	
+	this->RelativeGunAttachLocation = FVector(-5, -30, -30);
+	this->RelativeGunDropDistance = 150;
 
 	this->TriggerCapsule = CreateDefaultSubobject<UCapsuleComponent>(TEXT("Trigger Capsule"));
 	this->TriggerCapsule->InitCapsuleSize(38.59, 89.37);
@@ -65,9 +68,18 @@ void AUConceptDemoPaperCharacter::MoveGun() const
 {
 	if (this->AttachedGun != nullptr) {
 		this->AttachedGun->FacingDirection = this->FacingDirection;
-		FVector ActorLocation = this->GetActorLocation();
-		ActorLocation.Z += this->GunZRelativeLocation;
-		this->AttachedGun->SetActorLocation(ActorLocation);
+		FVector GunLocation = this->GetActorLocation();
+		GunLocation.X += this->RelativeGunAttachLocation.X;
+		GunLocation.Z += this->RelativeGunAttachLocation.Z;
+		if (this->AttachedGun->FacingDirection == EFacing_Direction::Left)
+		{
+			GunLocation.Y += this->RelativeGunAttachLocation.Y;
+		}
+		else if (this->AttachedGun->FacingDirection == EFacing_Direction::Right)
+		{
+			GunLocation.Y -= this->RelativeGunAttachLocation.Y;
+		}
+		this->AttachedGun->SetActorLocation(GunLocation);
 	}
 }
 
@@ -93,6 +105,23 @@ void AUConceptDemoPaperCharacter::EnsureXAxisLocation()
 	if (!this->bFallingDeath && CurrentPosition.X != GDefault_Character_Plane_X_Position) {
 		CurrentPosition.X = GDefault_Character_Plane_X_Position;
 		this->SetActorLocation(CurrentPosition);
+	}
+}
+
+void AUConceptDemoPaperCharacter::BindInputs()
+{
+	if (this->InputComponent)
+	{
+		this->InputComponent->BindAxis(TEXT("C HorizontalMovement"), this, &AUConceptDemoPaperCharacter::HandleMovement);
+		this->InputComponent->BindAction(TEXT("C Jump"), IE_Pressed, this, &AUConceptDemoPaperCharacter::Jump);
+		this->InputComponent->BindAction(TEXT("C Drop Down"), IE_Pressed, this, &AUConceptDemoPaperCharacter::DropDown);
+		this->InputComponent->BindAxis(TEXT("C Fire"), this, &AUConceptDemoPaperCharacter::FireAxis);
+		this->InputComponent->BindAction(TEXT("C Drop Gun"), IE_Pressed, this, &AUConceptDemoPaperCharacter::DropGun);
+		this->InputComponent->BindAction(TEXT("C Use Power"), IE_Pressed, this, &AUConceptDemoPaperCharacter::UsePower);
+	}
+	else
+	{
+		GEngine->AddOnScreenDebugMessage(FMath::Rand(), 5, FColor::Red, "ICNotSet");
 	}
 }
 
@@ -281,10 +310,10 @@ void AUConceptDemoPaperCharacter::DropGun()
 		}
 		switch (this->FacingDirection) {
 		case EFacing_Direction::Left:
-			NewGunLocation.Y += 125;
+			NewGunLocation.Y += this->RelativeGunDropDistance;
 			break;
 		case EFacing_Direction::Right:
-			NewGunLocation.Y -= 125;
+			NewGunLocation.Y -= this->RelativeGunDropDistance;
 			break;
 		}
 		this->AttachedGun->SetActorLocation(NewGunLocation);
@@ -314,6 +343,11 @@ void AUConceptDemoPaperCharacter::Fire()
 	{
 		this->CharacterHUD->SetStaminaBar(this->AttachedGun->ShotsCount, this->AttachedGun->ShotsLeft);
 	}
+}
+
+void AUConceptDemoPaperCharacter::FireAxis(const float AxisValue)
+{
+	if (AxisValue > 0) this->Fire();
 }
 
 void AUConceptDemoPaperCharacter::UsePower()

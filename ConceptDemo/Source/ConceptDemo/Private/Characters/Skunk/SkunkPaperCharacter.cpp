@@ -31,8 +31,12 @@ void ASkunkPaperCharacter::UsePower()
 		{
 			FVector SpawnLocation = this->GetActorLocation();
 			SpawnLocation.X += 10;
-			AFartCloud* FartCloud = this->GetWorld()->SpawnActor<AFartCloud>(this->SkunkFartCloud, SpawnLocation, this->GetActorRotation());
+			FTransform Transform = FTransform::Identity;
+			Transform.SetLocation(SpawnLocation);
+			Transform.CopyRotation(this->GetTransform());
+			AFartCloud* FartCloud = this->GetWorld()->SpawnActorDeferred<AFartCloud>(this->SkunkFartCloud, Transform, this, this, ESpawnActorCollisionHandlingMethod::AlwaysSpawn);
 			FartCloud->SkunkFartSource = this;
+			UGameplayStatics::FinishSpawningActor(FartCloud, Transform);
 		}
 		else
 		{

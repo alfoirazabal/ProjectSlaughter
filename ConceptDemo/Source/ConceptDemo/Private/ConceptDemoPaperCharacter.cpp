@@ -210,6 +210,7 @@ void AUConceptDemoPaperCharacter::UpdateHealthIndicator() const
 
 void AUConceptDemoPaperCharacter::Respawn()
 {
+	this->UpdateFlipBooks();
 	if (this->RespawnSound) UGameplayStatics::SpawnSound2D(this->GetWorld(), this->RespawnSound);
 	this->SetActorHiddenInGame(false);
 	this->Immune = true;

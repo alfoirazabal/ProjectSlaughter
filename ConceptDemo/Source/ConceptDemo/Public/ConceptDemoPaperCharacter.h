@@ -12,6 +12,7 @@
 #include "Characters/PowerupReadyProp.h"
 #include "Characters/Skull.h"
 #include "Props/Death/DeathIndicator.h"
+#include "Props/Droppables/Droppable.h"
 #include "ConceptDemoPaperCharacter.generated.h"
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnPlayerDeath);
@@ -68,6 +69,7 @@ protected:
 	UPROPERTY(EditAnywhere, Category="Respawning") float RespawnBlinkCount;
 	UPROPERTY(EditAnywhere, Category="Death") TSubclassOf<ADeathIndicator> DeathIndicatorType;
 	UPROPERTY(EditAnywhere, Category="PowerUp") TSubclassOf<APowerupReadyProp> PowerUpReadyPropType;
+	UPROPERTY(EditAnywhere, Category="Droppables") TArray<TSubclassOf<ADroppable>> DroppableTypes;
 	UPROPERTY() uint16 CurrentHideAndShowCount;
 	
 	UPROPERTY(EditAnywhere) FText PlayerName;

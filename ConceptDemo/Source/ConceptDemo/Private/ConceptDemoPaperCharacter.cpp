@@ -51,6 +51,10 @@ AUConceptDemoPaperCharacter::AUConceptDemoPaperCharacter()
 	this->DeathIndicatorType = DeathIndicatorObject.Class;
 	static ConstructorHelpers::FClassFinder<APowerupReadyProp> PowerUpReadyObject(TEXT("/Game/Props/VFX/CharacterPowerupReady/PowerupReady"));
 	this->PowerUpReadyPropType = PowerUpReadyObject.Class;
+	static ConstructorHelpers::FClassFinder<ADroppable> DroppableBone1OClassFinder(TEXT("/Game/Character/Droppables/DroppableBone1"));
+	static ConstructorHelpers::FClassFinder<ADroppable> DroppableBone2OClassFinder(TEXT("/Game/Character/Droppables/DroppableBone2"));
+	this->DroppableTypes.Add(DroppableBone1OClassFinder.Class);
+	this->DroppableTypes.Add(DroppableBone2OClassFinder.Class);
 	
 	this->RelativeGunAttachLocation = FVector(-5, -30, -30);
 	this->RelativeGunDropDistance = 150;
@@ -400,6 +404,11 @@ void AUConceptDemoPaperCharacter::TakeDamage(const float DamageCount)
 			this->UpdateHealthIndicator();
 			this->SetActorHiddenInGame(true);
 			this->MakeFallingDeath();
+		}
+		if (this->DroppableTypes.Num() > 0)
+		{
+			const TSubclassOf<ADroppable> RandomDroppable = this->DroppableTypes[FMath::RandRange(0, this->DroppableTypes.Num() - 1)];
+			this->GetWorld()->SpawnActor<ADroppable>(RandomDroppable, this->GetActorLocation(), this->GetActorRotation());
 		}
 		UGameplayStatics::SpawnSound2D(this->GetWorld(), this->DamageReceivedSound);
 		this->UpdateFlipBooks();

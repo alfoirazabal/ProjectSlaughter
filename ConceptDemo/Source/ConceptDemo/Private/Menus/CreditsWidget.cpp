@@ -7,6 +7,7 @@
 
 void UCreditsWidget::NativeConstruct()
 {
+	Super::NativeConstruct();
 	if (this->BackgroundTextureSequenceFlipTime <= 0)
 	{
 		GEngine->AddOnScreenDebugMessage(872231886, 4, FColor::Red, "Need to setup Widget Background Texture Sequence Flip Time > 0 on the editor.");
@@ -31,8 +32,12 @@ void UCreditsWidget::GoToNextWidget()
 {
 	UGameplayStatics::PlaySound2D(this->GetWorld(), this->NextWidgetSound);
 	this->GetWorld()->GetTimerManager().ClearTimer(this->BackgroundImageFlippingTimer);
-	UUserWidget* NextWidget = CreateWidget<UUserWidget>(this->GetWorld(), this->NextWidgetClass);
-	NextWidget->AddToViewport();
+	if (this->NextWidgetClass)
+	{
+		UUserWidget* NextWidget = CreateWidget<UUserWidget>(this->GetWorld(), this->NextWidgetClass);
+		NextWidget->AddToViewport();
+	}
+	this->RemoveFromParent();
 }
 
 void UCreditsWidget::SetBackgroundImageFlipping()

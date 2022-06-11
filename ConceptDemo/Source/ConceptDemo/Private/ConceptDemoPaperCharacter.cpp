@@ -51,9 +51,15 @@ AUConceptDemoPaperCharacter::AUConceptDemoPaperCharacter()
 	this->DeathIndicatorType = DeathIndicatorObject.Class;
 	static ConstructorHelpers::FClassFinder<APowerupReadyProp> PowerUpReadyObject(TEXT("/Game/Props/VFX/CharacterPowerupReady/PowerupReady"));
 	this->PowerUpReadyPropType = PowerUpReadyObject.Class;
+	static ConstructorHelpers::FClassFinder<ADroppable> DroppableBone1OClassFinder(TEXT("/Game/Character/Droppables/DroppableBone1"));
+	static ConstructorHelpers::FClassFinder<ADroppable> DroppableBone2OClassFinder(TEXT("/Game/Character/Droppables/DroppableBone2"));
+	this->DroppableTypes.Add(DroppableBone1OClassFinder.Class);
+	this->DroppableTypes.Add(DroppableBone2OClassFinder.Class);
 	
 	this->RelativeGunAttachLocation = FVector(-5, -30, -30);
 	this->RelativeGunDropDistance = 150;
+
+	this->DamageLevel2Threshold = 0.35;
 
 	this->TriggerCapsule = CreateDefaultSubobject<UCapsuleComponent>(TEXT("Trigger Capsule"));
 	this->TriggerCapsule->InitCapsuleSize(38.59, 89.37);
@@ -125,6 +131,22 @@ void AUConceptDemoPaperCharacter::BindInputs()
 	}
 }
 
+void AUConceptDemoPaperCharacter::UpdateFlipBooks()
+{
+	if (this->CurrentLifeSize > this->DamageLevel2Threshold)
+	{
+		if (this->IdleFlipBookDamageLevel1) this->IdleFlipBook = this->IdleFlipBookDamageLevel1;
+		if (this->JumpingFlipBookDamageLevel1) this->JumpingFlipBook = this->JumpingFlipBookDamageLevel1;
+		if (this->MovingFlipBookDamageLevel1) this->MovingFlipBook = this->MovingFlipBookDamageLevel1;
+	}
+	else
+	{
+		if (this->IdleFlipBookDamageLevel2) this->IdleFlipBook = this->IdleFlipBookDamageLevel2;
+		if (this->JumpingFlipBookDamageLevel2) this->JumpingFlipBook = this->JumpingFlipBookDamageLevel2;
+		if (this->MovingFlipBookDamageLevel2) this->MovingFlipBook = this->MovingFlipBookDamageLevel2;
+	}
+}
+
 // Called when the game starts
 void AUConceptDemoPaperCharacter::BeginPlay()
 {
@@ -150,6 +172,7 @@ void AUConceptDemoPaperCharacter::BeginPlay()
 	else {
 		GEngine->AddOnScreenDebugMessage(564564, 2, FColor::Red, "HealthHUD not found!");
 	}
+	this->UpdateFlipBooks();
 }
 
 void AUConceptDemoPaperCharacter::MakeFallingDeathWithIndicator()
@@ -191,6 +214,7 @@ void AUConceptDemoPaperCharacter::UpdateHealthIndicator() const
 
 void AUConceptDemoPaperCharacter::Respawn()
 {
+	this->UpdateFlipBooks();
 	if (this->RespawnSound) UGameplayStatics::SpawnSound2D(this->GetWorld(), this->RespawnSound);
 	this->SetActorHiddenInGame(false);
 	this->Immune = true;
@@ -366,7 +390,7 @@ void AUConceptDemoPaperCharacter::UpdateShotsCount()
 }
 
 
-void AUConceptDemoPaperCharacter::TakeDamage(float DamageCount)
+void AUConceptDemoPaperCharacter::TakeDamage(const float DamageCount)
 {
 	if (!this->Immune)
 	{
@@ -381,11 +405,17 @@ void AUConceptDemoPaperCharacter::TakeDamage(float DamageCount)
 			this->SetActorHiddenInGame(true);
 			this->MakeFallingDeath();
 		}
+		if (this->DroppableTypes.Num() > 0)
+		{
+			const TSubclassOf<ADroppable> RandomDroppable = this->DroppableTypes[FMath::RandRange(0, this->DroppableTypes.Num() - 1)];
+			this->GetWorld()->SpawnActor<ADroppable>(RandomDroppable, this->GetActorLocation(), this->GetActorRotation());
+		}
 		UGameplayStatics::SpawnSound2D(this->GetWorld(), this->DamageReceivedSound);
+		this->UpdateFlipBooks();
 	}
 }
 
-void AUConceptDemoPaperCharacter::AddLife(float Life)
+void AUConceptDemoPaperCharacter::AddLife(const float Life)
 {
 	if (this->CurrentLifeSize + Life < 1)
 	{
@@ -396,6 +426,7 @@ void AUConceptDemoPaperCharacter::AddLife(float Life)
 		this->CurrentLifeSize = 1;
 	}
 	this->UpdateHealthIndicator();
+	this->UpdateFlipBooks();
 }
 
 void AUConceptDemoPaperCharacter::ProcessRespawning()

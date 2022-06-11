@@ -12,6 +12,7 @@
 #include "Characters/PowerupReadyProp.h"
 #include "Characters/Skull.h"
 #include "Props/Death/DeathIndicator.h"
+#include "Props/Droppables/Droppable.h"
 #include "ConceptDemoPaperCharacter.generated.h"
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnPlayerDeath);
@@ -49,9 +50,17 @@ public:
 
 protected:
 	// Called when the game starts
-	UPROPERTY(EditAnywhere, Category="Concept Demo Action Sprites") UPaperFlipbook* IdleFlipBook;
-	UPROPERTY(EditAnywhere, Category="Concept Demo Action Sprites") UPaperFlipbook* MovingFlipBook;
-	UPROPERTY(EditAnywhere, Category="Concept Demo Action Sprites") UPaperFlipbook* JumpingFlipBook;
+	UPROPERTY(EditAnywhere, Category="Concept Demo Action Sprites DamageLevel1") UPaperFlipbook* IdleFlipBookDamageLevel1;
+	UPROPERTY(EditAnywhere, Category="Concept Demo Action Sprites DamageLevel1") UPaperFlipbook* MovingFlipBookDamageLevel1;
+	UPROPERTY(EditAnywhere, Category="Concept Demo Action Sprites DamageLevel1") UPaperFlipbook* JumpingFlipBookDamageLevel1;
+	UPROPERTY(EditAnywhere, Category="Concept Demo Action Sprites DamageLevel2") UPaperFlipbook* IdleFlipBookDamageLevel2;
+	UPROPERTY(EditAnywhere, Category="Concept Demo Action Sprites DamageLevel2") UPaperFlipbook* MovingFlipBookDamageLevel2;
+	UPROPERTY(EditAnywhere, Category="Concept Demo Action Sprites DamageLevel2") UPaperFlipbook* JumpingFlipBookDamageLevel2;
+	UPROPERTY() UPaperFlipbook* IdleFlipBook;
+	UPROPERTY() UPaperFlipbook* MovingFlipBook;
+	UPROPERTY() UPaperFlipbook* JumpingFlipBook;
+	UFUNCTION() void UpdateFlipBooks();
+	UPROPERTY(EditAnywhere, Category="Concept Demo Action Sprites DamageLevel2") float DamageLevel2Threshold;
 	UPROPERTY(EditAnywhere, Category="Concept Demo Drops") TSubclassOf<ASkull> DeathSkull;
 	UPROPERTY(EditAnywhere, Category="Character Asset Positions") FVector RelativeGunAttachLocation;
 	UPROPERTY(EditAnywhere, Category="Character Asset Positions") float RelativeGunDropDistance;
@@ -60,6 +69,7 @@ protected:
 	UPROPERTY(EditAnywhere, Category="Respawning") float RespawnBlinkCount;
 	UPROPERTY(EditAnywhere, Category="Death") TSubclassOf<ADeathIndicator> DeathIndicatorType;
 	UPROPERTY(EditAnywhere, Category="PowerUp") TSubclassOf<APowerupReadyProp> PowerUpReadyPropType;
+	UPROPERTY(EditAnywhere, Category="Droppables") TArray<TSubclassOf<ADroppable>> DroppableTypes;
 	UPROPERTY() uint16 CurrentHideAndShowCount;
 	
 	UPROPERTY(EditAnywhere) FText PlayerName;

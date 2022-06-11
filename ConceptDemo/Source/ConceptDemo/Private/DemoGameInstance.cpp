@@ -3,3 +3,7 @@
 
 #include "DemoGameInstance.h"
 
+UDemoGameInstance::UDemoGameInstance()
+{
+	this->UseControllerForPlayer2 = false;
+}

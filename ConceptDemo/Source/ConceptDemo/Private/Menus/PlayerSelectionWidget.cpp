@@ -9,6 +9,7 @@
 
 void UPlayerSelectionWidget::NativeConstruct()
 {
+	Super::NativeConstruct();
 	this->BackgroundTextureSequenceFlipTime = 0.2;
 	if (this->CharacterTypes.Num() == 0)
 	{

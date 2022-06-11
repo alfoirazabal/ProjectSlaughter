@@ -102,14 +102,17 @@ void ADemoLevelActor::SetupInputs()
 	this->InputComponent->BindAxis(TEXT("P1 Fire"), this, &ADemoLevelActor::P1Fire);
 	this->InputComponent->BindAction(TEXT("P1 Drop Gun"), IE_Pressed, this, &ADemoLevelActor::P1DropGun);
 	this->InputComponent->BindAction(TEXT("P1 Use Power"), IE_Pressed, this, &ADemoLevelActor::P1UsePower);
-	
-	this->InputComponent->BindAxis(TEXT("P2 HorizontalMovement"), this, &ADemoLevelActor::P2HorizontalMovement);
-	this->InputComponent->BindAction(TEXT("P2 Jump"), IE_Pressed, this, &ADemoLevelActor::P2JumpPressed);
-	this->InputComponent->BindAction(TEXT("P2 Jump"), IE_Released, this, &ADemoLevelActor::P2JumpReleased);
-	this->InputComponent->BindAction(TEXT("P2 Drop Down"), IE_Pressed, this, &ADemoLevelActor::P2DropDownPressed);
-	this->InputComponent->BindAxis(TEXT("P2 Fire"), this, &ADemoLevelActor::P2Fire);
-	this->InputComponent->BindAction(TEXT("P2 Drop Gun"), IE_Pressed, this, &ADemoLevelActor::P2DropGun);
-	this->InputComponent->BindAction(TEXT("P2 Use Power"), IE_Pressed, this, &ADemoLevelActor::P2UsePower);
+
+	if (!this->GameInstance->UseControllerForPlayer2)
+	{
+		this->InputComponent->BindAxis(TEXT("P2 HorizontalMovement"), this, &ADemoLevelActor::P2HorizontalMovement);
+		this->InputComponent->BindAction(TEXT("P2 Jump"), IE_Pressed, this, &ADemoLevelActor::P2JumpPressed);
+		this->InputComponent->BindAction(TEXT("P2 Jump"), IE_Released, this, &ADemoLevelActor::P2JumpReleased);
+		this->InputComponent->BindAction(TEXT("P2 Drop Down"), IE_Pressed, this, &ADemoLevelActor::P2DropDownPressed);
+		this->InputComponent->BindAxis(TEXT("P2 Fire"), this, &ADemoLevelActor::P2Fire);
+		this->InputComponent->BindAction(TEXT("P2 Drop Gun"), IE_Pressed, this, &ADemoLevelActor::P2DropGun);
+		this->InputComponent->BindAction(TEXT("P2 Use Power"), IE_Pressed, this, &ADemoLevelActor::P2UsePower);
+	}
 
 	this->InputComponent->BindAction(TEXT("Level Exit"), IE_Pressed, this, &ADemoLevelActor::ExitLevel);
 
@@ -198,10 +201,13 @@ void ADemoLevelActor::SpawnPlayers()
 	this->Player2 = this->GetWorld()->SpawnActor<AUConceptDemoPaperCharacter>(this->Player2Type, P2Location, PlayerSpawnRotation);
 	this->Player1->SetPlayerName(this->GameInstance->Player1Name);
 	this->Player2->SetPlayerName(this->GameInstance->Player2Name);
-	
-	this->Player2->SetPlayerNumber(EAutoReceiveInput::Player1);
-	this->Player2->InputComponent = this->InputComponent;
-	this->Player2->BindInputs();
+
+	if (this->GameInstance->UseControllerForPlayer2)
+	{
+		this->Player2->SetPlayerNumber(EAutoReceiveInput::Player1);
+		this->Player2->InputComponent = this->InputComponent;
+		this->Player2->BindInputs();
+	}
 }
 
 

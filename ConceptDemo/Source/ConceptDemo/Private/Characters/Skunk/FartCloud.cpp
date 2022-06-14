@@ -85,6 +85,7 @@ void AFartCloud::OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor* Oth
 					CharacterDefaultWalkSpeed.DefaultWalkSpeed = Character->GetCharacterMovement()->MaxWalkSpeed;
 					this->OverlappingCharactersDefaultWalkSpeeds.Add(CharacterDefaultWalkSpeed);
 					Character->GetCharacterMovement()->MaxWalkSpeed *= this->CurrentMovementSlowdownRatio;
+					Character->GetCharacterMovement()->SetJumpAllowed(false);
 				}
 			}
 		}
@@ -107,6 +108,7 @@ void AFartCloud::OnOverlapEnd(UPrimitiveComponent* OverlappedComp, AActor* Other
 					const FCharacterDefaultWalkSpeeds DefaultWalkSpeedFound = this->OverlappingCharactersDefaultWalkSpeeds[CharacterDefaultWalkSpeedIndex];
 					Character->GetCharacterMovement()->MaxWalkSpeed = DefaultWalkSpeedFound.DefaultWalkSpeed;
 					this->OverlappingCharactersDefaultWalkSpeeds.RemoveAt(CharacterDefaultWalkSpeedIndex);
+					Character->GetCharacterMovement()->SetJumpAllowed(true);
 				}
 			}
 		}

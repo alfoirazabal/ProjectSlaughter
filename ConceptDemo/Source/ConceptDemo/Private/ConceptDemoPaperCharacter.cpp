@@ -53,8 +53,14 @@ AUConceptDemoPaperCharacter::AUConceptDemoPaperCharacter()
 	this->PowerUpReadyPropType = PowerUpReadyObject.Class;
 	static ConstructorHelpers::FClassFinder<ADroppable> DroppableBone1OClassFinder(TEXT("/Game/Character/Droppables/DroppableBone1"));
 	static ConstructorHelpers::FClassFinder<ADroppable> DroppableBone2OClassFinder(TEXT("/Game/Character/Droppables/DroppableBone2"));
+	static ConstructorHelpers::FClassFinder<ADroppable> DroppableBloodSplat1ClassFinder(TEXT("/Game/Character/Droppables/DroppableBloodSplat1"));
+	static ConstructorHelpers::FClassFinder<ADroppable> DroppableBloodSplat2ClassFinder(TEXT("/Game/Character/Droppables/DroppableBloodSplat2"));
+	static ConstructorHelpers::FClassFinder<ADroppable> DroppableBloodSplat3ClassFinder(TEXT("/Game/Character/Droppables/DroppableBloodSplat3"));
 	this->DroppableTypes.Add(DroppableBone1OClassFinder.Class);
 	this->DroppableTypes.Add(DroppableBone2OClassFinder.Class);
+	this->DroppableTypes.Add(DroppableBloodSplat1ClassFinder.Class);
+	this->DroppableTypes.Add(DroppableBloodSplat2ClassFinder.Class);
+	this->DroppableTypes.Add(DroppableBloodSplat3ClassFinder.Class);
 	
 	this->RelativeGunAttachLocation = FVector(-5, -30, -30);
 	this->RelativeGunDropDistance = 150;

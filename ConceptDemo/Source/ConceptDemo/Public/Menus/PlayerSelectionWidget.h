@@ -19,36 +19,76 @@ class CONCEPTDEMO_API UPlayerSelectionWidget : public UUserWidget
 {
 	GENERATED_BODY()
 
-	UPROPERTY(EditAnywhere) TArray<TSubclassOf<AUConceptDemoPaperCharacter>> CharacterTypes;
-	UPROPERTY() TArray<AUConceptDemoPaperCharacter*> Characters;
-	UPROPERTY(EditAnywhere) AUConceptDemoPaperCharacter* Player1Character;
-	UPROPERTY(EditAnywhere) AUConceptDemoPaperCharacter* Player2Character;
-	uint16 Player1CharacterIndex;
-	uint16 Player2CharacterIndex;
+	UPROPERTY() TArray<TSubclassOf<AUConceptDemoPaperCharacter>> CharacterTypes;
+	UPROPERTY() TArray<AUConceptDemoPaperCharacter*> P1Characters;
+	UPROPERTY() TArray<AUConceptDemoPaperCharacter*> P2Characters;
+	UPROPERTY() AUConceptDemoPaperCharacter* Player1Character;
+	UPROPERTY() AUConceptDemoPaperCharacter* Player2Character;
 
 public:
+	
 	UPROPERTY(EditAnywhere) TArray<UTexture2D*> BackgroundTextureSequence;
 	UPROPERTY(EditAnywhere) float BackgroundTextureSequenceFlipTime;
 
+	UPROPERTY() TArray<UButton*> P1Buttons;
+	UPROPERTY() TArray<UImage*> P1CharacterImages;
+	UPROPERTY() TArray<UButton*> P2Buttons;
+	UPROPERTY() TArray<UImage*> P2CharacterImages;
+	UPROPERTY() TArray<UImage*> P1SelectionMarkerImages;
+	UPROPERTY() TArray<UImage*> P2SelectionMarkerImages;
+
     UPROPERTY(meta = (BindWidget)) UImage* BackgroundImage;
-	UPROPERTY(meta = (BindWidget)) UButton* ButtonGoBack;
-	UPROPERTY(meta = (BindWidget)) UButton* ButtonBegin;
-	UPROPERTY(meta = (BindWidget)) UButton* Player1ChangeButton;
-	UPROPERTY(meta = (BindWidget)) UButton* Player2ChangeButton;
-	UPROPERTY(meta = (BindWidget)) UImage* Player1CharacterImage;
-	UPROPERTY(meta = (BindWidget)) UImage* Player2CharacterImage;
+
+	UPROPERTY(meta = (BindWidget)) UButton* BtnP1Pos1;
+	UPROPERTY(meta = (BindWidget)) UButton* BtnP1Pos2;
+	UPROPERTY(meta = (BindWidget)) UButton* BtnP1Pos3;
+	UPROPERTY(meta = (BindWidget)) UButton* BtnP1Pos4;
+	UPROPERTY(meta = (BindWidget)) UButton* BtnP1Pos5;
+	UPROPERTY(meta = (BindWidget)) UButton* BtnP1Pos6;
+	UPROPERTY(meta = (BindWidget)) UButton* BtnP2Pos1;
+	UPROPERTY(meta = (BindWidget)) UButton* BtnP2Pos2;
+	UPROPERTY(meta = (BindWidget)) UButton* BtnP2Pos3;
+	UPROPERTY(meta = (BindWidget)) UButton* BtnP2Pos4;
+	UPROPERTY(meta = (BindWidget)) UButton* BtnP2Pos5;
+	UPROPERTY(meta = (BindWidget)) UButton* BtnP2Pos6;
+
+	UPROPERTY(meta = (BindWidget)) UImage* ImgP1Pos1;
+	UPROPERTY(meta = (BindWidget)) UImage* ImgP1Pos2;
+	UPROPERTY(meta = (BindWidget)) UImage* ImgP1Pos3;
+	UPROPERTY(meta = (BindWidget)) UImage* ImgP1Pos4;
+	UPROPERTY(meta = (BindWidget)) UImage* ImgP1Pos5;
+	UPROPERTY(meta = (BindWidget)) UImage* ImgP1Pos6;
+	UPROPERTY(meta = (BindWidget)) UImage* ImgP2Pos1;
+	UPROPERTY(meta = (BindWidget)) UImage* ImgP2Pos2;
+	UPROPERTY(meta = (BindWidget)) UImage* ImgP2Pos3;
+	UPROPERTY(meta = (BindWidget)) UImage* ImgP2Pos4;
+	UPROPERTY(meta = (BindWidget)) UImage* ImgP2Pos5;
+	UPROPERTY(meta = (BindWidget)) UImage* ImgP2Pos6;
+
+	UPROPERTY(meta = (BindWidget)) UImage* ImgSelectedP1Pos1;
+	UPROPERTY(meta = (BindWidget)) UImage* ImgSelectedP1Pos2;
+	UPROPERTY(meta = (BindWidget)) UImage* ImgSelectedP1Pos3;
+	UPROPERTY(meta = (BindWidget)) UImage* ImgSelectedP1Pos4;
+	UPROPERTY(meta = (BindWidget)) UImage* ImgSelectedP1Pos5;
+	UPROPERTY(meta = (BindWidget)) UImage* ImgSelectedP1Pos6;
+	UPROPERTY(meta = (BindWidget)) UImage* ImgSelectedP2Pos1;
+	UPROPERTY(meta = (BindWidget)) UImage* ImgSelectedP2Pos2;
+	UPROPERTY(meta = (BindWidget)) UImage* ImgSelectedP2Pos3;
+	UPROPERTY(meta = (BindWidget)) UImage* ImgSelectedP2Pos4;
+	UPROPERTY(meta = (BindWidget)) UImage* ImgSelectedP2Pos5;
+	UPROPERTY(meta = (BindWidget)) UImage* ImgSelectedP2Pos6;
+
 	UPROPERTY(meta = (BindWidget)) URichTextBlock* RichTextBlockPlayer1Description;
 	UPROPERTY(meta = (BindWidget)) URichTextBlock* RichTextBlockPlayer2Description;
 	UPROPERTY(meta = (BindWidget)) UEditableTextBox* EditableTextBoxPlayer1Name;
 	UPROPERTY(meta = (BindWidget)) UEditableTextBox* EditableTextBoxPlayer2Name;
 
+	UPROPERTY(meta = (BindWidget)) UButton* ButtonBegin;
+
+	explicit UPlayerSelectionWidget(const FObjectInitializer& ObjectInitializer);
 	virtual void NativeConstruct() override;
 	virtual void NativeDestruct() override;
 
-	UFUNCTION() void ChangePlayer1();
-	UFUNCTION() void ChangePlayer2();
-	void UpdatePlayer1();
-	void UpdatePlayer2();
 	UFUNCTION() void GoBack();
 	UFUNCTION() void BeginGame();
 
@@ -56,5 +96,20 @@ protected:
 	UPROPERTY() int CurrentFlippingImageIndex;
 	UPROPERTY() FTimerHandle BackgroundImageFlippingTimer; 
 	UFUNCTION() void SetBackgroundImageFlipping();
-	
+
+	UFUNCTION() void SelectP1Pos1();
+	UFUNCTION() void SelectP1Pos2();
+	UFUNCTION() void SelectP1Pos3();
+	UFUNCTION() void SelectP1Pos4();
+	UFUNCTION() void SelectP1Pos5();
+	UFUNCTION() void SelectP1Pos6();
+	UFUNCTION() void SelectP2Pos1();
+	UFUNCTION() void SelectP2Pos2();
+	UFUNCTION() void SelectP2Pos3();
+	UFUNCTION() void SelectP2Pos4();
+	UFUNCTION() void SelectP2Pos5();
+	UFUNCTION() void SelectP2Pos6();
+
+	UFUNCTION() void DisplaySelectedP1();
+	UFUNCTION() void DisplaySelectedP2();
 };

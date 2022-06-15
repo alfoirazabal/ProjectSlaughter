@@ -110,6 +110,15 @@ protected:
 	UFUNCTION() void SelectP2Pos5();
 	UFUNCTION() void SelectP2Pos6();
 
+	UFUNCTION() void P1SelectLeftwardsPlayer();
+	UFUNCTION() void P1SelectUpwardsPlayer();
+	UFUNCTION() void P1SelectRightwardsPlayer();
+	UFUNCTION() void P1SelectDownwardsPlayer();
+	UFUNCTION() void P2SelectLeftwardsPlayer();
+	UFUNCTION() void P2SelectUpwardsPlayer();
+	UFUNCTION() void P2SelectRightwardsPlayer();
+	UFUNCTION() void P2SelectDownwardsPlayer();
+
 	UFUNCTION() void DisplaySelectedP1();
 	UFUNCTION() void DisplaySelectedP2();
 };

@@ -102,6 +102,15 @@ void UPlayerSelectionWidget::NativeConstruct()
 	this->DisplaySelectedP1();
 	this->DisplaySelectedP2();
 	this->ButtonBegin->OnClicked.AddDynamic(this, &UPlayerSelectionWidget::BeginGame);
+	const APlayerController* PlayerController = this->GetOwningPlayer();
+	PlayerController->InputComponent->BindAction(TEXT("P1 Left"), IE_Pressed, this, &UPlayerSelectionWidget::P1SelectLeftwardsPlayer);
+	PlayerController->InputComponent->BindAction(TEXT("P1 Up"), IE_Pressed, this, &UPlayerSelectionWidget::P1SelectUpwardsPlayer);
+	PlayerController->InputComponent->BindAction(TEXT("P1 Right"), IE_Pressed, this, &UPlayerSelectionWidget::P1SelectRightwardsPlayer);
+	PlayerController->InputComponent->BindAction(TEXT("P1 Down"), IE_Pressed, this, &UPlayerSelectionWidget::P1SelectDownwardsPlayer);
+	PlayerController->InputComponent->BindAction(TEXT("P2 Left"), IE_Pressed, this, &UPlayerSelectionWidget::P2SelectLeftwardsPlayer);
+	PlayerController->InputComponent->BindAction(TEXT("P2 Up"), IE_Pressed, this, &UPlayerSelectionWidget::P2SelectUpwardsPlayer);
+	PlayerController->InputComponent->BindAction(TEXT("P2 Right"), IE_Pressed, this, &UPlayerSelectionWidget::P2SelectRightwardsPlayer);
+	PlayerController->InputComponent->BindAction(TEXT("P2 Down"), IE_Pressed, this, &UPlayerSelectionWidget::P2SelectDownwardsPlayer);
 }
 
 void UPlayerSelectionWidget::NativeDestruct()
@@ -200,6 +209,88 @@ void UPlayerSelectionWidget::SelectP2Pos6()
 {
 	this->Player2Character = this->P2Characters[5];
 	DisplaySelectedP2();
+}
+
+void UPlayerSelectionWidget::P1SelectLeftwardsPlayer()
+{
+	const int CurrentIndex = this->P1Characters.IndexOfByKey(this->Player1Character);
+	if (CurrentIndex != 0 && CurrentIndex != 3)
+	{
+		const int LeftwardsIndex = CurrentIndex - 1;
+		this->Player1Character = this->P1Characters[LeftwardsIndex];
+		this->DisplaySelectedP1();
+	}
+}
+void UPlayerSelectionWidget::P1SelectUpwardsPlayer()
+{
+	const int CurrentIndex = this->P1Characters.IndexOfByKey(this->Player1Character);
+	if (CurrentIndex > 2)
+	{
+		const int UpwardsIndex = CurrentIndex - 3;
+		this->Player1Character = this->P1Characters[UpwardsIndex];
+		this->DisplaySelectedP1();
+	}
+}
+void UPlayerSelectionWidget::P1SelectRightwardsPlayer()
+{
+	const int CurrentIndex = this->P1Characters.IndexOfByKey(this->Player1Character);
+	if (CurrentIndex != 2 && CurrentIndex != 5)
+	{
+		const int RightwardsIndex = CurrentIndex + 1;
+		this->Player1Character = this->P1Characters[RightwardsIndex];
+		this->DisplaySelectedP1();
+	}
+}
+void UPlayerSelectionWidget::P1SelectDownwardsPlayer()
+{
+	const int CurrentIndex = this->P1Characters.IndexOfByKey(this->Player1Character);
+	if (CurrentIndex < 3)
+	{
+		const int DownwardsIndex = CurrentIndex + 3;
+		this->Player1Character = this->P1Characters[DownwardsIndex];
+		this->DisplaySelectedP1();
+	}
+}
+
+void UPlayerSelectionWidget::P2SelectLeftwardsPlayer()
+{
+	const int CurrentIndex = this->P2Characters.IndexOfByKey(this->Player2Character);
+	if (CurrentIndex != 0 && CurrentIndex != 3)
+	{
+		const int LeftwardsIndex = CurrentIndex - 1;
+		this->Player2Character = this->P2Characters[LeftwardsIndex];
+		this->DisplaySelectedP2();
+	}
+}
+void UPlayerSelectionWidget::P2SelectUpwardsPlayer()
+{
+	const int CurrentIndex = this->P2Characters.IndexOfByKey(this->Player2Character);
+	if (CurrentIndex > 2)
+	{
+		const int UpwardsIndex = CurrentIndex - 3;
+		this->Player2Character = this->P2Characters[UpwardsIndex];
+		this->DisplaySelectedP2();
+	}
+}
+void UPlayerSelectionWidget::P2SelectRightwardsPlayer()
+{
+	const int CurrentIndex = this->P2Characters.IndexOfByKey(this->Player2Character);
+	if (CurrentIndex != 2 && CurrentIndex != 5)
+	{
+		const int RightwardsIndex = CurrentIndex + 1;
+		this->Player2Character = this->P2Characters[RightwardsIndex];
+		this->DisplaySelectedP2();
+	}
+}
+void UPlayerSelectionWidget::P2SelectDownwardsPlayer()
+{
+	const int CurrentIndex = this->P2Characters.IndexOfByKey(this->Player2Character);
+	if (CurrentIndex < 3)
+	{
+		const int DownwardsIndex = CurrentIndex + 3;
+		this->Player2Character = this->P2Characters[DownwardsIndex];
+		this->DisplaySelectedP2();
+	}
 }
 
 void UPlayerSelectionWidget::DisplaySelectedP1()

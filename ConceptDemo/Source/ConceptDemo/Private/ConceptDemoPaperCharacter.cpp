@@ -9,6 +9,7 @@
 #include <PaperFlipbookComponent.h>
 
 #include "SemiSolidPlatform.h"
+#include "Characters/PowerupReadyIndicator.h"
 #include "Characters/Skull.h"
 #include "Components/CapsuleComponent.h"
 #include "Components/WidgetComponent.h"
@@ -61,6 +62,7 @@ AUConceptDemoPaperCharacter::AUConceptDemoPaperCharacter()
 	this->DroppableTypes.Add(DroppableBloodSplat1ClassFinder.Class);
 	this->DroppableTypes.Add(DroppableBloodSplat2ClassFinder.Class);
 	this->DroppableTypes.Add(DroppableBloodSplat3ClassFinder.Class);
+	this->PowerUpReadyIndicatorRelativeLocation = FVector(-70, 0, 130);
 	
 	this->RelativeGunAttachLocation = FVector(-5, -30, -30);
 	this->RelativeGunDropDistance = 150;
@@ -176,6 +178,23 @@ void AUConceptDemoPaperCharacter::MakeFallingDeath()
 	FVector CurrentPosition = this->GetActorLocation();
 	CurrentPosition.X -= 500;
 	this->SetActorLocation(CurrentPosition);
+}
+
+FRotator AUConceptDemoPaperCharacter::GetFacingRotation() const
+{
+	FRotator Rotator = FRotator::ZeroRotator;
+	switch (this->FacingDirection)
+	{
+		case Left:
+			Rotator = FRotator(0, -90, 0);
+			break;
+		case Right:
+			Rotator = FRotator(0, 90, 0);
+			break;
+		default:
+			break;
+	}
+	return Rotator;
 }
 
 void AUConceptDemoPaperCharacter::UpdateHealthIndicator() const
@@ -356,6 +375,11 @@ void AUConceptDemoPaperCharacter::UsePower()
 {
 	this->CurrentSpecialPowerLoadTime = 0;
 	UGameplayStatics::SpawnSound2D(this->GetWorld(), this->PowerSound);
+	if (this->CurrentPowerUpReadyIndicator)
+	{
+		this->CurrentPowerUpReadyIndicator->Destroy();
+		this->CurrentPowerUpReadyIndicator = nullptr;
+	}
 	this->SpecialPowerReadyPropShown = false;
 }
 
@@ -450,6 +474,24 @@ void AUConceptDemoPaperCharacter::Tick(const float DeltaTime)
 			);
 			PowerUpReadyProp->ActorToFollow = this;
 			UGameplayStatics::FinishSpawningActor(PowerUpReadyProp, Transform);
+			if (!this->CurrentPowerUpReadyIndicator && this->PowerUpReadyIndicatorType)
+			{
+				if (this->PowerUpReadyIndicatorFlipBook)
+				{
+					APowerupReadyIndicator* PowerUpReadyIndicator = this->GetWorld()->SpawnActorDeferred<APowerupReadyIndicator>(
+						this->PowerUpReadyIndicatorType, Transform, this, this, ESpawnActorCollisionHandlingMethod::AlwaysSpawn
+					);
+					PowerUpReadyIndicator->FollowingActor = this;
+					PowerUpReadyIndicator->FollowingRelativePosition = this->PowerUpReadyIndicatorRelativeLocation;
+					PowerUpReadyIndicator->GetRenderComponent()->SetFlipbook(this->PowerUpReadyIndicatorFlipBook);
+					UGameplayStatics::FinishSpawningActor(PowerUpReadyIndicator, Transform);
+					this->CurrentPowerUpReadyIndicator = PowerUpReadyIndicator;
+				}
+				else
+				{
+					GEngine->AddOnScreenDebugMessage(FMath::Rand(), 6, FColor::Red, "PowerUp Ready Indicator FlipBook unset for: " + this->GetName());
+				}
+			}
 			this->SpecialPowerReadyPropShown = true;
 		}
 	}

@@ -56,17 +56,13 @@ void ALifeCollectible::Tick(float DeltaTime)
 void ALifeCollectible::OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor* OtherActor,
 	UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
-	GEngine->AddOnScreenDebugMessage(235236236, 2, FColor::Green, "COL0");
 	if (OtherComp)
 	{
-		GEngine->AddOnScreenDebugMessage(235236236, 2, FColor::Green, "COL1");
 		if (OtherActor)
 		{
-			GEngine->AddOnScreenDebugMessage(235236236, 2, FColor::Green, "COL2");
 			AUConceptDemoPaperCharacter* Character = Cast<AUConceptDemoPaperCharacter>(OtherActor);
 			if (Character)
 			{
-				GEngine->AddOnScreenDebugMessage(235236236, 2, FColor::Green, "COL3");
 				Character->AddLife(this->LifeBarFill);
 				this->Destroy();
 			}

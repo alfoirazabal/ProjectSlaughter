@@ -9,6 +9,7 @@
 #include "PaperCharacter.h"
 #include "PaperCharacterHUD.h"
 #include "UConceptDemoPaperPawn.h"
+#include "Characters/PowerupReadyIndicator.h"
 #include "Characters/PowerupReadyProp.h"
 #include "Characters/Skull.h"
 #include "Levels/UserWidgetPlayersStatusControl.h"
@@ -41,6 +42,12 @@ public:
 
 	UPROPERTY(EditAnywhere) UTexture2D* CharacterImage;
 	UPROPERTY(EditAnywhere) FString PlayerDescription;
+
+	UPROPERTY(EditAnywhere) TSubclassOf<APowerupReadyIndicator> PowerUpReadyIndicatorType;
+	UPROPERTY(EditAnywhere) UPaperFlipbook* PowerUpReadyIndicatorFlipBook;
+	UPROPERTY(EditAnywhere) FVector PowerUpReadyIndicatorRelativeLocation;
+	UPROPERTY() APowerupReadyIndicator* CurrentPowerUpReadyIndicator;
+	
 	UPROPERTY() UserWidgetPlayersStatusControl* UserWidgetPlayersStatusControl;
 
 	UPROPERTY(EditAnywhere, Category="Sounds") USoundBase* JumpSound;
@@ -99,7 +106,8 @@ protected:
 public:
 
 	DECLARE_DYNAMIC_MULTICAST_DELEGATE(FBeginOverlapEvent);
-
+	
+	UFUNCTION() FRotator GetFacingRotation() const;
 	UFUNCTION() void UpdateHealthIndicator() const;
 	UFUNCTION() void Respawn();
 	UFUNCTION(BlueprintCallable) void HandleMovement(float ScaleValue);

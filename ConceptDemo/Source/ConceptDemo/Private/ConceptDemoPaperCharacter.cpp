@@ -158,26 +158,6 @@ void AUConceptDemoPaperCharacter::BeginPlay()
 {
 	Super::BeginPlay();
 	this->InitialPosition = this->GetActorLocation();
-	TArray<UActorComponent*> Components;
-	this->GetComponents(Components);
-	const UWidgetComponent* WidgetComponent = nullptr;
-	for (int i = 0; WidgetComponent == nullptr && i < Components.Num(); i++) {
-		WidgetComponent = Cast<UWidgetComponent>(Components[i]);
-	}
-	if (WidgetComponent) {
-		UUserWidget* HUDWidget = WidgetComponent->GetWidget();
-		this->CharacterHUD = Cast<UPaperCharacterHUD>(HUDWidget);
-		if (!this->CharacterHUD) {
-			GEngine->AddOnScreenDebugMessage(5345343, 2, FColor::Red, "Unable to cast HealthHUD for PaperCharacter!");
-		}
-		else
-		{
-			this->CharacterHUD->SetGunAttached(false);
-		}
-	}
-	else {
-		GEngine->AddOnScreenDebugMessage(564564, 2, FColor::Red, "HealthHUD not found!");
-	}
 	this->UpdateFlipBooks();
 }
 
@@ -198,22 +178,14 @@ void AUConceptDemoPaperCharacter::MakeFallingDeath()
 	this->SetActorLocation(CurrentPosition);
 }
 
-void AUConceptDemoPaperCharacter::SetPlayerName(const FText NewPlayerName) const
-{
-	if (this->CharacterHUD)
-	{
-		this->CharacterHUD->SetPlayerName(NewPlayerName);
-	}
-}
-
 void AUConceptDemoPaperCharacter::UpdateHealthIndicator() const
 {
-	if (this->CharacterHUD) {
-		this->CharacterHUD->SetHealth(this->CurrentLifeSize);
-		this->CharacterHUD->SetLives(this->CurrentLives);
+	if (this->UserWidgetPlayersStatusControl) {
+		this->UserWidgetPlayersStatusControl->SetHealth(this->CurrentLifeSize);
+		this->UserWidgetPlayersStatusControl->SetLives(this->CurrentLives);
 		if (this->AttachedGun == nullptr)
 		{
-			this->CharacterHUD->SetStaminaBar(this->SpecialPowerLoadTime, this->CurrentSpecialPowerLoadTime);
+			this->UserWidgetPlayersStatusControl->SetStaminaBar(this->SpecialPowerLoadTime, this->CurrentSpecialPowerLoadTime);
 		}
 	}
 }
@@ -313,8 +285,8 @@ void AUConceptDemoPaperCharacter::AttachGun(AGun* Gun)
 	if (this->AttachedGun == nullptr) {
 		this->AttachedGun = Gun;
 		this->AttachedGun->SetAttached();
-		this->CharacterHUD->SetGunAttached(true);
-		this->CharacterHUD->SetStaminaBar(Gun->ShotsCount, Gun->ShotsLeft);
+		this->UserWidgetPlayersStatusControl->SetGunAttached(true);
+		this->UserWidgetPlayersStatusControl->SetStaminaBar(Gun->ShotsCount, Gun->ShotsLeft);
 		this->AttachedGun->ShotLost.AddDynamic(this, &AUConceptDemoPaperCharacter::UpdateShotsCount);
 		if (this->AttachGunSound) UGameplayStatics::SpawnSound2D(this->GetWorld(), this->AttachGunSound);
 	}
@@ -328,7 +300,7 @@ void AUConceptDemoPaperCharacter::DropGun()
 {
 	if (this->AttachedGun != nullptr) {
 		this->AttachedGun->SetDetached();
-		this->CharacterHUD->SetGunAttached(false);
+		this->UserWidgetPlayersStatusControl->SetGunAttached(false);
 		FVector NewGunLocation;
 		if (this->bFallingDeath)
 		{
@@ -353,7 +325,7 @@ void AUConceptDemoPaperCharacter::DropGun()
 			this->MoveIgnoreActorRemove(this->GunsIgnored[i]);
 		}
 		this->GunsIgnored.Empty();
-		this->CharacterHUD->SetGunAttached(false);
+		this->UserWidgetPlayersStatusControl->SetGunAttached(false);
 	}
 }
 
@@ -371,7 +343,7 @@ void AUConceptDemoPaperCharacter::Fire()
 	}
 	if (IsValid(this->AttachedGun))
 	{
-		this->CharacterHUD->SetStaminaBar(this->AttachedGun->ShotsCount, this->AttachedGun->ShotsLeft);
+		this->UserWidgetPlayersStatusControl->SetStaminaBar(this->AttachedGun->ShotsCount, this->AttachedGun->ShotsLeft);
 	}
 }
 
@@ -389,9 +361,9 @@ void AUConceptDemoPaperCharacter::UsePower()
 
 void AUConceptDemoPaperCharacter::UpdateShotsCount()
 {
-	if (this->AttachedGun && this->CharacterHUD)
+	if (this->AttachedGun && this->UserWidgetPlayersStatusControl)
 	{
-		this->CharacterHUD->SetStaminaBar(this->AttachedGun->ShotsCount, this->AttachedGun->ShotsLeft);
+		this->UserWidgetPlayersStatusControl->SetStaminaBar(this->AttachedGun->ShotsCount, this->AttachedGun->ShotsLeft);
 	}
 }
 

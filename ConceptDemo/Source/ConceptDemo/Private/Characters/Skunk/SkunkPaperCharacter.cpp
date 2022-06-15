@@ -19,7 +19,7 @@ void ASkunkPaperCharacter::Fire()
 	}
 	if (IsValid(this->AttachedGun))
 	{
-		this->CharacterHUD->SetStaminaBar(this->AttachedGun->ShotsCount, this->AttachedGun->ShotsLeft);
+		this->UserWidgetPlayersStatusControl->SetStaminaBar(this->AttachedGun->ShotsCount, this->AttachedGun->ShotsLeft);
 	}
 }
 

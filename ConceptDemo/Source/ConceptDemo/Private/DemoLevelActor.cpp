@@ -7,6 +7,7 @@
 
 #include "DemoGameInstance.h"
 #include "Kismet/GameplayStatics.h"
+#include "Levels/DemoLevel/DemoLevelGameModeBase.h"
 
 ADemoLevelActor::ADemoLevelActor()
 {
@@ -16,12 +17,13 @@ ADemoLevelActor::ADemoLevelActor()
 	this->GunsSpawnCheckTimeInSeconds = 5;
 	this->LifeCollectibleSpawnTimeInSeconds = 15;
 	this->LifeCollectibleSpawnChance = 0.95;
+	static ConstructorHelpers::FClassFinder<UUserWidgetPlayersStatus> UserWidgetPLayerStatusClassFinder(TEXT("/Game/Widgets/PlayersScoreWidget"));
+	this->UserWidgetPlayerStatusClass = UserWidgetPLayerStatusClassFinder.Class;
 }
 
 void ADemoLevelActor::BeginPlay()
 {
 	Super::BeginPlay();
-
 	this->GameInstance = Cast<UDemoGameInstance>(this->GetGameInstance());
 	if (IsValid(this->GameInstance))
 	{
@@ -35,6 +37,7 @@ void ADemoLevelActor::BeginPlay()
 		}
 	}
 	this->SpawnPlayers();
+	this->SetupPlayersStatusWidget();
 	this->SetupInputs();
 	this->Player1->PlayerDeath.AddDynamic(this, &ADemoLevelActor::P1ReactToDeath);
 	this->Player2->PlayerDeath.AddDynamic(this, &ADemoLevelActor::P2ReactToDeath);
@@ -120,6 +123,34 @@ void ADemoLevelActor::SetupInputs()
 	PlayerController->SetShowMouseCursor(false);
 }
 
+void ADemoLevelActor::SetupPlayersStatusWidget() const
+{
+	ADemoLevelGameModeBase* GameModeBase = Cast<ADemoLevelGameModeBase>(UGameplayStatics::GetGameMode(this->GetWorld()));
+	UUserWidgetPlayersStatus* PlayersStatusWidget = CreateWidget<UUserWidgetPlayersStatus>(this->GetWorld(), this->UserWidgetPlayerStatusClass);
+	GameModeBase->PlayerStatusWidget = PlayersStatusWidget;
+	PlayersStatusWidget->TxtP1Name->SetText(this->GameInstance->Player1Name);
+	PlayersStatusWidget->TxtP2Name->SetText(this->GameInstance->Player2Name);
+	PlayersStatusWidget->ImgP1CharacterType->SetBrushFromTexture(this->Player1->CharacterImage);
+	PlayersStatusWidget->ImgP2CharacterType->SetBrushFromTexture(this->Player2->CharacterImage);
+	PlayersStatusWidget->AddToViewport();
+	UserWidgetPlayersStatusControl* Player1StatusController = NewObject<UserWidgetPlayersStatusControl>();
+	UserWidgetPlayersStatusControl* Player2StatusController = NewObject<UserWidgetPlayersStatusControl>();
+	Player1StatusController->ImgHeart1 = PlayersStatusWidget->ImgP1Heart1;
+	Player1StatusController->ImgHeart2 = PlayersStatusWidget->ImgP1Heart2;
+	Player1StatusController->ImgHeart3 = PlayersStatusWidget->ImgP1Heart3;
+	Player1StatusController->PbrHealth = PlayersStatusWidget->PbrP1Life;
+	Player1StatusController->PbrStamina = PlayersStatusWidget->PbrP1Stamina;
+	Player2StatusController->ImgHeart1 = PlayersStatusWidget->ImgP2Heart1;
+	Player2StatusController->ImgHeart2 = PlayersStatusWidget->ImgP2Heart2;
+	Player2StatusController->ImgHeart3 = PlayersStatusWidget->ImgP2Heart3;
+	Player2StatusController->PbrHealth = PlayersStatusWidget->PbrP2Life;
+	Player2StatusController->PbrStamina = PlayersStatusWidget->PbrP2Stamina;
+	this->Player1->UserWidgetPlayersStatusControl = Player1StatusController;
+	this->Player2->UserWidgetPlayersStatusControl = Player2StatusController;
+	this->Player1->UpdateHealthIndicator();
+	this->Player2->UpdateHealthIndicator();
+}
+
 void ADemoLevelActor::P1HorizontalMovement(const float AxisValue)
 {
 	if (IsValid(this->Player1)) this->Player1->HandleMovement(AxisValue);
@@ -199,8 +230,6 @@ void ADemoLevelActor::SpawnPlayers()
 	this->RandomPlayerSpawnLocations.Remove(P2Location);
 	this->Player1 = this->GetWorld()->SpawnActor<AUConceptDemoPaperCharacter>(this->Player1Type, P1Location, PlayerSpawnRotation);
 	this->Player2 = this->GetWorld()->SpawnActor<AUConceptDemoPaperCharacter>(this->Player2Type, P2Location, PlayerSpawnRotation);
-	this->Player1->SetPlayerName(this->GameInstance->Player1Name);
-	this->Player2->SetPlayerName(this->GameInstance->Player2Name);
 
 	if (this->GameInstance->UseControllerForPlayer2)
 	{

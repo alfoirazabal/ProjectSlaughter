@@ -11,6 +11,7 @@
 #include "UConceptDemoPaperPawn.h"
 #include "Characters/PowerupReadyProp.h"
 #include "Characters/Skull.h"
+#include "Levels/UserWidgetPlayersStatusControl.h"
 #include "Props/Death/DeathIndicator.h"
 #include "Props/Droppables/Droppable.h"
 #include "ConceptDemoPaperCharacter.generated.h"
@@ -40,6 +41,7 @@ public:
 
 	UPROPERTY(EditAnywhere) UTexture2D* CharacterImage;
 	UPROPERTY(EditAnywhere) FString PlayerDescription;
+	UPROPERTY() UserWidgetPlayersStatusControl* UserWidgetPlayersStatusControl;
 
 	UPROPERTY(EditAnywhere, Category="Sounds") USoundBase* JumpSound;
 	UPROPERTY(EditAnywhere, Category="Sounds") USoundBase* PowerSound;
@@ -76,7 +78,6 @@ protected:
 	
 	EFacing_Direction FacingDirection;
 	UPROPERTY() TArray<AGun*> GunsIgnored;
-	UPROPERTY() UPaperCharacterHUD* CharacterHUD;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite) uint8 Lives;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite) float LifeSize;
@@ -99,7 +100,6 @@ public:
 
 	DECLARE_DYNAMIC_MULTICAST_DELEGATE(FBeginOverlapEvent);
 
-	UFUNCTION() void SetPlayerName(FText NewPlayerName) const;
 	UFUNCTION() void UpdateHealthIndicator() const;
 	UFUNCTION() void Respawn();
 	UFUNCTION(BlueprintCallable) void HandleMovement(float ScaleValue);

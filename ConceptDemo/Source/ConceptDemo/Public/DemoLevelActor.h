@@ -9,6 +9,7 @@
 #include "DemoGameInstance.h"
 #include "Engine/LevelScriptActor.h"
 #include "Guns/SpawnerGun.h"
+#include "Levels/UserWidgetPlayersStatus.h"
 #include "Props/Collectibles/LifeCollectible.h"
 #include "DemoLevelActor.generated.h"
 
@@ -25,6 +26,7 @@ public:
 	ADemoLevelActor();
 
 	UPROPERTY() UDemoGameInstance* GameInstance;
+	UPROPERTY() TSubclassOf<UUserWidgetPlayersStatus> UserWidgetPlayerStatusClass;
 	UPROPERTY(EditAnywhere, Category = "Players") TArray<FVector> RandomPlayerSpawnLocations;
 	UPROPERTY(EditAnywhere, Category = "Guns") TArray<TSubclassOf<AGun>> Guns;
 	UPROPERTY(EditAnywhere, Category = "Guns") TArray<ASpawnerGun*> SpawnerGuns;
@@ -48,6 +50,7 @@ public:
 	virtual void BeginPlay() override;
 	
 	UFUNCTION() void SetupInputs();
+	UFUNCTION() void SetupPlayersStatusWidget() const;
 
 protected:
 	void P1HorizontalMovement(float AxisValue);

@@ -41,6 +41,7 @@ public:
 	UFUNCTION() void BindInputs();
 
 	UPROPERTY(EditAnywhere) UTexture2D* CharacterImage;
+	UPROPERTY(EditAnywhere) UTexture2D* CharacterFaceImage;
 	UPROPERTY(EditAnywhere) FString PlayerDescription;
 
 	UPROPERTY(EditAnywhere) TSubclassOf<APowerupReadyIndicator> PowerUpReadyIndicatorType;

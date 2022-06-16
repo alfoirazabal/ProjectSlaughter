@@ -130,8 +130,8 @@ void ADemoLevelActor::SetupPlayersStatusWidget() const
 	GameModeBase->PlayerStatusWidget = PlayersStatusWidget;
 	PlayersStatusWidget->TxtP1Name->SetText(this->GameInstance->Player1Name);
 	PlayersStatusWidget->TxtP2Name->SetText(this->GameInstance->Player2Name);
-	PlayersStatusWidget->ImgP1CharacterType->SetBrushFromTexture(this->Player1->CharacterImage);
-	PlayersStatusWidget->ImgP2CharacterType->SetBrushFromTexture(this->Player2->CharacterImage);
+	PlayersStatusWidget->ImgP1CharacterType->SetBrushFromTexture(this->Player1->CharacterFaceImage);
+	PlayersStatusWidget->ImgP2CharacterType->SetBrushFromTexture(this->Player2->CharacterFaceImage);
 	PlayersStatusWidget->AddToViewport();
 	UserWidgetPlayersStatusControl* Player1StatusController = NewObject<UserWidgetPlayersStatusControl>();
 	UserWidgetPlayersStatusControl* Player2StatusController = NewObject<UserWidgetPlayersStatusControl>();

@@ -20,6 +20,7 @@ class CONCEPTDEMO_API AHedgePaperCharacter : public AUConceptDemoPaperCharacter
 	UPROPERTY(EditAnywhere) float ThornSpawnDistance;
 	UPROPERTY(EditAnywhere) float ThornDamage;
 
+public:
 	AHedgePaperCharacter();
 	virtual void Fire() override;
 	virtual void UsePower() override;

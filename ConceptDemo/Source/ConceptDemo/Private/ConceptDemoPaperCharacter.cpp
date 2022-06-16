@@ -52,6 +52,8 @@ AUConceptDemoPaperCharacter::AUConceptDemoPaperCharacter()
 	this->DeathIndicatorType = DeathIndicatorObject.Class;
 	static ConstructorHelpers::FClassFinder<APowerupReadyProp> PowerUpReadyObject(TEXT("/Game/Props/VFX/CharacterPowerupReady/PowerupReady"));
 	this->PowerUpReadyPropType = PowerUpReadyObject.Class;
+	static ConstructorHelpers::FObjectFinder<USoundBase> PowerUpReadySoundObject(TEXT("/Game/Character/Sounds/AbilityReady"));
+	this->PowerUpReadySound = PowerUpReadySoundObject.Object;
 	static ConstructorHelpers::FClassFinder<ADroppable> DroppableBone1OClassFinder(TEXT("/Game/Character/Droppables/DroppableBone1"));
 	static ConstructorHelpers::FClassFinder<ADroppable> DroppableBone2OClassFinder(TEXT("/Game/Character/Droppables/DroppableBone2"));
 	static ConstructorHelpers::FClassFinder<ADroppable> DroppableBloodSplat1ClassFinder(TEXT("/Game/Character/Droppables/DroppableBloodSplat1"));
@@ -474,6 +476,7 @@ void AUConceptDemoPaperCharacter::Tick(const float DeltaTime)
 			);
 			PowerUpReadyProp->ActorToFollow = this;
 			UGameplayStatics::FinishSpawningActor(PowerUpReadyProp, Transform);
+			UGameplayStatics::SpawnSound2D(this->GetWorld(), this->PowerUpReadySound);
 			if (!this->CurrentPowerUpReadyIndicator && this->PowerUpReadyIndicatorType)
 			{
 				if (this->PowerUpReadyIndicatorFlipBook)

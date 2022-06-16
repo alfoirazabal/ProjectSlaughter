@@ -9,6 +9,7 @@
 #include "Components/AudioComponent.h"
 #include "Components/SphereComponent.h"
 #include "Kismet/GameplayStatics.h"
+#include "Props/Collectibles/LifeCollectible.h"
 #include "SpecialZones/DangerZone.h"
 
 // Sets default values
@@ -95,7 +96,12 @@ void ABullet::OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor* OtherA
 				this->DestroyOrExplodeBullet();
 			}
 		}
-		else if (OtherActor != this && !Cast<ADangerZone>(OtherActor) && !Cast<AGun>(OtherActor) && !Cast<ACharacterPowerProp>(OtherActor))
+		else if (OtherActor != this &&
+			!Cast<ADangerZone>(OtherActor) &&
+			!Cast<AGun>(OtherActor) &&
+			!Cast<ACharacterPowerProp>(OtherActor) &&
+			!Cast<ALifeCollectible>(OtherActor)
+		)
 		{
 			GEngine->AddOnScreenDebugMessage(189992511, 2, FColor::Red, "Bullet collided with: " + OtherComp->GetName());
 			this->DestroyOrExplodeBullet();

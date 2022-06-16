@@ -56,6 +56,7 @@ public:
 	UPROPERTY(EditAnywhere, Category="Sounds") USoundBase* AttachGunSound;
 	UPROPERTY(EditAnywhere, Category="Sounds") USoundBase* RespawnSound;
 	UPROPERTY(EditAnywhere, Category="Sounds") USoundBase* WinSound;
+	UPROPERTY(EditAnywhere, Category="Sounds") USoundBase* PowerUpReadySound;
 
 protected:
 	// Called when the game starts

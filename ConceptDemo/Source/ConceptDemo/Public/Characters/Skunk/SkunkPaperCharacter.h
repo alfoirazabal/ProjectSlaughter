@@ -17,6 +17,7 @@ class CONCEPTDEMO_API ASkunkPaperCharacter : public AUConceptDemoPaperCharacter
 
 	UPROPERTY(EditAnywhere) TSubclassOf<AFartCloud> SkunkFartCloud;
 
+public:
 	ASkunkPaperCharacter();
 	virtual void Fire() override;
 	virtual void UsePower() override;

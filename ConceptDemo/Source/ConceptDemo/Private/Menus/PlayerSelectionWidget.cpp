@@ -22,10 +22,10 @@ UPlayerSelectionWidget::UPlayerSelectionWidget(const FObjectInitializer& ObjectI
 	const TSubclassOf<AUConceptDemoPaperCharacter> HedgeRedClass = HedgeRedClassFinder.Class;
 	const TSubclassOf<AUConceptDemoPaperCharacter> HedgeBlueClass = HedgeBlueClassFinder.Class;
 	this->CharacterTypes.Add(RabbitYellowClass);
-	this->CharacterTypes.Add(RabbitVioletClass);
 	this->CharacterTypes.Add(SkunkClass);
-	this->CharacterTypes.Add(SkunkAltClass);
 	this->CharacterTypes.Add(HedgeRedClass);
+	this->CharacterTypes.Add(RabbitVioletClass);
+	this->CharacterTypes.Add(SkunkAltClass);
 	this->CharacterTypes.Add(HedgeBlueClass);
 	for (uint16 i = 0 ; i < this->CharacterTypes.Num() ; i++)
 	{
@@ -82,8 +82,8 @@ void UPlayerSelectionWidget::NativeConstruct()
 	this->P2SelectionMarkerImages.Add(this->ImgSelectedP2Pos6);
 	for (uint8 i = 0 ; i < 6 ; i++)
 	{
-		this->P1CharacterImages[i]->SetBrushFromTexture(this->P1Characters[i]->CharacterImage);
-		this->P2CharacterImages[i]->SetBrushFromTexture(this->P2Characters[i]->CharacterImage);
+		this->P1CharacterImages[i]->SetBrushFromTexture(this->P1Characters[i]->CharacterFaceImage);
+		this->P2CharacterImages[i]->SetBrushFromTexture(this->P2Characters[i]->CharacterFaceImage);
 	}
 	this->P1Buttons[0]->OnClicked.AddDynamic(this, &UPlayerSelectionWidget::SelectP1Pos1);
 	this->P1Buttons[1]->OnClicked.AddDynamic(this, &UPlayerSelectionWidget::SelectP1Pos2);

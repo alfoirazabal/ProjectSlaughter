@@ -3,7 +3,7 @@
 
 #include "Characters/Skunk/FartCloud.h"
 
-#include "ConceptDemoPaperCharacter.h"
+#include "Characters/ConceptDemoPaperCharacter.h"
 #include "Components/CapsuleComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
 
@@ -12,6 +12,9 @@ AFartCloud::AFartCloud()
 {
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
+
+	this->DamageScore = 5;
+	
 	this->AliveTime = 25;
 	this->AliveTimeLeft = this->AliveTime;
 	this->InitialMovementSlowdownRatio = 0.12;
@@ -55,7 +58,7 @@ void AFartCloud::Tick(const float DeltaTime)
 	}
 }
 
-int AFartCloud::FindCharacterWalkSpeedIndex(const AUConceptDemoPaperCharacter* Character)
+int AFartCloud::FindCharacterWalkSpeedIndex(const AConceptDemoPaperCharacter* Character)
 {
 	int IndexFound = -1;
 	for (int i = 0 ; IndexFound == -1 && i < this->OverlappingCharactersDefaultWalkSpeeds.Num() ; i++)
@@ -73,13 +76,14 @@ void AFartCloud::OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor* Oth
 {
 	if (OtherComp)
 	{
-		AUConceptDemoPaperCharacter* Character = Cast<AUConceptDemoPaperCharacter>(OtherActor);
+		AConceptDemoPaperCharacter* Character = Cast<AConceptDemoPaperCharacter>(OtherActor);
 		if (Character)
 		{
 			if (this->SkunkFartSource != nullptr && Character != this->SkunkFartSource)
 			{
 				if (this->FindCharacterWalkSpeedIndex(Character) == -1)
 				{
+					this->SkunkFartSource->OnEnemyDamaged.Broadcast(Character, this->SkunkFartSource, this, this->DamageScore);
 					FCharacterDefaultWalkSpeeds CharacterDefaultWalkSpeed;
 					CharacterDefaultWalkSpeed.Character = Character;
 					CharacterDefaultWalkSpeed.DefaultWalkSpeed = Character->GetCharacterMovement()->MaxWalkSpeed;
@@ -97,7 +101,7 @@ void AFartCloud::OnOverlapEnd(UPrimitiveComponent* OverlappedComp, AActor* Other
 {
 	if (OtherComp)
 	{
-		const AUConceptDemoPaperCharacter* Character = Cast<AUConceptDemoPaperCharacter>(OtherActor);
+		const AConceptDemoPaperCharacter* Character = Cast<AConceptDemoPaperCharacter>(OtherActor);
 		if (Character)
 		{
 			if (this->SkunkFartSource != nullptr && Character != this->SkunkFartSource)

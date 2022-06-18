@@ -11,4 +11,7 @@ class CONCEPTDEMO_API ACharacterPowerProp : public AActor
 {
 	GENERATED_BODY()
 
+public:
+	UPROPERTY() float DamageScore;
+
 };

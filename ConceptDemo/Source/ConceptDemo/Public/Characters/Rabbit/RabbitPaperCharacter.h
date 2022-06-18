@@ -3,14 +3,14 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "ConceptDemoPaperCharacter.h"
+#include "Characters/ConceptDemoPaperCharacter.h"
 #include "RabbitPaperCharacter.generated.h"
 
 /**
  * 
  */
 UCLASS()
-class CONCEPTDEMO_API ARabbitPaperCharacter : public AUConceptDemoPaperCharacter
+class CONCEPTDEMO_API ARabbitPaperCharacter : public AConceptDemoPaperCharacter
 {
 	GENERATED_BODY()
 

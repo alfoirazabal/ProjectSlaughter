@@ -1,9 +1,9 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "SemiSolidPlatform.h"
+#include "Props/Platforms/SemiSolidPlatform.h"
 
-#include "ConceptDemoPaperCharacter.h"
+#include "Characters/ConceptDemoPaperCharacter.h"
 #include "Components/BoxComponent.h"
 #include "Components/CapsuleComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
@@ -42,7 +42,7 @@ void ASemiSolidPlatform::OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AAc
 {
 	if (OtherComp)
 	{
-		AUConceptDemoPaperCharacter* Character = Cast<AUConceptDemoPaperCharacter>(OtherActor);
+		AConceptDemoPaperCharacter* Character = Cast<AConceptDemoPaperCharacter>(OtherActor);
 		if (Character)
 		{
 			if (Character->GetCharacterMovement()->Velocity.Z > 0)

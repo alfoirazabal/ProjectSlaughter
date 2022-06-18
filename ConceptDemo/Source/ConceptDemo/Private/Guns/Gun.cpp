@@ -131,7 +131,7 @@ void AGun::SetDetached() {
 	this->OnGunDetached();
 }
 
-void AGun::Fire() {
+void AGun::Fire(AActor* SourceActor) {
 	if (this->BulletClass != nullptr) {
 		if (this->CurrentTimeBetweenShots == 0 && this->ShotsLeft > 0)
 		{
@@ -146,7 +146,8 @@ void AGun::Fire() {
 			ABullet* Bullet = this->GetWorld()->SpawnActor<ABullet>(this->BulletClass, bulletLocation, this->GetActorRotation());
 			if (Bullet)
 			{
-				Bullet->FireSource = this;
+				Bullet->SourceActor = SourceActor;
+				Bullet->SourceGun = this;
 				Bullet->FacingDirection = this->FacingDirection;
 				Bullet->TravelSpeed = 15;
 				Bullet->MaxTravelDistance = 5000;

@@ -9,18 +9,18 @@
 
 UPlayerSelectionWidget::UPlayerSelectionWidget(const FObjectInitializer& ObjectInitializer) : Super(ObjectInitializer)
 {
-	static ConstructorHelpers::FClassFinder<AUConceptDemoPaperCharacter> RabbitYellowClassFinder(TEXT("/Game/Character/Rabbit/Yellow/YellowRabbitCharacter"));
-	static ConstructorHelpers::FClassFinder<AUConceptDemoPaperCharacter> RabbitVioletClassFinder(TEXT("/Game/Character/Rabbit/Violet/VioletRabbitCharacter"));
-	static ConstructorHelpers::FClassFinder<AUConceptDemoPaperCharacter> SkunkClassFinder(TEXT("/Game/Character/Skunk/SkunkCharacter"));
-	static ConstructorHelpers::FClassFinder<AUConceptDemoPaperCharacter> SkunkAltClassFinder(TEXT("/Game/Character/SkunkAlt/SkunkAltCharacter"));
-	static ConstructorHelpers::FClassFinder<AUConceptDemoPaperCharacter> HedgeRedClassFinder(TEXT("/Game/Character/Hedge/Red/HedgeRedCharacter"));
-	static ConstructorHelpers::FClassFinder<AUConceptDemoPaperCharacter> HedgeBlueClassFinder(TEXT("/Game/Character/Hedge/Blue/HedgeBlueCharacter"));
-	const TSubclassOf<AUConceptDemoPaperCharacter> RabbitYellowClass = RabbitYellowClassFinder.Class;
-	const TSubclassOf<AUConceptDemoPaperCharacter> RabbitVioletClass = RabbitVioletClassFinder.Class;
-	const TSubclassOf<AUConceptDemoPaperCharacter> SkunkClass = SkunkClassFinder.Class;
-	const TSubclassOf<AUConceptDemoPaperCharacter> SkunkAltClass = SkunkAltClassFinder.Class;
-	const TSubclassOf<AUConceptDemoPaperCharacter> HedgeRedClass = HedgeRedClassFinder.Class;
-	const TSubclassOf<AUConceptDemoPaperCharacter> HedgeBlueClass = HedgeBlueClassFinder.Class;
+	static ConstructorHelpers::FClassFinder<AConceptDemoPaperCharacter> RabbitYellowClassFinder(TEXT("/Game/Character/Rabbit/Yellow/YellowRabbitCharacter"));
+	static ConstructorHelpers::FClassFinder<AConceptDemoPaperCharacter> RabbitVioletClassFinder(TEXT("/Game/Character/Rabbit/Violet/VioletRabbitCharacter"));
+	static ConstructorHelpers::FClassFinder<AConceptDemoPaperCharacter> SkunkClassFinder(TEXT("/Game/Character/Skunk/SkunkCharacter"));
+	static ConstructorHelpers::FClassFinder<AConceptDemoPaperCharacter> SkunkAltClassFinder(TEXT("/Game/Character/SkunkAlt/SkunkAltCharacter"));
+	static ConstructorHelpers::FClassFinder<AConceptDemoPaperCharacter> HedgeRedClassFinder(TEXT("/Game/Character/Hedge/Red/HedgeRedCharacter"));
+	static ConstructorHelpers::FClassFinder<AConceptDemoPaperCharacter> HedgeBlueClassFinder(TEXT("/Game/Character/Hedge/Blue/HedgeBlueCharacter"));
+	const TSubclassOf<AConceptDemoPaperCharacter> RabbitYellowClass = RabbitYellowClassFinder.Class;
+	const TSubclassOf<AConceptDemoPaperCharacter> RabbitVioletClass = RabbitVioletClassFinder.Class;
+	const TSubclassOf<AConceptDemoPaperCharacter> SkunkClass = SkunkClassFinder.Class;
+	const TSubclassOf<AConceptDemoPaperCharacter> SkunkAltClass = SkunkAltClassFinder.Class;
+	const TSubclassOf<AConceptDemoPaperCharacter> HedgeRedClass = HedgeRedClassFinder.Class;
+	const TSubclassOf<AConceptDemoPaperCharacter> HedgeBlueClass = HedgeBlueClassFinder.Class;
 	this->CharacterTypes.Add(RabbitYellowClass);
 	this->CharacterTypes.Add(SkunkClass);
 	this->CharacterTypes.Add(HedgeRedClass);
@@ -29,8 +29,8 @@ UPlayerSelectionWidget::UPlayerSelectionWidget(const FObjectInitializer& ObjectI
 	this->CharacterTypes.Add(HedgeBlueClass);
 	for (uint16 i = 0 ; i < this->CharacterTypes.Num() ; i++)
 	{
-		AUConceptDemoPaperCharacter* CharacterP1 = Cast<AUConceptDemoPaperCharacter>(this->CharacterTypes[i]->GetDefaultObject());
-		AUConceptDemoPaperCharacter* CharacterP2 = Cast<AUConceptDemoPaperCharacter>(this->CharacterTypes[i]->GetDefaultObject());
+		AConceptDemoPaperCharacter* CharacterP1 = Cast<AConceptDemoPaperCharacter>(this->CharacterTypes[i]->GetDefaultObject());
+		AConceptDemoPaperCharacter* CharacterP2 = Cast<AConceptDemoPaperCharacter>(this->CharacterTypes[i]->GetDefaultObject());
 		this->P1Characters.Add(CharacterP1);
 		this->P2Characters.Add(CharacterP2);
 	}

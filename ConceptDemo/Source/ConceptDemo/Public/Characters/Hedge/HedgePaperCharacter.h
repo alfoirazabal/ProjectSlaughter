@@ -3,7 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "ConceptDemoPaperCharacter.h"
+#include "Characters/ConceptDemoPaperCharacter.h"
 #include "HedgeThorn.h"
 #include "HedgePaperCharacter.generated.h"
 
@@ -11,7 +11,7 @@
  * 
  */
 UCLASS()
-class CONCEPTDEMO_API AHedgePaperCharacter : public AUConceptDemoPaperCharacter
+class CONCEPTDEMO_API AHedgePaperCharacter : public AConceptDemoPaperCharacter
 {
 	GENERATED_BODY()
 	

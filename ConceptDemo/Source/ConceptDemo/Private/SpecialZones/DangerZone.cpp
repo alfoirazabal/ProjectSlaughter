@@ -3,7 +3,7 @@
 
 #include "SpecialZones/DangerZone.h"
 
-#include "ConceptDemoPaperCharacter.h"
+#include "Characters/ConceptDemoPaperCharacter.h"
 #include "Components/BoxComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
 
@@ -33,7 +33,7 @@ void ADangerZone::Tick(float DeltaSeconds)
 		this->GetOverlappingActors(OverlappingActors);
 		for (AActor* OverlappingActor : OverlappingActors)
 		{
-			AUConceptDemoPaperCharacter* Character = Cast<AUConceptDemoPaperCharacter>(OverlappingActor);
+			AConceptDemoPaperCharacter* Character = Cast<AConceptDemoPaperCharacter>(OverlappingActor);
 			if (Character)
 			{
 				Character->TakeDamage(this->ZoneDamage);
@@ -43,7 +43,7 @@ void ADangerZone::Tick(float DeltaSeconds)
 	}
 }
 
-int ADangerZone::FindCharacterWalkSpeedIndex(const AUConceptDemoPaperCharacter* Character)
+int ADangerZone::FindCharacterWalkSpeedIndex(const AConceptDemoPaperCharacter* Character)
 {
 	int IndexFound = -1;
 	for (int i = 0 ; IndexFound == -1 && i < this->OverlappingCharactersDefaultWalkSpeeds.Num() ; i++)
@@ -61,7 +61,7 @@ void ADangerZone::OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor* Ot
 {
 	if (OtherComp)
 	{
-		AUConceptDemoPaperCharacter* Character = Cast<AUConceptDemoPaperCharacter>(OtherActor);
+		AConceptDemoPaperCharacter* Character = Cast<AConceptDemoPaperCharacter>(OtherActor);
 		if (Character)
 		{
 			if (this->FindCharacterWalkSpeedIndex(Character) == -1)
@@ -81,7 +81,7 @@ void ADangerZone::OnOverlapEnd(UPrimitiveComponent* OverlappedComp, AActor* Othe
 {
 	if (OtherComp)
 	{
-		const AUConceptDemoPaperCharacter* Character = Cast<AUConceptDemoPaperCharacter>(OtherActor);
+		const AConceptDemoPaperCharacter* Character = Cast<AConceptDemoPaperCharacter>(OtherActor);
 		if (Character)
 		{
 			const int CharacterDefaultWalkSpeedIndex = this->FindCharacterWalkSpeedIndex(Character);

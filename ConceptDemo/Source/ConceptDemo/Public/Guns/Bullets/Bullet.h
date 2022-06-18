@@ -24,9 +24,12 @@ public:
 	UPROPERTY(EditAnywhere) USoundBase* ShotSound;
 	UPROPERTY() UAudioComponent* ShotSoundComponent;
 
-	UPROPERTY() AActor* FireSource;
+	UPROPERTY() AActor* SourceActor;
+	UPROPERTY() AActor* TargetDamagedActor;
+	UPROPERTY() AActor* SourceGun;
 
-	float BulletDamage;
+	UPROPERTY(EditAnywhere) float BulletDamage;
+	UPROPERTY(EditAnywhere) float BulletScoreMultiplier; // Score to give to shooter based on BulletDamage
 
 protected:
 	// Called when the game starts or when spawned

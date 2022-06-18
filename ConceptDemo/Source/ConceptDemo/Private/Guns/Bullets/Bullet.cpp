@@ -76,7 +76,12 @@ void ABullet::DestroyOrExplodeBullet()
 			Rotator.Roll = 180;
 			Rotator.Pitch = 180;
 		}
-		this->GetWorld()->SpawnActor<AExplodingBullet>(this->ExplodingBulletClass, this->GetActorLocation(), Rotator);
+		AExplodingBullet* ExplodingBulletObject = this->GetWorld()->SpawnActorDeferred<AExplodingBullet>(
+			this->ExplodingBulletClass, this->GetActorTransform(), this, nullptr, ESpawnActorCollisionHandlingMethod::AlwaysSpawn
+		);
+		ExplodingBulletObject->SourceActor = this->SourceActor;
+		UGameplayStatics::FinishSpawningActor(ExplodingBulletObject, this->GetActorTransform());
+		ExplodingBulletObject->SetActorRotation(Rotator);
 	}
 	if (this->ShotSoundComponent) this->ShotSoundComponent->Stop();
 	this->Destroy();

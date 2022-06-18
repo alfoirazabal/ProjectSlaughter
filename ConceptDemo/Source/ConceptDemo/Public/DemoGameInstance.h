@@ -23,7 +23,10 @@ public:
 	UPROPERTY() TSubclassOf<AConceptDemoPaperCharacter> SelectedPlayer2Type;
 	UPROPERTY() FText Player1Name;
 	UPROPERTY() FText Player2Name;
-	UPROPERTY() uint8 WinningPlayerNumber;
+	UPROPERTY() uint8 WinnerSurvivorPlayerNumber;
+	UPROPERTY() uint8 WinnerScorePlayerNumber;
+	UPROPERTY() float Player1Score;
+	UPROPERTY() float Player2Score;
 	UPROPERTY(EditAnywhere) bool UseControllerForPlayer2;
 	
 };

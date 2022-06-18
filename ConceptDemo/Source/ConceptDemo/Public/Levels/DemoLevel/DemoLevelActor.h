@@ -72,6 +72,7 @@ protected:
 	UFUNCTION() void SpawnPlayers();
 	UFUNCTION() void SpawnGuns();
 	UFUNCTION() void SpawnCollectibles();
+	UFUNCTION() uint8 GetScoreWinnerPlayerNumber() const;
 	UFUNCTION() void P1ReactToDeath();
 	UFUNCTION() void P2ReactToDeath();
 	UFUNCTION() void ReactToGunDeath(AGun* Gun);

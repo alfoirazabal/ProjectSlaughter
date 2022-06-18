@@ -21,6 +21,7 @@ AExplodingBullet::AExplodingBullet()
 	this->TriggerCapsule->InitCapsuleSize(54.5, 54.5);
 	this->TriggerCapsule->SetCollisionProfileName("Trigger");
 	this->TriggerCapsule->SetupAttachment(this->RootComponent);
+	this->TriggerCapsule->OnComponentBeginOverlap.AddDynamic(this, &AExplodingBullet::OnOverlapBegin);
 }
 
 void AExplodingBullet::BeginPlay()
@@ -61,6 +62,25 @@ void AExplodingBullet::Tick(const float DeltaSeconds)
 			{
 				Character->TakeDamage(this->ExplosionDamage);
 				this->AffectedActors.Add(Character);
+			}
+		}
+	}
+}
+
+void AExplodingBullet::OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
+{
+	if (OtherComp)
+	{
+		const AConceptDemoPaperPawn* TargetPawn = Cast<AConceptDemoPaperPawn>(OtherActor);
+		if (TargetPawn)
+		{
+			if (TargetPawn != this->SourceActor)
+			{
+				const AConceptDemoPaperPawn* SourcePawn = Cast<AConceptDemoPaperPawn>(this->SourceActor);
+				if (SourcePawn)
+				{
+					SourcePawn->OnEnemyDamaged.Broadcast(OtherActor, SourceActor, this, this->InitialDamage);
+				}
 			}
 		}
 	}

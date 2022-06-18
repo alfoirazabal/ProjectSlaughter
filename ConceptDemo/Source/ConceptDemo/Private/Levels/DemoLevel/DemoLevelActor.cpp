@@ -307,18 +307,42 @@ void ADemoLevelActor::SpawnCollectibles()
 	}
 }
 
+uint8 ADemoLevelActor::GetScoreWinnerPlayerNumber() const
+{
+	uint8 WinnerPlayerNumber;
+	if (this->Player1->Score > this->Player2->Score)
+	{
+		WinnerPlayerNumber = 1;
+	}
+	else if (this->Player2->Score > this->Player1->Score)
+	{
+		WinnerPlayerNumber = 2;
+	}
+	else
+	{
+		WinnerPlayerNumber = 0;
+	}
+	return WinnerPlayerNumber;
+}
+
 
 void ADemoLevelActor::P1ReactToDeath()
 {
 	GEngine->AddOnScreenDebugMessage(35234211, 2, FColor::Yellow, "P1 Died");
-	this->GameInstance->WinningPlayerNumber = 2;
+	this->GameInstance->WinnerSurvivorPlayerNumber = 2;
+	this->GameInstance->WinnerScorePlayerNumber = this->GetScoreWinnerPlayerNumber();
+	this->GameInstance->Player1Score = this->Player1->Score;
+	this->GameInstance->Player2Score = this->Player2->Score;
 	UGameplayStatics::OpenLevel(this, "GameOverMenu");
 }
 
 void ADemoLevelActor::P2ReactToDeath()
 {
 	GEngine->AddOnScreenDebugMessage(35234212, 2, FColor::Yellow, "P2 Died");
-	this->GameInstance->WinningPlayerNumber = 1;
+	this->GameInstance->WinnerSurvivorPlayerNumber = 1;
+	this->GameInstance->WinnerScorePlayerNumber = this->GetScoreWinnerPlayerNumber();
+	this->GameInstance->Player1Score = this->Player1->Score;
+	this->GameInstance->Player2Score = this->Player2->Score;
 	UGameplayStatics::OpenLevel(this, "GameOverMenu");
 }
 

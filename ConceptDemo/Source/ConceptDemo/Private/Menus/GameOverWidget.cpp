@@ -2,68 +2,18 @@
 
 
 #include "Menus/GameOverWidget.h"
-
-#include "DemoGameInstance.h"
 #include "Kismet/GameplayStatics.h"
 
 void UGameOverWidget::NativeConstruct()
 {
-	const UDemoGameInstance* GameInstance = Cast<UDemoGameInstance>(this->GetGameInstance());
-	if (IsValid(GameInstance)) {
-		TSubclassOf<AConceptDemoPaperCharacter> SelectedPlayerType;
-		switch (GameInstance->WinningPlayerNumber)
-		{
-			case 1:
-				if (IsValid(GameInstance->SelectedPlayer1Type)) SelectedPlayerType = GameInstance->SelectedPlayer1Type;
-				break;
-			case 2:
-				if (IsValid(GameInstance->SelectedPlayer2Type)) SelectedPlayerType = GameInstance->SelectedPlayer2Type;
-				break;
-			default:
-				break;
-		}
-		if (IsValid(SelectedPlayerType)) {
-			const AConceptDemoPaperCharacter* DefaultObject = SelectedPlayerType.GetDefaultObject();
-			if (IsValid(DefaultObject)) {
-				UTexture2D* ObjectTexture = DefaultObject->CharacterImage;
-				if (IsValid(ObjectTexture)) {
-					this->WinnerPlayerImage->SetBrushFromTexture(ObjectTexture);
-				}
-				else
-				{
-					GEngine->AddOnScreenDebugMessage(129576123, 2, FColor::Red, "PaperCharacter Object texture invalid for winning player");
-				}
-				if (DefaultObject->WinSound)
-				{
-					UGameplayStatics::PlaySound2D(this->GetWorld(), DefaultObject->WinSound);
-				}
-				else
-				{
-					GEngine->AddOnScreenDebugMessage(284662666, 2, FColor::Red, "Player " + DefaultObject->GetName() + " has no Win Sound!");
-				}
-			}
-		}
-		else
-		{
-			GEngine->AddOnScreenDebugMessage(277177122, 2, FColor::Red, "Can't find SelectedPlayerType variable (Winning player)");
-		}
-		FText WinnerPlayerName;
-		switch (GameInstance->WinningPlayerNumber)
-		{
-			case 1:
-				WinnerPlayerName = GameInstance->Player1Name;
-				break;
-			case 2:
-				WinnerPlayerName = GameInstance->Player2Name;
-				break;
-			default:
-				break;
-		}
-		this->TextBlockWinnerPlayerName->SetText(WinnerPlayerName);
+	this->DemoGameInstance = Cast<UDemoGameInstance>(this->GetGameInstance());
+	if (IsValid(this->DemoGameInstance)) {
 		this->GetWorld()->GetTimerManager().SetTimer(
 			this->BackgroundImageFlippingTimer, this, &UGameOverWidget::SetBackgroundImageFlipping,
 			this->BackgroundTextureSequenceFlipTime, true
 		);
+		this->FillSurvivalWinner();
+		this->FillScores();
 	}
 	this->ButtonContinue->OnClicked.AddDynamic(this, &UGameOverWidget::ContinueToMainMenu);
 }
@@ -73,6 +23,78 @@ void UGameOverWidget::NativeDestruct()
 	this->GetWorld()->GetTimerManager().ClearTimer(this->BackgroundImageFlippingTimer);
 	Super::NativeDestruct();
 }
+
+void UGameOverWidget::FillSurvivalWinner()
+{
+	TSubclassOf<AConceptDemoPaperCharacter> SelectedPlayerType;
+	switch (this->DemoGameInstance->WinnerSurvivorPlayerNumber)
+	{
+	case 1:
+		if (IsValid(this->DemoGameInstance->SelectedPlayer1Type)) SelectedPlayerType = this->DemoGameInstance->SelectedPlayer1Type;
+		break;
+	case 2:
+		if (IsValid(this->DemoGameInstance->SelectedPlayer2Type)) SelectedPlayerType = this->DemoGameInstance->SelectedPlayer2Type;
+		break;
+	default:
+		break;
+	}
+	if (IsValid(SelectedPlayerType)) {
+		const AConceptDemoPaperCharacter* DefaultObject = SelectedPlayerType.GetDefaultObject();
+		if (IsValid(DefaultObject)) {
+			UTexture2D* ObjectTexture = DefaultObject->CharacterFaceImage;
+			if (IsValid(ObjectTexture)) {
+				this->ImgWinnerSurviving->SetBrushFromTexture(ObjectTexture);
+			}
+			if (DefaultObject->WinSound)
+			{
+				UGameplayStatics::PlaySound2D(this->GetWorld(), DefaultObject->WinSound);
+			}
+		}
+	}
+	FText WinnerPlayerName;
+	switch (this->DemoGameInstance->WinnerSurvivorPlayerNumber)
+	{
+	case 1:
+		WinnerPlayerName = this->DemoGameInstance->Player1Name;
+		break;
+	case 2:
+		WinnerPlayerName = this->DemoGameInstance->Player2Name;
+		break;
+	default:
+		break;
+	}
+	this->TxtWinnerSurvivingName->SetText(WinnerPlayerName);
+}
+
+void UGameOverWidget::FillScores()
+{
+	FNumberFormattingOptions NumberFormattingOptions;
+	NumberFormattingOptions.MinimumFractionalDigits = 2;
+	NumberFormattingOptions.MaximumFractionalDigits = 2;
+	AConceptDemoPaperCharacter* Character1;
+	AConceptDemoPaperCharacter* Character2;
+	if (this->DemoGameInstance->Player1Score >= this->DemoGameInstance->Player2Score)
+	{
+		Character1 = this->DemoGameInstance->SelectedPlayer1Type.GetDefaultObject();
+		Character2 = this->DemoGameInstance->SelectedPlayer2Type.GetDefaultObject();
+		this->TxtFirstPlayerName->SetText(this->DemoGameInstance->Player1Name);
+		this->TxtSecondPlayerName->SetText(this->DemoGameInstance->Player2Name);
+		this->TxtFirstPlayerScore->SetText(FText::AsNumber(this->DemoGameInstance->Player1Score, &NumberFormattingOptions));
+		this->TxtSecondPlayerScore->SetText(FText::AsNumber(this->DemoGameInstance->Player2Score, &NumberFormattingOptions));
+	}
+	else
+	{
+		Character1 = this->DemoGameInstance->SelectedPlayer2Type.GetDefaultObject();
+		Character2 = this->DemoGameInstance->SelectedPlayer1Type.GetDefaultObject();
+		this->TxtFirstPlayerName->SetText(this->DemoGameInstance->Player2Name);
+		this->TxtSecondPlayerName->SetText(this->DemoGameInstance->Player1Name);
+		this->TxtFirstPlayerScore->SetText(FText::AsNumber(this->DemoGameInstance->Player2Score, &NumberFormattingOptions));
+		this->TxtSecondPlayerScore->SetText(FText::AsNumber(this->DemoGameInstance->Player1Score, &NumberFormattingOptions));
+	}
+	this->ImgWinnerScore1->SetBrushFromTexture(Character1->CharacterFaceImage);
+	this->ImgWinnerScore2->SetBrushFromTexture(Character2->CharacterFaceImage);
+}
+
 
 void UGameOverWidget::ContinueToMainMenu()
 {

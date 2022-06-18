@@ -3,7 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "ConceptDemoPaperCharacter.h"
+#include "Characters/ConceptDemoPaperCharacter.h"
 #include "FartCloud.h"
 #include "SkunkPaperCharacter.generated.h"
 
@@ -11,7 +11,7 @@
  * 
  */
 UCLASS()
-class CONCEPTDEMO_API ASkunkPaperCharacter : public AUConceptDemoPaperCharacter
+class CONCEPTDEMO_API ASkunkPaperCharacter : public AConceptDemoPaperCharacter
 {
 	GENERATED_BODY()
 

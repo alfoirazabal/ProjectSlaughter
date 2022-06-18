@@ -22,7 +22,7 @@ void ARabbitPaperCharacter::Fire()
 {
 	if (IsValid(this->AttachedGun))
 	{
-		this->AttachedGun->Fire();
+		this->AttachedGun->Fire(this);
 	}
 	if (IsValid(this->AttachedGun))
 	{

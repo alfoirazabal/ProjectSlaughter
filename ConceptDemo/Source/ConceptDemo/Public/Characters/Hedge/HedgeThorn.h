@@ -3,8 +3,8 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "ExplodingBullet.h"
-#include "ConceptDemoPaperCharacter.h"
+#include "Guns/Bullets/ExplodingBullet.h"
+#include "Characters/ConceptDemoPaperCharacter.h"
 #include "Characters/CharacterPowerProp.h"
 #include "SlaughterFirendsDemoConstants.h"
 #include "HedgeThorn.generated.h"
@@ -21,7 +21,7 @@ public:
 	// Sets default values for this actor's properties
 	AHedgeThorn();
 
-	UPROPERTY() AUConceptDemoPaperCharacter* HedgeThornSource;
+	UPROPERTY() AConceptDemoPaperCharacter* HedgeThornSource;
 
 	UPROPERTY(BlueprintReadWrite, EditAnywhere) TEnumAsByte<EFacing_Direction> FacingDirection;
 	UPROPERTY(BlueprintReadWrite, EditAnywhere) uint8 TravelSpeed;

@@ -1,26 +1,23 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "ConceptDemoPaperCharacter.h"
+#include "Characters/ConceptDemoPaperCharacter.h"
 
 #include "Guns/Gun.h"
-#include "SpikesObject.h"
+#include "Props/SpikesObject.h"
 #include "Train/TrainAI.h"
 #include <PaperFlipbookComponent.h>
 
-#include "SemiSolidPlatform.h"
 #include "Characters/PowerupReadyIndicator.h"
-#include "Characters/Skull.h"
 #include "Components/CapsuleComponent.h"
 #include "Components/WidgetComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "Kismet/GameplayStatics.h"
 #include "Props/Death/DeathIndicator.h"
-
-constexpr float GDefault_Character_Plane_X_Position = 760;
+#include "Props/Platforms/SemiSolidPlatform.h"
 
 // Sets default values for this component's properties
-AUConceptDemoPaperCharacter::AUConceptDemoPaperCharacter()
+AConceptDemoPaperCharacter::AConceptDemoPaperCharacter()
 {
 	this->AttachedGun = nullptr;
 
@@ -37,9 +34,6 @@ AUConceptDemoPaperCharacter::AUConceptDemoPaperCharacter()
 	this->CurrentSpecialPowerLoadTime = 0;
 
 	this->PlayerName = FText::FromString("Player");
-	
-	this->GetCharacterMovement()->JumpZVelocity = 700;
-	this->AutoPossessAI = EAutoPossessAI::PlacedInWorldOrSpawned;
 	
 	this->GetCharacterMovement()->GravityScale = 3;
 	this->GetCharacterMovement()->JumpZVelocity = 1190;
@@ -76,11 +70,11 @@ AUConceptDemoPaperCharacter::AUConceptDemoPaperCharacter()
 	this->TriggerCapsule->SetCollisionProfileName("Trigger");
 	this->TriggerCapsule->SetupAttachment(this->RootComponent);
 
-	this->TriggerCapsule->OnComponentBeginOverlap.AddDynamic(this, &AUConceptDemoPaperCharacter::OnOverlapBegin);
-	this->TriggerCapsule->OnComponentEndOverlap.AddDynamic(this, &AUConceptDemoPaperCharacter::OnOverlapEnd);
+	this->TriggerCapsule->OnComponentBeginOverlap.AddDynamic(this, &AConceptDemoPaperCharacter::OnOverlapBegin);
+	this->TriggerCapsule->OnComponentEndOverlap.AddDynamic(this, &AConceptDemoPaperCharacter::OnOverlapEnd);
 }
 
-void AUConceptDemoPaperCharacter::MoveGun() const
+void AConceptDemoPaperCharacter::MoveGun() const
 {
 	if (this->AttachedGun != nullptr) {
 		this->AttachedGun->FacingDirection = this->FacingDirection;
@@ -99,41 +93,16 @@ void AUConceptDemoPaperCharacter::MoveGun() const
 	}
 }
 
-void AUConceptDemoPaperCharacter::CheckCharacterFall()
-{
-	if (this->GetActorLocation().Z <= GLevelsZFallLimit) {
-		this->CurrentLives--;
-		this->CurrentLifeSize = this->LifeSize;
-		if (this->CurrentLives == 0) {
-			this->Die();
-		}
-		else {
-			this->UpdateHealthIndicator();
-			this->Respawn();
-		}
-	}
-}
-
-void AUConceptDemoPaperCharacter::EnsureXAxisLocation()
-{
-	// Prevents actor from moving along the X axis, and move only along the Y and Z axis of the simulated 3D plane.
-	FVector CurrentPosition = this->GetActorLocation();
-	if (!this->bFallingDeath && CurrentPosition.X != GDefault_Character_Plane_X_Position) {
-		CurrentPosition.X = GDefault_Character_Plane_X_Position;
-		this->SetActorLocation(CurrentPosition);
-	}
-}
-
-void AUConceptDemoPaperCharacter::BindInputs()
+void AConceptDemoPaperCharacter::BindInputs()
 {
 	if (this->InputComponent)
 	{
-		this->InputComponent->BindAxis(TEXT("C HorizontalMovement"), this, &AUConceptDemoPaperCharacter::HandleMovement);
-		this->InputComponent->BindAction(TEXT("C Jump"), IE_Pressed, this, &AUConceptDemoPaperCharacter::Jump);
-		this->InputComponent->BindAction(TEXT("C Drop Down"), IE_Pressed, this, &AUConceptDemoPaperCharacter::DropDown);
-		this->InputComponent->BindAxis(TEXT("C Fire"), this, &AUConceptDemoPaperCharacter::FireAxis);
-		this->InputComponent->BindAction(TEXT("C Drop Gun"), IE_Pressed, this, &AUConceptDemoPaperCharacter::DropGun);
-		this->InputComponent->BindAction(TEXT("C Use Power"), IE_Pressed, this, &AUConceptDemoPaperCharacter::UsePower);
+		this->InputComponent->BindAxis(TEXT("C HorizontalMovement"), this, &AConceptDemoPaperCharacter::HandleMovement);
+		this->InputComponent->BindAction(TEXT("C Jump"), IE_Pressed, this, &AConceptDemoPaperCharacter::Jump);
+		this->InputComponent->BindAction(TEXT("C Drop Down"), IE_Pressed, this, &AConceptDemoPaperCharacter::DropDown);
+		this->InputComponent->BindAxis(TEXT("C Fire"), this, &AConceptDemoPaperCharacter::FireAxis);
+		this->InputComponent->BindAction(TEXT("C Drop Gun"), IE_Pressed, this, &AConceptDemoPaperCharacter::DropGun);
+		this->InputComponent->BindAction(TEXT("C Use Power"), IE_Pressed, this, &AConceptDemoPaperCharacter::UsePower);
 	}
 	else
 	{
@@ -141,7 +110,7 @@ void AUConceptDemoPaperCharacter::BindInputs()
 	}
 }
 
-void AUConceptDemoPaperCharacter::UpdateFlipBooks()
+void AConceptDemoPaperCharacter::UpdateFlipBooks()
 {
 	if (this->CurrentLifeSize > this->DamageLevel2Threshold)
 	{
@@ -158,14 +127,14 @@ void AUConceptDemoPaperCharacter::UpdateFlipBooks()
 }
 
 // Called when the game starts
-void AUConceptDemoPaperCharacter::BeginPlay()
+void AConceptDemoPaperCharacter::BeginPlay()
 {
 	Super::BeginPlay();
 	this->InitialPosition = this->GetActorLocation();
 	this->UpdateFlipBooks();
 }
 
-void AUConceptDemoPaperCharacter::MakeFallingDeathWithIndicator()
+void AConceptDemoPaperCharacter::MakeFallingDeathWithIndicator()
 {
 	const FTransform Transform = this->GetActorTransform();
 	ADeathIndicator* DeathIndicator = this->GetWorld()->SpawnActorDeferred<ADeathIndicator>(this->DeathIndicatorType, Transform, this, nullptr, ESpawnActorCollisionHandlingMethod::AlwaysSpawn);
@@ -174,7 +143,7 @@ void AUConceptDemoPaperCharacter::MakeFallingDeathWithIndicator()
 	UGameplayStatics::FinishSpawningActor(DeathIndicator, Transform);
 }
 
-void AUConceptDemoPaperCharacter::MakeFallingDeath()
+void AConceptDemoPaperCharacter::MakeFallingDeath()
 {
 	this->bFallingDeath = true;
 	FVector CurrentPosition = this->GetActorLocation();
@@ -182,24 +151,7 @@ void AUConceptDemoPaperCharacter::MakeFallingDeath()
 	this->SetActorLocation(CurrentPosition);
 }
 
-FRotator AUConceptDemoPaperCharacter::GetFacingRotation() const
-{
-	FRotator Rotator = FRotator::ZeroRotator;
-	switch (this->FacingDirection)
-	{
-		case Left:
-			Rotator = FRotator(0, -90, 0);
-			break;
-		case Right:
-			Rotator = FRotator(0, 90, 0);
-			break;
-		default:
-			break;
-	}
-	return Rotator;
-}
-
-void AUConceptDemoPaperCharacter::UpdateHealthIndicator() const
+void AConceptDemoPaperCharacter::UpdateHealthIndicator() const
 {
 	if (this->UserWidgetPlayersStatusControl) {
 		this->UserWidgetPlayersStatusControl->SetHealth(this->CurrentLifeSize);
@@ -211,7 +163,7 @@ void AUConceptDemoPaperCharacter::UpdateHealthIndicator() const
 	}
 }
 
-void AUConceptDemoPaperCharacter::Respawn()
+void AConceptDemoPaperCharacter::Respawn()
 {
 	this->UpdateFlipBooks();
 	if (this->RespawnSound) UGameplayStatics::SpawnSound2D(this->GetWorld(), this->RespawnSound);
@@ -225,31 +177,11 @@ void AUConceptDemoPaperCharacter::Respawn()
 	this->bFallingDeath = false;
 	this->SetActorLocation(this->InitialPosition);
 	this->GetWorld()->GetTimerManager().SetTimer(
-		this->RespawnTimer, this, &AUConceptDemoPaperCharacter::ProcessRespawning, this->TimeBetweenActorRespawnBlink, true
+		this->RespawnTimer, this, &AConceptDemoPaperCharacter::ProcessRespawning, this->TimeBetweenActorRespawnBlink, true
 	);
 }
 
-bool AUConceptDemoPaperCharacter::IsOnTheAir() const
-{
-	const FVector Velocity = this->GetVelocity();
-	const float ZVelocity = Velocity.Z;
-	return ZVelocity != 0;
-}
-
-FRotator AUConceptDemoPaperCharacter::GetRightRotator()
-{
-	const FRotator Rotator = FRotator::ZeroRotator;
-	return Rotator;
-}
-
-FRotator AUConceptDemoPaperCharacter::GetLeftRotator()
-{
-	FRotator Rotator = FRotator::ZeroRotator;
-	Rotator.Yaw = 180;
-	return Rotator;
-}
-
-void AUConceptDemoPaperCharacter::HandleMovement(const float ScaleValue)
+void AConceptDemoPaperCharacter::HandleMovement(const float ScaleValue)
 {
 	FVector Vector = FVector::ZeroVector;
 	Vector.Y = 1;
@@ -277,7 +209,22 @@ void AUConceptDemoPaperCharacter::HandleMovement(const float ScaleValue)
 	CheckCharacterFall();
 }
 
-void AUConceptDemoPaperCharacter::DropDown()
+void AConceptDemoPaperCharacter::CheckCharacterFall()
+{
+	if (this->GetActorLocation().Z <= GLevelsZFallLimit) {
+		this->CurrentLives--;
+		this->CurrentLifeSize = this->LifeSize;
+		if (this->CurrentLives == 0) {
+			this->Die();
+		}
+		else {
+			this->UpdateHealthIndicator();
+			this->Respawn();
+		}
+	}
+}
+
+void AConceptDemoPaperCharacter::DropDown()
 {
 	FFindFloorResult FloorResult = this->GetCharacterMovement()->CurrentFloor;
 	FHitResult HitResult = FloorResult.HitResult;
@@ -295,20 +242,21 @@ void AUConceptDemoPaperCharacter::DropDown()
 	}
 }
 
-void AUConceptDemoPaperCharacter::Jump()
+void AConceptDemoPaperCharacter::Jump()
 {
 	if (this->GetCharacterMovement()->Velocity.Z == 0) UGameplayStatics::PlaySound2D(this->GetWorld(), this->JumpSound);
 	Super::Jump();
 }
 
-void AUConceptDemoPaperCharacter::AttachGun(AGun* Gun)
+
+void AConceptDemoPaperCharacter::AttachGun(AGun* Gun)
 {
 	if (this->AttachedGun == nullptr) {
 		this->AttachedGun = Gun;
 		this->AttachedGun->SetAttached();
 		this->UserWidgetPlayersStatusControl->SetGunAttached(true);
 		this->UserWidgetPlayersStatusControl->SetStaminaBar(Gun->ShotsCount, Gun->ShotsLeft);
-		this->AttachedGun->ShotLost.AddDynamic(this, &AUConceptDemoPaperCharacter::UpdateShotsCount);
+		this->AttachedGun->ShotLost.AddDynamic(this, &AConceptDemoPaperCharacter::UpdateShotsCount);
 		if (this->AttachGunSound) UGameplayStatics::SpawnSound2D(this->GetWorld(), this->AttachGunSound);
 	}
 	else {
@@ -317,7 +265,7 @@ void AUConceptDemoPaperCharacter::AttachGun(AGun* Gun)
 	}
 }
 
-void AUConceptDemoPaperCharacter::DropGun()
+void AConceptDemoPaperCharacter::DropGun()
 {
 	if (this->AttachedGun != nullptr) {
 		this->AttachedGun->SetDetached();
@@ -332,15 +280,17 @@ void AUConceptDemoPaperCharacter::DropGun()
 			NewGunLocation = this->AttachedGun->GetActorLocation();
 		}
 		switch (this->FacingDirection) {
-		case EFacing_Direction::Left:
-			NewGunLocation.Y += this->RelativeGunDropDistance;
-			break;
-		case EFacing_Direction::Right:
-			NewGunLocation.Y -= this->RelativeGunDropDistance;
-			break;
+			case EFacing_Direction::Left:
+				NewGunLocation.Y += this->RelativeGunDropDistance;
+				break;
+			case EFacing_Direction::Right:
+				NewGunLocation.Y -= this->RelativeGunDropDistance;
+				break;
+			default:
+				break;
 		}
 		this->AttachedGun->SetActorLocation(NewGunLocation);
-		this->AttachedGun->ShotLost.RemoveDynamic(this, &AUConceptDemoPaperCharacter::UpdateShotsCount);
+		this->AttachedGun->ShotLost.RemoveDynamic(this, &AConceptDemoPaperCharacter::UpdateShotsCount);
 		this->AttachedGun = nullptr;
 		for (int i = 0; i < this->GunsIgnored.Num(); i++) {
 			this->MoveIgnoreActorRemove(this->GunsIgnored[i]);
@@ -350,16 +300,16 @@ void AUConceptDemoPaperCharacter::DropGun()
 	}
 }
 
-bool AUConceptDemoPaperCharacter::HasGun() const
+bool AConceptDemoPaperCharacter::HasGun() const
 {
 	return this->AttachedGun != nullptr;
 }
 
-void AUConceptDemoPaperCharacter::Fire()
+void AConceptDemoPaperCharacter::Fire()
 {
 	if (IsValid(this->AttachedGun))
 	{
-		this->AttachedGun->Fire();
+		this->AttachedGun->Fire(this);
 		this->CurrentSpecialPowerLoadTime = 0;
 	}
 	if (IsValid(this->AttachedGun))
@@ -368,12 +318,12 @@ void AUConceptDemoPaperCharacter::Fire()
 	}
 }
 
-void AUConceptDemoPaperCharacter::FireAxis(const float AxisValue)
+void AConceptDemoPaperCharacter::FireAxis(const float AxisValue)
 {
 	if (AxisValue > 0) this->Fire();
 }
 
-void AUConceptDemoPaperCharacter::UsePower()
+void AConceptDemoPaperCharacter::UsePower()
 {
 	this->CurrentSpecialPowerLoadTime = 0;
 	UGameplayStatics::SpawnSound2D(this->GetWorld(), this->PowerSound);
@@ -385,7 +335,7 @@ void AUConceptDemoPaperCharacter::UsePower()
 	this->SpecialPowerReadyPropShown = false;
 }
 
-void AUConceptDemoPaperCharacter::UpdateShotsCount()
+void AConceptDemoPaperCharacter::UpdateShotsCount()
 {
 	if (this->AttachedGun && this->UserWidgetPlayersStatusControl)
 	{
@@ -393,8 +343,7 @@ void AUConceptDemoPaperCharacter::UpdateShotsCount()
 	}
 }
 
-
-void AUConceptDemoPaperCharacter::TakeDamage(const float DamageCount)
+void AConceptDemoPaperCharacter::TakeDamage(const float DamageCount)
 {
 	if (!this->Immune)
 	{
@@ -419,7 +368,7 @@ void AUConceptDemoPaperCharacter::TakeDamage(const float DamageCount)
 	}
 }
 
-void AUConceptDemoPaperCharacter::AddLife(const float Life)
+void AConceptDemoPaperCharacter::AddLife(const float Life)
 {
 	if (this->CurrentLifeSize + Life < 1)
 	{
@@ -433,7 +382,7 @@ void AUConceptDemoPaperCharacter::AddLife(const float Life)
 	this->UpdateFlipBooks();
 }
 
-void AUConceptDemoPaperCharacter::ProcessRespawning()
+void AConceptDemoPaperCharacter::ProcessRespawning()
 {
 	this->SetActorHiddenInGame(!this->IsHidden());
 	this->CurrentHideAndShowCount++;
@@ -446,16 +395,15 @@ void AUConceptDemoPaperCharacter::ProcessRespawning()
 	}
 }
 
-void AUConceptDemoPaperCharacter::Die()
+void AConceptDemoPaperCharacter::Die()
 {
 	this->DropGun();
 	this->PlayerDeath.Broadcast();
 	this->Destroy();
 }
 
-
 // Called every frame
-void AUConceptDemoPaperCharacter::Tick(const float DeltaTime)
+void AConceptDemoPaperCharacter::Tick(const float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 	EnsureXAxisLocation();
@@ -500,7 +448,7 @@ void AUConceptDemoPaperCharacter::Tick(const float DeltaTime)
 	}
 }
 
-void AUConceptDemoPaperCharacter::OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor* OtherActor,
+void AConceptDemoPaperCharacter::OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor* OtherActor,
 	UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
 	if (OtherComp)
@@ -530,7 +478,7 @@ void AUConceptDemoPaperCharacter::OnOverlapBegin(UPrimitiveComponent* Overlapped
 	}
 }
 
-void AUConceptDemoPaperCharacter::OnOverlapEnd(UPrimitiveComponent* OverlappedComp, AActor* OtherActor,
+void AConceptDemoPaperCharacter::OnOverlapEnd(UPrimitiveComponent* OverlappedComp, AActor* OtherActor,
 	UPrimitiveComponent* OtherComp, int32 OtherBodyIndex)
 {
 	if (OtherComp)

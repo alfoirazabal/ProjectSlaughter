@@ -3,7 +3,7 @@
 
 #include "Props/Collectibles/LifeCollectible.h"
 
-#include "ConceptDemoPaperCharacter.h"
+#include "Characters/ConceptDemoPaperCharacter.h"
 #include "Components/CapsuleComponent.h"
 
 // Sets default values
@@ -60,7 +60,7 @@ void ALifeCollectible::OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActo
 	{
 		if (OtherActor)
 		{
-			AUConceptDemoPaperCharacter* Character = Cast<AUConceptDemoPaperCharacter>(OtherActor);
+			AConceptDemoPaperCharacter* Character = Cast<AConceptDemoPaperCharacter>(OtherActor);
 			if (Character)
 			{
 				Character->AddLife(this->LifeBarFill);

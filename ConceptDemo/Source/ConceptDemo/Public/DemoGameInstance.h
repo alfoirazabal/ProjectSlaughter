@@ -3,7 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "ConceptDemoPaperCharacter.h"
+#include "Characters/ConceptDemoPaperCharacter.h"
 #include "Engine/GameInstance.h"
 #include "DemoGameInstance.generated.h"
 
@@ -19,8 +19,8 @@ public:
 
 	UDemoGameInstance();
 	
-	UPROPERTY() TSubclassOf<AUConceptDemoPaperCharacter> SelectedPlayer1Type;
-	UPROPERTY() TSubclassOf<AUConceptDemoPaperCharacter> SelectedPlayer2Type;
+	UPROPERTY() TSubclassOf<AConceptDemoPaperCharacter> SelectedPlayer1Type;
+	UPROPERTY() TSubclassOf<AConceptDemoPaperCharacter> SelectedPlayer2Type;
 	UPROPERTY() FText Player1Name;
 	UPROPERTY() FText Player2Name;
 	UPROPERTY() uint8 WinningPlayerNumber;

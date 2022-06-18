@@ -3,7 +3,7 @@
 
 #include "Characters/Hedge/HedgeThorn.h"
 
-#include "ConceptDemoPaperCharacter.h"
+#include "Characters/ConceptDemoPaperCharacter.h"
 #include "Components/CapsuleComponent.h"
 #include "Characters/CharacterPowerProp.h"
 #include "Components/AudioComponent.h"
@@ -93,7 +93,7 @@ void AHedgeThorn::OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor* Ot
 {
 	if (OtherComp)
 	{
-		AUConceptDemoPaperCharacter* Character = Cast<AUConceptDemoPaperCharacter>(OtherActor);
+		AConceptDemoPaperCharacter* Character = Cast<AConceptDemoPaperCharacter>(OtherActor);
 		if (Character && Character != this->HedgeThornSource)
 		{
 			Character->TakeDamage(this->HedgeThornDamage);

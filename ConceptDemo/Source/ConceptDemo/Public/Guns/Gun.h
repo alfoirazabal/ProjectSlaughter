@@ -4,7 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
-#include "Bullet.h"
+#include "Guns/Bullets/Bullet.h"
 #include "SlaughterFirendsDemoConstants.h"
 #include "Gun.generated.h"
 

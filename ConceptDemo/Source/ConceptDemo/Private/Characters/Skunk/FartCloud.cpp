@@ -3,7 +3,7 @@
 
 #include "Characters/Skunk/FartCloud.h"
 
-#include "ConceptDemoPaperCharacter.h"
+#include "Characters/ConceptDemoPaperCharacter.h"
 #include "Components/CapsuleComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
 
@@ -55,7 +55,7 @@ void AFartCloud::Tick(const float DeltaTime)
 	}
 }
 
-int AFartCloud::FindCharacterWalkSpeedIndex(const AUConceptDemoPaperCharacter* Character)
+int AFartCloud::FindCharacterWalkSpeedIndex(const AConceptDemoPaperCharacter* Character)
 {
 	int IndexFound = -1;
 	for (int i = 0 ; IndexFound == -1 && i < this->OverlappingCharactersDefaultWalkSpeeds.Num() ; i++)
@@ -73,7 +73,7 @@ void AFartCloud::OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor* Oth
 {
 	if (OtherComp)
 	{
-		AUConceptDemoPaperCharacter* Character = Cast<AUConceptDemoPaperCharacter>(OtherActor);
+		AConceptDemoPaperCharacter* Character = Cast<AConceptDemoPaperCharacter>(OtherActor);
 		if (Character)
 		{
 			if (this->SkunkFartSource != nullptr && Character != this->SkunkFartSource)
@@ -97,7 +97,7 @@ void AFartCloud::OnOverlapEnd(UPrimitiveComponent* OverlappedComp, AActor* Other
 {
 	if (OtherComp)
 	{
-		const AUConceptDemoPaperCharacter* Character = Cast<AUConceptDemoPaperCharacter>(OtherActor);
+		const AConceptDemoPaperCharacter* Character = Cast<AConceptDemoPaperCharacter>(OtherActor);
 		if (Character)
 		{
 			if (this->SkunkFartSource != nullptr && Character != this->SkunkFartSource)

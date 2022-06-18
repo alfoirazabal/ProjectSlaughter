@@ -1,10 +1,10 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "UConceptDemoPaperPawn.h"
+#include "Characters/ConceptDemoPaperPawn.h"
 
 // Sets default values
-AUConceptDemoPaperPawn::AUConceptDemoPaperPawn()
+AConceptDemoPaperPawn::AConceptDemoPaperPawn()
 {
  	// Set this pawn to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
@@ -12,26 +12,26 @@ AUConceptDemoPaperPawn::AUConceptDemoPaperPawn()
 }
 
 // Called when the game starts or when spawned
-void AUConceptDemoPaperPawn::BeginPlay()
+void AConceptDemoPaperPawn::BeginPlay()
 {
 	Super::BeginPlay();
 	
 }
 
 // Called every frame
-void AUConceptDemoPaperPawn::Tick(float DeltaTime)
+void AConceptDemoPaperPawn::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
 }
 
-void AUConceptDemoPaperPawn::SetPlayerNumber(const TEnumAsByte<EAutoReceiveInput::Type> PlayerNumber)
+void AConceptDemoPaperPawn::SetPlayerNumber(const TEnumAsByte<EAutoReceiveInput::Type> PlayerNumber)
 {
 	AutoReceiveInput = PlayerNumber;
 }
 
 // Called to bind functionality to input
-void AUConceptDemoPaperPawn::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
+void AConceptDemoPaperPawn::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
 }

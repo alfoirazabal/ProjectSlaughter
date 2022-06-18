@@ -3,7 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "ConceptDemoPaperCharacter.h"
+#include "Characters/ConceptDemoPaperCharacter.h"
 #include "Blueprint/UserWidget.h"
 #include "Components/Button.h"
 #include "Components/EditableTextBox.h"
@@ -19,11 +19,11 @@ class CONCEPTDEMO_API UPlayerSelectionWidget : public UUserWidget
 {
 	GENERATED_BODY()
 
-	UPROPERTY() TArray<TSubclassOf<AUConceptDemoPaperCharacter>> CharacterTypes;
-	UPROPERTY() TArray<AUConceptDemoPaperCharacter*> P1Characters;
-	UPROPERTY() TArray<AUConceptDemoPaperCharacter*> P2Characters;
-	UPROPERTY() AUConceptDemoPaperCharacter* Player1Character;
-	UPROPERTY() AUConceptDemoPaperCharacter* Player2Character;
+	UPROPERTY() TArray<TSubclassOf<AConceptDemoPaperCharacter>> CharacterTypes;
+	UPROPERTY() TArray<AConceptDemoPaperCharacter*> P1Characters;
+	UPROPERTY() TArray<AConceptDemoPaperCharacter*> P2Characters;
+	UPROPERTY() AConceptDemoPaperCharacter* Player1Character;
+	UPROPERTY() AConceptDemoPaperCharacter* Player2Character;
 
 public:
 	

@@ -2,10 +2,8 @@
 
 #pragma once
 
-#include <Components/AudioComponent.h>
-
 #include "CoreMinimal.h"
-#include "ConceptDemoPaperCharacter.h"
+#include "Characters/ConceptDemoPaperCharacter.h"
 #include "DemoGameInstance.h"
 #include "Engine/LevelScriptActor.h"
 #include "Guns/SpawnerGun.h"
@@ -36,10 +34,10 @@ public:
 	UPROPERTY(EditAnywhere, Category = "Collectibles") TSubclassOf<ALifeCollectible> LifeCollectiblesType;
 	UPROPERTY(EditAnywhere, Category = "Collectibles") float LifeCollectibleSpawnTimeInSeconds;
 	UPROPERTY(EditAnywhere, Category = "Collectibles") float LifeCollectibleSpawnChance;
-	UPROPERTY(EditAnywhere, Category = "Players") TSubclassOf<AUConceptDemoPaperCharacter> Player1Type;
-	UPROPERTY(EditAnywhere, Category = "Players") TSubclassOf<AUConceptDemoPaperCharacter> Player2Type;
-	UPROPERTY() AUConceptDemoPaperCharacter* Player1;
-	UPROPERTY() AUConceptDemoPaperCharacter* Player2;
+	UPROPERTY(EditAnywhere, Category = "Players") TSubclassOf<AConceptDemoPaperCharacter> Player1Type;
+	UPROPERTY(EditAnywhere, Category = "Players") TSubclassOf<AConceptDemoPaperCharacter> Player2Type;
+	UPROPERTY() AConceptDemoPaperCharacter* Player1;
+	UPROPERTY() AConceptDemoPaperCharacter* Player2;
 	UPROPERTY(EditAnywhere, Category = "Music") TArray<USoundBase*> LevelMusic;
 	UPROPERTY(EditAnywhere, Category = "Music") UAudioComponent* LevelMusicComponent;
 	UPROPERTY(EditAnywhere, Category = "Music") USoundBase* BackgroundMusic;

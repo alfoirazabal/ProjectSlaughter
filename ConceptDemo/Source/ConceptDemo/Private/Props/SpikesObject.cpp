@@ -1,7 +1,7 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "SpikesObject.h"
+#include "Props/SpikesObject.h"
 
 // Sets default values
 ASpikesObject::ASpikesObject()

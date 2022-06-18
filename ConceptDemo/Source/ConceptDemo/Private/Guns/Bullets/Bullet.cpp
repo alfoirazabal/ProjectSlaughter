@@ -1,10 +1,10 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "Bullet.h"
+#include "Guns/Bullets/Bullet.h"
 
 #include "Components/CapsuleComponent.h"
-#include "ConceptDemoPaperCharacter.h"
+#include "Characters/ConceptDemoPaperCharacter.h"
 #include "Characters/CharacterPowerProp.h"
 #include "Components/AudioComponent.h"
 #include "Components/SphereComponent.h"
@@ -85,7 +85,7 @@ void ABullet::OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor* OtherA
 {
 	if (OtherComp)
 	{
-		AUConceptDemoPaperCharacter* Character = Cast<AUConceptDemoPaperCharacter>(OtherActor);
+		AConceptDemoPaperCharacter* Character = Cast<AConceptDemoPaperCharacter>(OtherActor);
 		if (Character)
 		{
 			if (

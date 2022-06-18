@@ -4,17 +4,16 @@
 
 #include "CoreMinimal.h"
 #include "PaperCharacter.h"
-#include "GameFramework/Pawn.h"
-#include "UConceptDemoPaperPawn.generated.h"
+#include "ConceptDemoPaperPawn.generated.h"
 
 UCLASS()
-class CONCEPTDEMO_API AUConceptDemoPaperPawn : public APaperCharacter
+class CONCEPTDEMO_API AConceptDemoPaperPawn : public APaperCharacter
 {
 	GENERATED_BODY()
 
 public:
 	// Sets default values for this pawn's properties
-	AUConceptDemoPaperPawn();
+	AConceptDemoPaperPawn();
 
 protected:
 	// Called when the game starts or when spawned

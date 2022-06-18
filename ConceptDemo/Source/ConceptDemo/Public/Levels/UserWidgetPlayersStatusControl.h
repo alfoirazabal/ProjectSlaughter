@@ -11,15 +11,15 @@
  * 
  */
 UCLASS()
-class CONCEPTDEMO_API UserWidgetPlayersStatusControl : public UObject
+class CONCEPTDEMO_API UUserWidgetPlayersStatusControl : public UObject
 {
 	
 public:
 
 	GENERATED_BODY()
 	
-	UserWidgetPlayersStatusControl();
-	virtual ~UserWidgetPlayersStatusControl() override;
+	UUserWidgetPlayersStatusControl();
+	virtual ~UUserWidgetPlayersStatusControl() override;
 
 	UPROPERTY() UImage* ImgHeart1;
 	UPROPERTY() UImage* ImgHeart2;

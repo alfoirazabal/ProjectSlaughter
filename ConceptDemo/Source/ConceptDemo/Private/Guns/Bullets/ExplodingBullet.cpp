@@ -1,9 +1,9 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "ExplodingBullet.h"
+#include "Guns/Bullets/ExplodingBullet.h"
 
-#include "ConceptDemoPaperCharacter.h"
+#include "Characters/ConceptDemoPaperCharacter.h"
 #include "Components/CapsuleComponent.h"
 #include "Kismet/GameplayStatics.h"
 
@@ -54,7 +54,7 @@ void AExplodingBullet::Tick(const float DeltaSeconds)
 	this->GetOverlappingActors(OverlappingActors);
 	for (AActor* OverlappingActor : OverlappingActors)
 	{
-		AUConceptDemoPaperCharacter* Character = Cast<AUConceptDemoPaperCharacter>(OverlappingActor);
+		AConceptDemoPaperCharacter* Character = Cast<AConceptDemoPaperCharacter>(OverlappingActor);
 		if (Character)
 		{
 			if (!this->AffectedActors.Contains(Character))

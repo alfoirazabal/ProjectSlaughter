@@ -7,8 +7,7 @@
 
 #include "Guns/Gun.h"
 #include "PaperCharacter.h"
-#include "PaperCharacterHUD.h"
-#include "UConceptDemoPaperPawn.h"
+#include "ConceptDemoPaperPawn.h"
 #include "Characters/PowerupReadyIndicator.h"
 #include "Characters/PowerupReadyProp.h"
 #include "Characters/Skull.h"
@@ -20,7 +19,7 @@
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnPlayerDeath);
 
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
-class CONCEPTDEMO_API AUConceptDemoPaperCharacter : public AUConceptDemoPaperPawn
+class CONCEPTDEMO_API AConceptDemoPaperCharacter : public AConceptDemoPaperPawn
 {
 	GENERATED_BODY()
 
@@ -36,7 +35,7 @@ class CONCEPTDEMO_API AUConceptDemoPaperCharacter : public AUConceptDemoPaperPaw
 
 public:	
 	// Sets default values for this component's properties
-	AUConceptDemoPaperCharacter();
+	AConceptDemoPaperCharacter();
 
 	UFUNCTION() void BindInputs();
 
@@ -49,7 +48,7 @@ public:
 	UPROPERTY(EditAnywhere) FVector PowerUpReadyIndicatorRelativeLocation;
 	UPROPERTY() APowerupReadyIndicator* CurrentPowerUpReadyIndicator;
 	
-	UPROPERTY() UserWidgetPlayersStatusControl* UserWidgetPlayersStatusControl;
+	UPROPERTY() UUserWidgetPlayersStatusControl* UserWidgetPlayersStatusControl;
 
 	UPROPERTY(EditAnywhere, Category="Sounds") USoundBase* JumpSound;
 	UPROPERTY(EditAnywhere, Category="Sounds") USoundBase* PowerSound;
@@ -146,6 +145,6 @@ public:
 
 USTRUCT() struct FCharacterDefaultWalkSpeeds {
 	GENERATED_BODY()
-	UPROPERTY() AUConceptDemoPaperCharacter* Character;
+	UPROPERTY() AConceptDemoPaperCharacter* Character;
 	float DefaultWalkSpeed;
 };

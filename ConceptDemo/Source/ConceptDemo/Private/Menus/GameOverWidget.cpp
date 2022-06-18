@@ -10,7 +10,7 @@ void UGameOverWidget::NativeConstruct()
 {
 	const UDemoGameInstance* GameInstance = Cast<UDemoGameInstance>(this->GetGameInstance());
 	if (IsValid(GameInstance)) {
-		TSubclassOf<AUConceptDemoPaperCharacter> SelectedPlayerType;
+		TSubclassOf<AConceptDemoPaperCharacter> SelectedPlayerType;
 		switch (GameInstance->WinningPlayerNumber)
 		{
 			case 1:
@@ -23,7 +23,7 @@ void UGameOverWidget::NativeConstruct()
 				break;
 		}
 		if (IsValid(SelectedPlayerType)) {
-			const AUConceptDemoPaperCharacter* DefaultObject = SelectedPlayerType.GetDefaultObject();
+			const AConceptDemoPaperCharacter* DefaultObject = SelectedPlayerType.GetDefaultObject();
 			if (IsValid(DefaultObject)) {
 				UTexture2D* ObjectTexture = DefaultObject->CharacterImage;
 				if (IsValid(ObjectTexture)) {

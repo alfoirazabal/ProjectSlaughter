@@ -1,7 +1,7 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "ElevatorPlatform.h"
+#include "Props/Platforms/ElevatorPlatform.h"
 
 // Sets default values
 AElevatorPlatform::AElevatorPlatform()

@@ -1,7 +1,7 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "DemoLevelActor.h"
+#include "Levels/DemoLevel/DemoLevelActor.h"
 
 #include <Components/AudioComponent.h>
 
@@ -133,8 +133,8 @@ void ADemoLevelActor::SetupPlayersStatusWidget() const
 	PlayersStatusWidget->ImgP1CharacterType->SetBrushFromTexture(this->Player1->CharacterFaceImage);
 	PlayersStatusWidget->ImgP2CharacterType->SetBrushFromTexture(this->Player2->CharacterFaceImage);
 	PlayersStatusWidget->AddToViewport();
-	UserWidgetPlayersStatusControl* Player1StatusController = NewObject<UserWidgetPlayersStatusControl>();
-	UserWidgetPlayersStatusControl* Player2StatusController = NewObject<UserWidgetPlayersStatusControl>();
+	UUserWidgetPlayersStatusControl* Player1StatusController = NewObject<UUserWidgetPlayersStatusControl>();
+	UUserWidgetPlayersStatusControl* Player2StatusController = NewObject<UUserWidgetPlayersStatusControl>();
 	Player1StatusController->ImgHeart1 = PlayersStatusWidget->ImgP1Heart1;
 	Player1StatusController->ImgHeart2 = PlayersStatusWidget->ImgP1Heart2;
 	Player1StatusController->ImgHeart3 = PlayersStatusWidget->ImgP1Heart3;
@@ -228,8 +228,8 @@ void ADemoLevelActor::SpawnPlayers()
 	this->RandomPlayerSpawnLocations.Remove(P1Location);
 	const FVector P2Location = this->RandomPlayerSpawnLocations[FMath::RandRange(0, this->RandomPlayerSpawnLocations.Num() - 1)];
 	this->RandomPlayerSpawnLocations.Remove(P2Location);
-	this->Player1 = this->GetWorld()->SpawnActor<AUConceptDemoPaperCharacter>(this->Player1Type, P1Location, PlayerSpawnRotation);
-	this->Player2 = this->GetWorld()->SpawnActor<AUConceptDemoPaperCharacter>(this->Player2Type, P2Location, PlayerSpawnRotation);
+	this->Player1 = this->GetWorld()->SpawnActor<AConceptDemoPaperCharacter>(this->Player1Type, P1Location, PlayerSpawnRotation);
+	this->Player2 = this->GetWorld()->SpawnActor<AConceptDemoPaperCharacter>(this->Player2Type, P2Location, PlayerSpawnRotation);
 
 	if (this->GameInstance->UseControllerForPlayer2)
 	{

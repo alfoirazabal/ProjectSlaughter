@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "PaperCharacter.h"
+#include "SlaughterFirendsDemoConstants.h"
 #include "ConceptDemoPaperPawn.generated.h"
 
 UCLASS()
@@ -14,6 +15,19 @@ class CONCEPTDEMO_API AConceptDemoPaperPawn : public APaperCharacter
 public:
 	// Sets default values for this pawn's properties
 	AConceptDemoPaperPawn();
+
+	UPROPERTY() bool bFallingDeath;
+
+	UFUNCTION() void EnsureXAxisLocation();
+	UFUNCTION() bool IsOnTheAir() const;
+	
+	UFUNCTION() static FRotator GetRightRotator();
+	UFUNCTION() static FRotator GetLeftRotator();
+	
+	UPROPERTY() FVector InitialPosition;
+	UPROPERTY() TEnumAsByte<EFacing_Direction> FacingDirection;
+	
+	UFUNCTION() FRotator GetFacingRotation() const;
 
 protected:
 	// Called when the game starts or when spawned

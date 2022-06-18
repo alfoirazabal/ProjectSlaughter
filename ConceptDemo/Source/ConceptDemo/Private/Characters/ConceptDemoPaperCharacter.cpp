@@ -8,16 +8,13 @@
 #include "Train/TrainAI.h"
 #include <PaperFlipbookComponent.h>
 
-#include "Props/Platforms/SemiSolidPlatform.h"
 #include "Characters/PowerupReadyIndicator.h"
-#include "Characters/Skull.h"
 #include "Components/CapsuleComponent.h"
 #include "Components/WidgetComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "Kismet/GameplayStatics.h"
 #include "Props/Death/DeathIndicator.h"
-
-constexpr float GDefault_Character_Plane_X_Position = 760;
+#include "Props/Platforms/SemiSolidPlatform.h"
 
 // Sets default values for this component's properties
 AConceptDemoPaperCharacter::AConceptDemoPaperCharacter()
@@ -37,9 +34,6 @@ AConceptDemoPaperCharacter::AConceptDemoPaperCharacter()
 	this->CurrentSpecialPowerLoadTime = 0;
 
 	this->PlayerName = FText::FromString("Player");
-	
-	this->GetCharacterMovement()->JumpZVelocity = 700;
-	this->AutoPossessAI = EAutoPossessAI::PlacedInWorldOrSpawned;
 	
 	this->GetCharacterMovement()->GravityScale = 3;
 	this->GetCharacterMovement()->JumpZVelocity = 1190;
@@ -96,31 +90,6 @@ void AConceptDemoPaperCharacter::MoveGun() const
 			GunLocation.Y -= this->RelativeGunAttachLocation.Y;
 		}
 		this->AttachedGun->SetActorLocation(GunLocation);
-	}
-}
-
-void AConceptDemoPaperCharacter::CheckCharacterFall()
-{
-	if (this->GetActorLocation().Z <= GLevelsZFallLimit) {
-		this->CurrentLives--;
-		this->CurrentLifeSize = this->LifeSize;
-		if (this->CurrentLives == 0) {
-			this->Die();
-		}
-		else {
-			this->UpdateHealthIndicator();
-			this->Respawn();
-		}
-	}
-}
-
-void AConceptDemoPaperCharacter::EnsureXAxisLocation()
-{
-	// Prevents actor from moving along the X axis, and move only along the Y and Z axis of the simulated 3D plane.
-	FVector CurrentPosition = this->GetActorLocation();
-	if (!this->bFallingDeath && CurrentPosition.X != GDefault_Character_Plane_X_Position) {
-		CurrentPosition.X = GDefault_Character_Plane_X_Position;
-		this->SetActorLocation(CurrentPosition);
 	}
 }
 
@@ -182,23 +151,6 @@ void AConceptDemoPaperCharacter::MakeFallingDeath()
 	this->SetActorLocation(CurrentPosition);
 }
 
-FRotator AConceptDemoPaperCharacter::GetFacingRotation() const
-{
-	FRotator Rotator = FRotator::ZeroRotator;
-	switch (this->FacingDirection)
-	{
-		case Left:
-			Rotator = FRotator(0, -90, 0);
-			break;
-		case Right:
-			Rotator = FRotator(0, 90, 0);
-			break;
-		default:
-			break;
-	}
-	return Rotator;
-}
-
 void AConceptDemoPaperCharacter::UpdateHealthIndicator() const
 {
 	if (this->UserWidgetPlayersStatusControl) {
@@ -229,26 +181,6 @@ void AConceptDemoPaperCharacter::Respawn()
 	);
 }
 
-bool AConceptDemoPaperCharacter::IsOnTheAir() const
-{
-	const FVector Velocity = this->GetVelocity();
-	const float ZVelocity = Velocity.Z;
-	return ZVelocity != 0;
-}
-
-FRotator AConceptDemoPaperCharacter::GetRightRotator()
-{
-	const FRotator Rotator = FRotator::ZeroRotator;
-	return Rotator;
-}
-
-FRotator AConceptDemoPaperCharacter::GetLeftRotator()
-{
-	FRotator Rotator = FRotator::ZeroRotator;
-	Rotator.Yaw = 180;
-	return Rotator;
-}
-
 void AConceptDemoPaperCharacter::HandleMovement(const float ScaleValue)
 {
 	FVector Vector = FVector::ZeroVector;
@@ -277,6 +209,21 @@ void AConceptDemoPaperCharacter::HandleMovement(const float ScaleValue)
 	CheckCharacterFall();
 }
 
+void AConceptDemoPaperCharacter::CheckCharacterFall()
+{
+	if (this->GetActorLocation().Z <= GLevelsZFallLimit) {
+		this->CurrentLives--;
+		this->CurrentLifeSize = this->LifeSize;
+		if (this->CurrentLives == 0) {
+			this->Die();
+		}
+		else {
+			this->UpdateHealthIndicator();
+			this->Respawn();
+		}
+	}
+}
+
 void AConceptDemoPaperCharacter::DropDown()
 {
 	FFindFloorResult FloorResult = this->GetCharacterMovement()->CurrentFloor;
@@ -300,6 +247,7 @@ void AConceptDemoPaperCharacter::Jump()
 	if (this->GetCharacterMovement()->Velocity.Z == 0) UGameplayStatics::PlaySound2D(this->GetWorld(), this->JumpSound);
 	Super::Jump();
 }
+
 
 void AConceptDemoPaperCharacter::AttachGun(AGun* Gun)
 {
@@ -332,12 +280,14 @@ void AConceptDemoPaperCharacter::DropGun()
 			NewGunLocation = this->AttachedGun->GetActorLocation();
 		}
 		switch (this->FacingDirection) {
-		case EFacing_Direction::Left:
-			NewGunLocation.Y += this->RelativeGunDropDistance;
-			break;
-		case EFacing_Direction::Right:
-			NewGunLocation.Y -= this->RelativeGunDropDistance;
-			break;
+			case EFacing_Direction::Left:
+				NewGunLocation.Y += this->RelativeGunDropDistance;
+				break;
+			case EFacing_Direction::Right:
+				NewGunLocation.Y -= this->RelativeGunDropDistance;
+				break;
+			default:
+				break;
 		}
 		this->AttachedGun->SetActorLocation(NewGunLocation);
 		this->AttachedGun->ShotLost.RemoveDynamic(this, &AConceptDemoPaperCharacter::UpdateShotsCount);
@@ -392,7 +342,6 @@ void AConceptDemoPaperCharacter::UpdateShotsCount()
 		this->UserWidgetPlayersStatusControl->SetStaminaBar(this->AttachedGun->ShotsCount, this->AttachedGun->ShotsLeft);
 	}
 }
-
 
 void AConceptDemoPaperCharacter::TakeDamage(const float DamageCount)
 {
@@ -452,7 +401,6 @@ void AConceptDemoPaperCharacter::Die()
 	this->PlayerDeath.Broadcast();
 	this->Destroy();
 }
-
 
 // Called every frame
 void AConceptDemoPaperCharacter::Tick(const float DeltaTime)

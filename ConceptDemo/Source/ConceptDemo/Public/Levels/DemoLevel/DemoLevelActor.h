@@ -25,6 +25,7 @@ public:
 
 	UPROPERTY() UDemoGameInstance* GameInstance;
 	UPROPERTY() TSubclassOf<UUserWidgetPlayersStatus> UserWidgetPlayerStatusClass;
+	UPROPERTY() UUserWidgetPlayersStatus* UserWidgetPlayersStatus;
 	UPROPERTY(EditAnywhere, Category = "Players") TArray<FVector> RandomPlayerSpawnLocations;
 	UPROPERTY(EditAnywhere, Category = "Guns") TArray<TSubclassOf<AGun>> Guns;
 	UPROPERTY(EditAnywhere, Category = "Guns") TArray<ASpawnerGun*> SpawnerGuns;
@@ -42,13 +43,14 @@ public:
 	UPROPERTY(EditAnywhere, Category = "Music") UAudioComponent* LevelMusicComponent;
 	UPROPERTY(EditAnywhere, Category = "Music") USoundBase* BackgroundMusic;
 	UPROPERTY() int CurrentBackgroundMusicPlayingIndex;
+	FNumberFormattingOptions PlayersScoreFormattingOptions;
 
 	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable) void OnGunSpawned(AGun* Gun);
 	
 	virtual void BeginPlay() override;
 	
 	UFUNCTION() void SetupInputs();
-	UFUNCTION() void SetupPlayersStatusWidget() const;
+	UFUNCTION() void SetupPlayersStatusWidget();
 
 protected:
 	void P1HorizontalMovement(float AxisValue);
@@ -74,4 +76,6 @@ protected:
 	UFUNCTION() void P2ReactToDeath();
 	UFUNCTION() void ReactToGunDeath(AGun* Gun);
 	UFUNCTION() void ExitLevel();
+
+	UFUNCTION() void OnPlayerDamagedPlayer(AActor* TargetedPawn, AActor* SourcePawn, AActor* Asset, float DamageScore);
 };

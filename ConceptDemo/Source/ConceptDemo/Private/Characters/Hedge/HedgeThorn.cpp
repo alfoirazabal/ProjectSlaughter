@@ -18,6 +18,9 @@ AHedgeThorn::AHedgeThorn()
 {
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
+
+	this->DamageScore = 3.5;
+	
 	this->InitialPosition = this->GetActorLocation();
 	this->TravelSpeed = 3;
 	this->TotalDistanceTraveled = 0;
@@ -97,11 +100,11 @@ void AHedgeThorn::OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor* Ot
 		if (Character && Character != this->HedgeThornSource)
 		{
 			Character->TakeDamage(this->HedgeThornDamage);
+			this->HedgeThornSource->OnEnemyDamaged.Broadcast(Character, this->HedgeThornSource, this, this->DamageScore);
 			this->DestroyOrExplodeBullet();
 		}
 		else if (OtherActor != this && !Cast<ADangerZone>(OtherActor) && !Cast<AGun>(OtherActor) && !Cast<ACharacterPowerProp>(OtherActor))
 		{
-			GEngine->AddOnScreenDebugMessage(189992511, 2, FColor::Red, "Hedge thorn collided with: " + OtherComp->GetName());
 			this->DestroyOrExplodeBullet();
 		}
 	}

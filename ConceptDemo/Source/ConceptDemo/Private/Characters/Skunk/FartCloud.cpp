@@ -12,6 +12,9 @@ AFartCloud::AFartCloud()
 {
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
+
+	this->DamageScore = 5;
+	
 	this->AliveTime = 25;
 	this->AliveTimeLeft = this->AliveTime;
 	this->InitialMovementSlowdownRatio = 0.12;
@@ -80,6 +83,7 @@ void AFartCloud::OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor* Oth
 			{
 				if (this->FindCharacterWalkSpeedIndex(Character) == -1)
 				{
+					this->SkunkFartSource->OnEnemyDamaged.Broadcast(Character, this->SkunkFartSource, this, this->DamageScore);
 					FCharacterDefaultWalkSpeeds CharacterDefaultWalkSpeed;
 					CharacterDefaultWalkSpeed.Character = Character;
 					CharacterDefaultWalkSpeed.DefaultWalkSpeed = Character->GetCharacterMovement()->MaxWalkSpeed;

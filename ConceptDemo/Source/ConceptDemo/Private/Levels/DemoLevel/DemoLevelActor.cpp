@@ -6,6 +6,7 @@
 #include <Components/AudioComponent.h>
 
 #include "DemoGameInstance.h"
+#include "Internationalization/Culture.h"
 #include "Kismet/GameplayStatics.h"
 #include "Levels/DemoLevel/DemoLevelGameModeBase.h"
 
@@ -17,6 +18,8 @@ ADemoLevelActor::ADemoLevelActor()
 	this->GunsSpawnCheckTimeInSeconds = 5;
 	this->LifeCollectibleSpawnTimeInSeconds = 15;
 	this->LifeCollectibleSpawnChance = 0.95;
+	this->PlayersScoreFormattingOptions.MinimumFractionalDigits = 2;
+	this->PlayersScoreFormattingOptions.MaximumFractionalDigits = 2;
 	static ConstructorHelpers::FClassFinder<UUserWidgetPlayersStatus> UserWidgetPLayerStatusClassFinder(TEXT("/Game/Widgets/PlayersScoreWidget"));
 	this->UserWidgetPlayerStatusClass = UserWidgetPLayerStatusClassFinder.Class;
 }
@@ -59,6 +62,8 @@ void ADemoLevelActor::BeginPlay()
 			);
 		}
 	}
+	this->Player1->OnEnemyDamaged.AddDynamic(this, &ADemoLevelActor::OnPlayerDamagedPlayer);
+	this->Player2->OnEnemyDamaged.AddDynamic(this, &ADemoLevelActor::OnPlayerDamagedPlayer);
 	if (this->LifeCollectiblesSpawners.Num() > 0)
 	{
 		FTimerHandle TimerHandle;
@@ -123,28 +128,28 @@ void ADemoLevelActor::SetupInputs()
 	PlayerController->SetShowMouseCursor(false);
 }
 
-void ADemoLevelActor::SetupPlayersStatusWidget() const
+void ADemoLevelActor::SetupPlayersStatusWidget()
 {
 	ADemoLevelGameModeBase* GameModeBase = Cast<ADemoLevelGameModeBase>(UGameplayStatics::GetGameMode(this->GetWorld()));
-	UUserWidgetPlayersStatus* PlayersStatusWidget = CreateWidget<UUserWidgetPlayersStatus>(this->GetWorld(), this->UserWidgetPlayerStatusClass);
-	GameModeBase->PlayerStatusWidget = PlayersStatusWidget;
-	PlayersStatusWidget->TxtP1Name->SetText(this->GameInstance->Player1Name);
-	PlayersStatusWidget->TxtP2Name->SetText(this->GameInstance->Player2Name);
-	PlayersStatusWidget->ImgP1CharacterType->SetBrushFromTexture(this->Player1->CharacterFaceImage);
-	PlayersStatusWidget->ImgP2CharacterType->SetBrushFromTexture(this->Player2->CharacterFaceImage);
-	PlayersStatusWidget->AddToViewport();
+	this->UserWidgetPlayersStatus = CreateWidget<UUserWidgetPlayersStatus>(this->GetWorld(), this->UserWidgetPlayerStatusClass);
+	GameModeBase->PlayerStatusWidget = this->UserWidgetPlayersStatus;
+	this->UserWidgetPlayersStatus->TxtP1Name->SetText(this->GameInstance->Player1Name);
+	this->UserWidgetPlayersStatus->TxtP2Name->SetText(this->GameInstance->Player2Name);
+	this->UserWidgetPlayersStatus->ImgP1CharacterType->SetBrushFromTexture(this->Player1->CharacterFaceImage);
+	this->UserWidgetPlayersStatus->ImgP2CharacterType->SetBrushFromTexture(this->Player2->CharacterFaceImage);
+	this->UserWidgetPlayersStatus->AddToViewport();
 	UUserWidgetPlayersStatusControl* Player1StatusController = NewObject<UUserWidgetPlayersStatusControl>();
 	UUserWidgetPlayersStatusControl* Player2StatusController = NewObject<UUserWidgetPlayersStatusControl>();
-	Player1StatusController->ImgHeart1 = PlayersStatusWidget->ImgP1Heart1;
-	Player1StatusController->ImgHeart2 = PlayersStatusWidget->ImgP1Heart2;
-	Player1StatusController->ImgHeart3 = PlayersStatusWidget->ImgP1Heart3;
-	Player1StatusController->PbrHealth = PlayersStatusWidget->PbrP1Life;
-	Player1StatusController->PbrStamina = PlayersStatusWidget->PbrP1Stamina;
-	Player2StatusController->ImgHeart1 = PlayersStatusWidget->ImgP2Heart1;
-	Player2StatusController->ImgHeart2 = PlayersStatusWidget->ImgP2Heart2;
-	Player2StatusController->ImgHeart3 = PlayersStatusWidget->ImgP2Heart3;
-	Player2StatusController->PbrHealth = PlayersStatusWidget->PbrP2Life;
-	Player2StatusController->PbrStamina = PlayersStatusWidget->PbrP2Stamina;
+	Player1StatusController->ImgHeart1 = this->UserWidgetPlayersStatus->ImgP1Heart1;
+	Player1StatusController->ImgHeart2 = this->UserWidgetPlayersStatus->ImgP1Heart2;
+	Player1StatusController->ImgHeart3 = this->UserWidgetPlayersStatus->ImgP1Heart3;
+	Player1StatusController->PbrHealth = this->UserWidgetPlayersStatus->PbrP1Life;
+	Player1StatusController->PbrStamina = this->UserWidgetPlayersStatus->PbrP1Stamina;
+	Player2StatusController->ImgHeart1 = this->UserWidgetPlayersStatus->ImgP2Heart1;
+	Player2StatusController->ImgHeart2 = this->UserWidgetPlayersStatus->ImgP2Heart2;
+	Player2StatusController->ImgHeart3 = this->UserWidgetPlayersStatus->ImgP2Heart3;
+	Player2StatusController->PbrHealth = this->UserWidgetPlayersStatus->PbrP2Life;
+	Player2StatusController->PbrStamina = this->UserWidgetPlayersStatus->PbrP2Stamina;
 	this->Player1->UserWidgetPlayersStatusControl = Player1StatusController;
 	this->Player2->UserWidgetPlayersStatusControl = Player2StatusController;
 	this->Player1->UpdateHealthIndicator();
@@ -340,4 +345,27 @@ void ADemoLevelActor::ReactToGunDeath(AGun* Gun)
 void ADemoLevelActor::ExitLevel()
 {
 	UGameplayStatics::OpenLevel(this, "MainMenu");
+}
+
+void ADemoLevelActor::OnPlayerDamagedPlayer(AActor* TargetedPawn, AActor* SourcePawn, AActor* Asset, const float DamageScore)
+{
+	AConceptDemoPaperPawn* ConceptDemoSourcePawn = Cast<AConceptDemoPaperPawn>(SourcePawn);
+	const AConceptDemoPaperPawn* ConceptDemoTargetPawn = Cast<AConceptDemoPaperPawn>(TargetedPawn);
+	if (ConceptDemoSourcePawn && ConceptDemoTargetPawn)
+	{
+		if (!ConceptDemoTargetPawn->Immune)
+		{
+			ConceptDemoSourcePawn->Score += DamageScore;
+			UTextBlock* PlayerScoreText = nullptr;
+			if (ConceptDemoSourcePawn == this->Player1)
+			{
+				PlayerScoreText = this->UserWidgetPlayersStatus->TxtP1Score;
+			}
+			else if (ConceptDemoSourcePawn == this->Player2)
+			{
+				PlayerScoreText = this->UserWidgetPlayersStatus->TxtP2Score;
+			}
+			PlayerScoreText->SetText(FText::AsNumber(ConceptDemoSourcePawn->Score, &this->PlayersScoreFormattingOptions));
+		}
+	}
 }

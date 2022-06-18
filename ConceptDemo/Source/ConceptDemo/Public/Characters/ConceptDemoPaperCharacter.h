@@ -89,7 +89,6 @@ protected:
 	uint16 CurrentSpecialPowerLoadTime;
 	UPROPERTY() bool SpecialPowerReadyPropShown;
 	
-	UPROPERTY() bool Immune;
 	UPROPERTY() FTimerHandle RespawnTimer;
 	
 	virtual void BeginPlay() override;

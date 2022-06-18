@@ -309,7 +309,7 @@ void AConceptDemoPaperCharacter::Fire()
 {
 	if (IsValid(this->AttachedGun))
 	{
-		this->AttachedGun->Fire();
+		this->AttachedGun->Fire(this);
 		this->CurrentSpecialPowerLoadTime = 0;
 	}
 	if (IsValid(this->AttachedGun))

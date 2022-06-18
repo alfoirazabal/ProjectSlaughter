@@ -76,7 +76,7 @@ public:
 	virtual void Tick(float DeltaTime) override;
 	void SetAttached();
 	void SetDetached();
-	UFUNCTION() void Fire();
+	UFUNCTION() void Fire(AActor* SourceActor);
 	UFUNCTION() void Respawn();
 
 	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable) void OnGunAttatched();

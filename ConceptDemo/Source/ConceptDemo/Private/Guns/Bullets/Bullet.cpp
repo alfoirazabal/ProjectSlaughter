@@ -24,6 +24,8 @@ ABullet::ABullet()
 	this->ExplodingBulletClass = nullptr;
 	this->ExplodingBullet = false;
 
+	this->BulletScoreMultiplier = 5;
+
 	this->TriggerCapsule = CreateDefaultSubobject<UCapsuleComponent>(TEXT("Trigger Capsule"));
 	this->TriggerCapsule->InitCapsuleSize(13.45, 13.45);
 	this->TriggerCapsule->SetCollisionProfileName("Trigger");
@@ -89,10 +91,17 @@ void ABullet::OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor* OtherA
 		if (Character)
 		{
 			if (
-				(Character->AttachedGun != nullptr && this->FireSource != nullptr && this->FireSource != Character->AttachedGun) ||
+				(Character->AttachedGun != nullptr && this->SourceGun != nullptr && this->SourceActor != Character) ||
 				Character->AttachedGun == nullptr
 			) {
+				this->TargetDamagedActor = Character;
 				Character->TakeDamage(this->BulletDamage);
+				const AConceptDemoPaperPawn* SourcePawn = Cast<AConceptDemoPaperPawn>(this->SourceActor);
+				if (SourcePawn)
+				{
+					float DamageScore = this->BulletDamage *= this->BulletScoreMultiplier;
+					SourcePawn->OnEnemyDamaged.Broadcast(Character, SourceActor, this, this->BulletDamage);
+				}
 				this->DestroyOrExplodeBullet();
 			}
 		}
@@ -103,7 +112,6 @@ void ABullet::OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor* OtherA
 			!Cast<ALifeCollectible>(OtherActor)
 		)
 		{
-			GEngine->AddOnScreenDebugMessage(189992511, 2, FColor::Red, "Bullet collided with: " + OtherComp->GetName());
 			this->DestroyOrExplodeBullet();
 		}
 	}

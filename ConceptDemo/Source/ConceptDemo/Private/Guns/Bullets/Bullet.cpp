@@ -1,10 +1,10 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "Bullet.h"
+#include "Guns/Bullets/Bullet.h"
 
 #include "Components/CapsuleComponent.h"
-#include "ConceptDemoPaperCharacter.h"
+#include "Characters/ConceptDemoPaperCharacter.h"
 #include "Characters/CharacterPowerProp.h"
 #include "Components/AudioComponent.h"
 #include "Components/SphereComponent.h"
@@ -23,6 +23,8 @@ ABullet::ABullet()
 	this->MaxTravelDistance = 5000;
 	this->ExplodingBulletClass = nullptr;
 	this->ExplodingBullet = false;
+
+	this->BulletScoreMultiplier = 5;
 
 	this->TriggerCapsule = CreateDefaultSubobject<UCapsuleComponent>(TEXT("Trigger Capsule"));
 	this->TriggerCapsule->InitCapsuleSize(13.45, 13.45);
@@ -74,7 +76,12 @@ void ABullet::DestroyOrExplodeBullet()
 			Rotator.Roll = 180;
 			Rotator.Pitch = 180;
 		}
-		this->GetWorld()->SpawnActor<AExplodingBullet>(this->ExplodingBulletClass, this->GetActorLocation(), Rotator);
+		AExplodingBullet* ExplodingBulletObject = this->GetWorld()->SpawnActorDeferred<AExplodingBullet>(
+			this->ExplodingBulletClass, this->GetActorTransform(), this, nullptr, ESpawnActorCollisionHandlingMethod::AlwaysSpawn
+		);
+		ExplodingBulletObject->SourceActor = this->SourceActor;
+		UGameplayStatics::FinishSpawningActor(ExplodingBulletObject, this->GetActorTransform());
+		ExplodingBulletObject->SetActorRotation(Rotator);
 	}
 	if (this->ShotSoundComponent) this->ShotSoundComponent->Stop();
 	this->Destroy();
@@ -85,14 +92,21 @@ void ABullet::OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor* OtherA
 {
 	if (OtherComp)
 	{
-		AUConceptDemoPaperCharacter* Character = Cast<AUConceptDemoPaperCharacter>(OtherActor);
+		AConceptDemoPaperCharacter* Character = Cast<AConceptDemoPaperCharacter>(OtherActor);
 		if (Character)
 		{
 			if (
-				(Character->AttachedGun != nullptr && this->FireSource != nullptr && this->FireSource != Character->AttachedGun) ||
+				(Character->AttachedGun != nullptr && this->SourceGun != nullptr && this->SourceActor != Character) ||
 				Character->AttachedGun == nullptr
 			) {
+				this->TargetDamagedActor = Character;
 				Character->TakeDamage(this->BulletDamage);
+				const AConceptDemoPaperPawn* SourcePawn = Cast<AConceptDemoPaperPawn>(this->SourceActor);
+				if (SourcePawn)
+				{
+					float DamageScore = this->BulletDamage *= this->BulletScoreMultiplier;
+					SourcePawn->OnEnemyDamaged.Broadcast(Character, SourceActor, this, this->BulletDamage);
+				}
 				this->DestroyOrExplodeBullet();
 			}
 		}
@@ -103,7 +117,6 @@ void ABullet::OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor* OtherA
 			!Cast<ALifeCollectible>(OtherActor)
 		)
 		{
-			GEngine->AddOnScreenDebugMessage(189992511, 2, FColor::Red, "Bullet collided with: " + OtherComp->GetName());
 			this->DestroyOrExplodeBullet();
 		}
 	}

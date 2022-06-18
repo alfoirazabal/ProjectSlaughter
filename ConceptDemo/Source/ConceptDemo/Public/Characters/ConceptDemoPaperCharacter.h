@@ -7,8 +7,7 @@
 
 #include "Guns/Gun.h"
 #include "PaperCharacter.h"
-#include "PaperCharacterHUD.h"
-#include "UConceptDemoPaperPawn.h"
+#include "ConceptDemoPaperPawn.h"
 #include "Characters/PowerupReadyIndicator.h"
 #include "Characters/PowerupReadyProp.h"
 #include "Characters/Skull.h"
@@ -20,23 +19,16 @@
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnPlayerDeath);
 
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
-class CONCEPTDEMO_API AUConceptDemoPaperCharacter : public AUConceptDemoPaperPawn
+class CONCEPTDEMO_API AConceptDemoPaperCharacter : public AConceptDemoPaperPawn
 {
 	GENERATED_BODY()
 
 	void MoveGun() const;
-
 	void CheckCharacterFall();
-	void EnsureXAxisLocation();
-	bool IsOnTheAir() const;
-	static FRotator GetRightRotator();
-	static FRotator GetLeftRotator();
-
-	bool bFallingDeath;
 
 public:	
 	// Sets default values for this component's properties
-	AUConceptDemoPaperCharacter();
+	AConceptDemoPaperCharacter();
 
 	UFUNCTION() void BindInputs();
 
@@ -49,7 +41,7 @@ public:
 	UPROPERTY(EditAnywhere) FVector PowerUpReadyIndicatorRelativeLocation;
 	UPROPERTY() APowerupReadyIndicator* CurrentPowerUpReadyIndicator;
 	
-	UPROPERTY() UserWidgetPlayersStatusControl* UserWidgetPlayersStatusControl;
+	UPROPERTY() UUserWidgetPlayersStatusControl* UserWidgetPlayersStatusControl;
 
 	UPROPERTY(EditAnywhere, Category="Sounds") USoundBase* JumpSound;
 	UPROPERTY(EditAnywhere, Category="Sounds") USoundBase* PowerSound;
@@ -85,7 +77,6 @@ protected:
 	
 	UPROPERTY(EditAnywhere) FText PlayerName;
 	
-	EFacing_Direction FacingDirection;
 	UPROPERTY() TArray<AGun*> GunsIgnored;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite) uint8 Lives;
@@ -98,7 +89,6 @@ protected:
 	uint16 CurrentSpecialPowerLoadTime;
 	UPROPERTY() bool SpecialPowerReadyPropShown;
 	
-	UPROPERTY() bool Immune;
 	UPROPERTY() FTimerHandle RespawnTimer;
 	
 	virtual void BeginPlay() override;
@@ -109,7 +99,6 @@ public:
 
 	DECLARE_DYNAMIC_MULTICAST_DELEGATE(FBeginOverlapEvent);
 	
-	UFUNCTION() FRotator GetFacingRotation() const;
 	UFUNCTION() void UpdateHealthIndicator() const;
 	UFUNCTION() void Respawn();
 	UFUNCTION(BlueprintCallable) void HandleMovement(float ScaleValue);
@@ -130,12 +119,9 @@ public:
 	FOnPlayerDeath PlayerDeath;
 
 	UPROPERTY() AGun* AttachedGun;
-	FVector InitialPosition;
 	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
-
-	//UPROPERTY(EditAnywhere, Category = "Spawn Sprite") class UPaperSprite* SpawnSprite;
 
 	UPROPERTY(VisibleAnywhere, Category = "Trigger Capsule")
 	class UCapsuleComponent* TriggerCapsule;
@@ -146,6 +132,6 @@ public:
 
 USTRUCT() struct FCharacterDefaultWalkSpeeds {
 	GENERATED_BODY()
-	UPROPERTY() AUConceptDemoPaperCharacter* Character;
+	UPROPERTY() AConceptDemoPaperCharacter* Character;
 	float DefaultWalkSpeed;
 };

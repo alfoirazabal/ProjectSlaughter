@@ -2,10 +2,8 @@
 
 #pragma once
 
-#include <Components/AudioComponent.h>
-
 #include "CoreMinimal.h"
-#include "ConceptDemoPaperCharacter.h"
+#include "Characters/ConceptDemoPaperCharacter.h"
 #include "DemoGameInstance.h"
 #include "Engine/LevelScriptActor.h"
 #include "Guns/SpawnerGun.h"
@@ -27,6 +25,7 @@ public:
 
 	UPROPERTY() UDemoGameInstance* GameInstance;
 	UPROPERTY() TSubclassOf<UUserWidgetPlayersStatus> UserWidgetPlayerStatusClass;
+	UPROPERTY() UUserWidgetPlayersStatus* UserWidgetPlayersStatus;
 	UPROPERTY(EditAnywhere, Category = "Players") TArray<FVector> RandomPlayerSpawnLocations;
 	UPROPERTY(EditAnywhere, Category = "Guns") TArray<TSubclassOf<AGun>> Guns;
 	UPROPERTY(EditAnywhere, Category = "Guns") TArray<ASpawnerGun*> SpawnerGuns;
@@ -36,21 +35,22 @@ public:
 	UPROPERTY(EditAnywhere, Category = "Collectibles") TSubclassOf<ALifeCollectible> LifeCollectiblesType;
 	UPROPERTY(EditAnywhere, Category = "Collectibles") float LifeCollectibleSpawnTimeInSeconds;
 	UPROPERTY(EditAnywhere, Category = "Collectibles") float LifeCollectibleSpawnChance;
-	UPROPERTY(EditAnywhere, Category = "Players") TSubclassOf<AUConceptDemoPaperCharacter> Player1Type;
-	UPROPERTY(EditAnywhere, Category = "Players") TSubclassOf<AUConceptDemoPaperCharacter> Player2Type;
-	UPROPERTY() AUConceptDemoPaperCharacter* Player1;
-	UPROPERTY() AUConceptDemoPaperCharacter* Player2;
+	UPROPERTY(EditAnywhere, Category = "Players") TSubclassOf<AConceptDemoPaperCharacter> Player1Type;
+	UPROPERTY(EditAnywhere, Category = "Players") TSubclassOf<AConceptDemoPaperCharacter> Player2Type;
+	UPROPERTY() AConceptDemoPaperCharacter* Player1;
+	UPROPERTY() AConceptDemoPaperCharacter* Player2;
 	UPROPERTY(EditAnywhere, Category = "Music") TArray<USoundBase*> LevelMusic;
 	UPROPERTY(EditAnywhere, Category = "Music") UAudioComponent* LevelMusicComponent;
 	UPROPERTY(EditAnywhere, Category = "Music") USoundBase* BackgroundMusic;
 	UPROPERTY() int CurrentBackgroundMusicPlayingIndex;
+	FNumberFormattingOptions PlayersScoreFormattingOptions;
 
 	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable) void OnGunSpawned(AGun* Gun);
 	
 	virtual void BeginPlay() override;
 	
 	UFUNCTION() void SetupInputs();
-	UFUNCTION() void SetupPlayersStatusWidget() const;
+	UFUNCTION() void SetupPlayersStatusWidget();
 
 protected:
 	void P1HorizontalMovement(float AxisValue);
@@ -72,8 +72,11 @@ protected:
 	UFUNCTION() void SpawnPlayers();
 	UFUNCTION() void SpawnGuns();
 	UFUNCTION() void SpawnCollectibles();
+	UFUNCTION() uint8 GetScoreWinnerPlayerNumber() const;
 	UFUNCTION() void P1ReactToDeath();
 	UFUNCTION() void P2ReactToDeath();
 	UFUNCTION() void ReactToGunDeath(AGun* Gun);
 	UFUNCTION() void ExitLevel();
+
+	UFUNCTION() void OnPlayerDamagedPlayer(AActor* TargetedPawn, AActor* SourcePawn, AActor* Asset, float DamageScore);
 };

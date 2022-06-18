@@ -32,6 +32,8 @@ public:
 	UPROPERTY(meta = (BindWidget)) UProgressBar* PbrP2Stamina;
 	UPROPERTY(meta = (BindWidget)) UImage* ImgP1CharacterType;
 	UPROPERTY(meta = (BindWidget)) UImage* ImgP2CharacterType;
+	UPROPERTY(meta = (BindWidget)) UTextBlock* TxtP1Score;
+	UPROPERTY(meta = (BindWidget)) UTextBlock* TxtP2Score;
 
 	UFUNCTION() virtual void NativeConstruct() override;
 	

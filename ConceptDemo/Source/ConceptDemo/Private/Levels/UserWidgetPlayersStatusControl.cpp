@@ -3,22 +3,22 @@
 
 #include "Levels/UserWidgetPlayersStatusControl.h"
 
-UserWidgetPlayersStatusControl::UserWidgetPlayersStatusControl()
+UUserWidgetPlayersStatusControl::UUserWidgetPlayersStatusControl()
 {
 	this->GunAttachedStaminaBarColor = FColor(0, 0, 255, 255);
 	this->NoGunAttachedStaminaBarColor = FColor(0, 255, 0, 255);
 }
 
-UserWidgetPlayersStatusControl::~UserWidgetPlayersStatusControl()
+UUserWidgetPlayersStatusControl::~UUserWidgetPlayersStatusControl()
 {
 }
 
-void UserWidgetPlayersStatusControl::SetHealth(const float Health) const
+void UUserWidgetPlayersStatusControl::SetHealth(const float Health) const
 {
 	this->PbrHealth->SetPercent(Health);
 }
 
-void UserWidgetPlayersStatusControl::SetLives(const uint8 Lives) const
+void UUserWidgetPlayersStatusControl::SetLives(const uint8 Lives) const
 {
 	TArray<UImage*> HeartImages;
 	HeartImages.Add(this->ImgHeart1);
@@ -44,7 +44,7 @@ void UserWidgetPlayersStatusControl::SetLives(const uint8 Lives) const
 	}
 }
 
-void UserWidgetPlayersStatusControl::SetStaminaBar(const uint16 Total, const uint16 Current) const
+void UUserWidgetPlayersStatusControl::SetStaminaBar(const uint16 Total, const uint16 Current) const
 {
 	if (Total != 0)
 	{
@@ -57,7 +57,7 @@ void UserWidgetPlayersStatusControl::SetStaminaBar(const uint16 Total, const uin
 	}
 }
 
-void UserWidgetPlayersStatusControl::SetGunAttached(const bool GunAttached) const
+void UUserWidgetPlayersStatusControl::SetGunAttached(const bool GunAttached) const
 {
 	if (GunAttached)
 	{

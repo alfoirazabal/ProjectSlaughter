@@ -5,7 +5,7 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
 #include "TrainAI.h"
-#include "ElevatorLightAI.h"
+#include "Props/ElevatorLights/ElevatorLightAI.h"
 #include "SlaughterFirendsDemoConstants.h"
 #include "TrainAISpawner.generated.h"
 

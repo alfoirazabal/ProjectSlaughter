@@ -1,9 +1,9 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "ExplodingBullet.h"
+#include "Guns/Bullets/ExplodingBullet.h"
 
-#include "ConceptDemoPaperCharacter.h"
+#include "Characters/ConceptDemoPaperCharacter.h"
 #include "Components/CapsuleComponent.h"
 #include "Kismet/GameplayStatics.h"
 
@@ -21,6 +21,7 @@ AExplodingBullet::AExplodingBullet()
 	this->TriggerCapsule->InitCapsuleSize(54.5, 54.5);
 	this->TriggerCapsule->SetCollisionProfileName("Trigger");
 	this->TriggerCapsule->SetupAttachment(this->RootComponent);
+	this->TriggerCapsule->OnComponentBeginOverlap.AddDynamic(this, &AExplodingBullet::OnOverlapBegin);
 }
 
 void AExplodingBullet::BeginPlay()
@@ -54,13 +55,32 @@ void AExplodingBullet::Tick(const float DeltaSeconds)
 	this->GetOverlappingActors(OverlappingActors);
 	for (AActor* OverlappingActor : OverlappingActors)
 	{
-		AUConceptDemoPaperCharacter* Character = Cast<AUConceptDemoPaperCharacter>(OverlappingActor);
+		AConceptDemoPaperCharacter* Character = Cast<AConceptDemoPaperCharacter>(OverlappingActor);
 		if (Character)
 		{
 			if (!this->AffectedActors.Contains(Character))
 			{
 				Character->TakeDamage(this->ExplosionDamage);
 				this->AffectedActors.Add(Character);
+			}
+		}
+	}
+}
+
+void AExplodingBullet::OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
+{
+	if (OtherComp)
+	{
+		const AConceptDemoPaperPawn* TargetPawn = Cast<AConceptDemoPaperPawn>(OtherActor);
+		if (TargetPawn)
+		{
+			if (TargetPawn != this->SourceActor)
+			{
+				const AConceptDemoPaperPawn* SourcePawn = Cast<AConceptDemoPaperPawn>(this->SourceActor);
+				if (SourcePawn)
+				{
+					SourcePawn->OnEnemyDamaged.Broadcast(OtherActor, SourceActor, this, this->InitialDamage);
+				}
 			}
 		}
 	}

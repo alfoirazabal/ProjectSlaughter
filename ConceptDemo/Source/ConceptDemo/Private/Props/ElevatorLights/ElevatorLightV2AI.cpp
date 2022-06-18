@@ -1,7 +1,7 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "ElevatorLightV2AI.h"
+#include "Props/ElevatorLights/ElevatorLightV2AI.h"
 
 // Sets default values
 AElevatorLightV2AI::AElevatorLightV2AI()

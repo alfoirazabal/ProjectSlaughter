@@ -3,7 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "ConceptDemoPaperCharacter.h"
+#include "Characters/ConceptDemoPaperCharacter.h"
 #include "Engine/StaticMeshActor.h"
 #include "DangerZone.generated.h"
 
@@ -27,7 +27,7 @@ public:
 	
 	virtual void Tick(float DeltaSeconds) override;
 
-	int FindCharacterWalkSpeedIndex(const AUConceptDemoPaperCharacter* Character);
+	int FindCharacterWalkSpeedIndex(const AConceptDemoPaperCharacter* Character);
 	
 	ADangerZone();
 

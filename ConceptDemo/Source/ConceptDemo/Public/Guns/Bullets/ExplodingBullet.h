@@ -22,6 +22,7 @@ public:
 	UPROPERTY(EditAnywhere) float InflationSpeed;
 	UPROPERTY(EditAnywhere) float ExplosionDamage;
 	UPROPERTY(EditAnywhere) USoundBase* ExplosionSound;
+	UPROPERTY() AActor* SourceActor;
 	UPROPERTY() TArray<AActor*> AffectedActors;
 	float InitialDamage;
 	float CurrentDamageRadiusSize;
@@ -31,5 +32,6 @@ public:
 	
 	UPROPERTY(VisibleAnywhere, Category = "Trigger Capsule")
 	class UCapsuleComponent* TriggerCapsule;
+	UFUNCTION() void OnOverlapBegin(class UPrimitiveComponent* OverlappedComp, class AActor* OtherActor, class UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
 	
 };

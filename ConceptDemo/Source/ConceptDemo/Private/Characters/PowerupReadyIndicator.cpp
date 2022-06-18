@@ -3,7 +3,7 @@
 
 #include "Characters/PowerupReadyIndicator.h"
 
-#include "ConceptDemoPaperCharacter.h"
+#include "Characters/ConceptDemoPaperCharacter.h"
 
 APowerupReadyIndicator::APowerupReadyIndicator()
 {
@@ -18,7 +18,7 @@ void APowerupReadyIndicator::Tick(const float DeltaSeconds)
 		FVector NewLocation = this->FollowingActor->GetActorLocation();
 		NewLocation += this->FollowingRelativePosition;
 		this->SetActorLocation(NewLocation);
-		const AUConceptDemoPaperCharacter* PaperCharacter = Cast<AUConceptDemoPaperCharacter>(this->FollowingActor);
+		const AConceptDemoPaperCharacter* PaperCharacter = Cast<AConceptDemoPaperCharacter>(this->FollowingActor);
 		if (PaperCharacter)
 		{
 			const FRotator Rotation = PaperCharacter->GetFacingRotation();

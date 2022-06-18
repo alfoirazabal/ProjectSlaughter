@@ -4,21 +4,25 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
-#include "ElevatorLightV2AI.h"
-#include "ElevatorPlatform.h"
-#include "ElevatorLightSetter.generated.h"
+#include <Components/PointLightComponent.h>
+#include "ElevatorLightAI.generated.h"
 
 UCLASS()
-class CONCEPTDEMO_API AElevatorLightSetter final : public AActor
+class CONCEPTDEMO_API AElevatorLightAI final : public AActor
 {
 	GENERATED_BODY()
 	
 public:	
 	// Sets default values for this actor's properties
-	AElevatorLightSetter();
+	AElevatorLightAI();
 
-	UPROPERTY(EditAnywhere) AElevatorLightV2AI* ElevatorLight;
-	UPROPERTY(EditAnywhere) AElevatorPlatform* ElevatorPlatform;
+	UPROPERTY(EditAnywhere) bool bRedLightOn;
+	UPROPERTY(EditAnywhere) bool bYellowLightOn;
+	UPROPERTY(EditAnywhere) bool bGreenLightOn;
+
+	UPointLightComponent* RedLight;
+	UPointLightComponent* YellowLight;
+	UPointLightComponent* GreenLight;
 
 protected:
 	// Called when the game starts or when spawned

@@ -20,7 +20,8 @@ public:
 	UPROPERTY(EditAnywhere) FRotator StartupRotation;
 	UPROPERTY(EditAnywhere) float TravelVelocity;
 	UPROPERTY(EditAnywhere) float TravelDistance;
-	UPROPERTY(EditAnywhere) TSubclassOf<ASpaceShip> VehicleType;
+	UPROPERTY(EditAnywhere) TArray<TSubclassOf<ASpaceShip>> VehicleTypes;
+	UPROPERTY() TArray<TSubclassOf<ASpaceShip>> RandomVehicleTypes;
 	UPROPERTY(EditAnywhere) float SpawnMinTime;
 	UPROPERTY(EditAnywhere) float SpawnMaxTime;
 
@@ -28,9 +29,12 @@ protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
+	UFUNCTION() void FillRandomVehicleTypes();
+	UFUNCTION() TSubclassOf<ASpaceShip> GetRandomSpaceShipType();
+
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
-	void SpawnVehicle();
-	void SpawnStartupVehicles();
+	UFUNCTION() void SpawnVehicle();
+	UFUNCTION() void SpawnStartupVehicles();
 };

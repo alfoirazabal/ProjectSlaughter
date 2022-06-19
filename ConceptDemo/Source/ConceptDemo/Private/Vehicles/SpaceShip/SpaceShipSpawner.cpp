@@ -16,6 +16,13 @@ ASpaceShipSpawner::ASpaceShipSpawner()
 	this->TravelDistance = 3750;
 	this->SpawnMinTime = 3;
 	this->SpawnMaxTime = 8;
+	
+	static ConstructorHelpers::FClassFinder<ASpaceShip> SpaceShip1ClassFinder(TEXT("/Game/Props/Vehicles/SpaceShip_1/SpaceShip_1"));
+	static ConstructorHelpers::FClassFinder<ASpaceShip> SpaceShip2ClassFinder(TEXT("/Game/Props/Vehicles/SpaceShip_2_Police/Ship2_Police"));
+	this->VehicleTypes.Add(SpaceShip1ClassFinder.Class);
+	this->VehicleTypes.Add(SpaceShip2ClassFinder.Class);
+	this->VehicleTypesSpawnChances.Add(1);
+	this->VehicleTypesSpawnChances.Add(0.05);
 }
 
 // Called when the game starts or when spawned
@@ -24,39 +31,27 @@ void ASpaceShipSpawner::BeginPlay()
 	Super::BeginPlay();
 	const float RandomSpawnTime = FMath::RandRange(this->SpawnMinTime, this->SpawnMaxTime);
 	FTimerHandle TimerHandle;
-	this->FillRandomVehicleTypes();
+	
+	this->RandomSpaceShipGenerator = NewObject<UObjectWithChanceGenerator>();
+	for (int i = 0 ; i < this->VehicleTypes.Num() ; i++)
+	{
+		TSubclassOf<ASpaceShip> VehicleType = this->VehicleTypes[i];
+		if (this->VehicleTypesSpawnChances.Num() == this->VehicleTypes.Num())
+		{
+			const float SpawnChance = this->VehicleTypesSpawnChances[i];
+			this->RandomSpaceShipGenerator->AddClass(VehicleType, SpawnChance);
+		}
+		else
+		{
+			GEngine->AddOnScreenDebugMessage(783164383, 10, FColor::Red, "You need to have the same amount of spawn chances as there are vehicles: " + this->GetName());
+		}
+	}
+	this->RandomSpaceShipGenerator->BuildSpawnChances();
+	
 	this->GetWorld()->GetTimerManager().SetTimer(TimerHandle, this, &ASpaceShipSpawner::SpawnVehicle, RandomSpawnTime, false);
 	if (this->StartWithSpawnedVehicles) 
 	{
 		this->SpawnStartupVehicles();
-	}
-}
-
-void ASpaceShipSpawner::FillRandomVehicleTypes()
-{
-	float VehicleTypesProbabilitySum = 0;
-	TArray<ASpaceShip*> RandomVehicles;
-	for (int i = 0 ; i < this->VehicleTypes.Num() ; i++)
-	{
-		const TSubclassOf<ASpaceShip> CurrentVehicleType = this->VehicleTypes[i];
-		ASpaceShip* CurrentRandomVehicle = Cast<ASpaceShip>(CurrentVehicleType->GetDefaultObject());
-		if (CurrentRandomVehicle)
-		{
-			VehicleTypesProbabilitySum += CurrentRandomVehicle->SpawnChance;
-			RandomVehicles.Add(CurrentRandomVehicle);
-		}
-	}
-	this->RandomVehicleTypes.Reserve(100);
-	for (int i = 0 ; i < 100 ; i++)
-	{
-		for (int j = 0 ; j < RandomVehicles.Num() ; j++)
-		{
-			const int TimesToAdd = (RandomVehicles[j]->SpawnChance / VehicleTypesProbabilitySum) * 100;
-			for (int k = i ; k < TimesToAdd + i ; k++)
-			{
-				RandomVehicleTypes.Add(this->VehicleTypes[j]);
-			}
-		}
 	}
 }
 
@@ -66,21 +61,10 @@ void ASpaceShipSpawner::Tick(const float DeltaTime)
 	Super::Tick(DeltaTime);
 }
 
-TSubclassOf<ASpaceShip> ASpaceShipSpawner::GetRandomSpaceShipType()
-{
-	TSubclassOf<ASpaceShip> RandomVehicleType = nullptr;
-	if (this->RandomVehicleTypes.Num() > 0)
-	{
-		const int RandomPosition = FMath::RandRange(0, 100);
-		RandomVehicleType = this->RandomVehicleTypes[RandomPosition];
-	}
-	return RandomVehicleType;
-}
-
 void ASpaceShipSpawner::SpawnVehicle()
 {
 	const FTransform Transform = this->GetActorTransform();
-	const TSubclassOf<ASpaceShip> RandomSpaceShipType = this->GetRandomSpaceShipType();
+	const TSubclassOf<ASpaceShip> RandomSpaceShipType = this->RandomSpaceShipGenerator->GetRandomObjectClass();
 	if (RandomSpaceShipType)
 	{
 		ASpaceShip* NewShip = this->GetWorld()->SpawnActorDeferred<ASpaceShip>(RandomSpaceShipType, Transform, this, nullptr, ESpawnActorCollisionHandlingMethod::AlwaysSpawn);
@@ -100,30 +84,30 @@ void ASpaceShipSpawner::SpawnVehicle()
 
 void ASpaceShipSpawner::SpawnStartupVehicles() 
 {
-	if (this->RandomVehicleTypes.Num() > 0)
+	float CurrentSpawnedDistance = 0;
+	while (
+		(this->TravelVelocity > 0 && CurrentSpawnedDistance <= this->TravelDistance) ||
+		(this->TravelVelocity < 0 && CurrentSpawnedDistance >= -this->TravelDistance)
+	)
 	{
-		float CurrentSpawnedDistance = 0;
-		while (
-			(this->TravelVelocity > 0 && CurrentSpawnedDistance <= this->TravelDistance) ||
-			(this->TravelVelocity < 0 && CurrentSpawnedDistance >= -this->TravelDistance)
-		)
+		const float RandomSpawnDistance = (FMath::RandRange(this->SpawnMinTime, this->SpawnMaxTime) * this->TravelVelocity) + CurrentSpawnedDistance;
+		FVector SpawnPosition = this->GetActorLocation();
+		SpawnPosition.Y += RandomSpawnDistance;
+		const FTransform Transform = this->GetActorTransform();
+		const TSubclassOf<ASpaceShip> RandomSpaceShipType = this->RandomSpaceShipGenerator->GetRandomObjectClass();
+		if (RandomSpaceShipType)
 		{
-			const float RandomSpawnDistance = (FMath::RandRange(this->SpawnMinTime, this->SpawnMaxTime) * this->TravelVelocity) + CurrentSpawnedDistance;
-			FVector SpawnPosition = this->GetActorLocation();
-			SpawnPosition.Y += RandomSpawnDistance;
-			const FTransform Transform = this->GetActorTransform();
-			const TSubclassOf<ASpaceShip> RandomSpaceShipType = this->GetRandomSpaceShipType();
 			ASpaceShip* NewShip = this->GetWorld()->SpawnActorDeferred<ASpaceShip>(RandomSpaceShipType, Transform, this, nullptr, ESpawnActorCollisionHandlingMethod::AlwaysSpawn);
 			NewShip->StartupRotation = this->StartupRotation;
 			NewShip->TravelVelocity = this->TravelVelocity;
 			NewShip->TravelDistance = this->TravelDistance;
 			UGameplayStatics::FinishSpawningActor(NewShip, Transform);
 			NewShip->SetActorLocation(SpawnPosition);
-			CurrentSpawnedDistance += RandomSpawnDistance;
 		}
-	}
-	else
-	{
-		GEngine->AddOnScreenDebugMessage(783164382, 4, FColor::Red, "No space ship types to spawn on SpaceShipSpawner");
+		else
+		{
+			GEngine->AddOnScreenDebugMessage(783164382, 4, FColor::Red, "No space ship types to spawn on SpaceShipSpawner");
+		}
+		CurrentSpawnedDistance += RandomSpawnDistance;
 	}
 }

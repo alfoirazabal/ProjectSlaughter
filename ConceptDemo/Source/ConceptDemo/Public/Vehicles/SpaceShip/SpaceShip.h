@@ -15,7 +15,6 @@ public:
 	// Sets default values for this actor's properties
 	ASpaceShip();
 
-	UPROPERTY(EditAnywhere) float SpawnChance;
 	UPROPERTY(EditAnywhere) FRotator StartupRotation;
 	UPROPERTY(EditAnywhere) float TravelVelocity;
 	UPROPERTY(EditAnywhere) float TravelDistance;

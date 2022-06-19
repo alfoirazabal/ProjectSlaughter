@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "SpaceShip.h"
 #include "GameFramework/Actor.h"
+#include "Helpers/UObjectWithChanceGenerator.h"
 #include "SpaceShipSpawner.generated.h"
 
 UCLASS()
@@ -20,8 +21,8 @@ public:
 	UPROPERTY(EditAnywhere) FRotator StartupRotation;
 	UPROPERTY(EditAnywhere) float TravelVelocity;
 	UPROPERTY(EditAnywhere) float TravelDistance;
-	UPROPERTY(EditAnywhere) TArray<TSubclassOf<ASpaceShip>> VehicleTypes;
-	UPROPERTY() TArray<TSubclassOf<ASpaceShip>> RandomVehicleTypes;
+	UPROPERTY(EditAnywhere, Category = "Vehicle Types") TArray<TSubclassOf<ASpaceShip>> VehicleTypes;
+	UPROPERTY(EditAnywhere, Category = "Vehicle Types") TArray<float> VehicleTypesSpawnChances;
 	UPROPERTY(EditAnywhere) float SpawnMinTime;
 	UPROPERTY(EditAnywhere) float SpawnMaxTime;
 
@@ -29,8 +30,7 @@ protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
-	UFUNCTION() void FillRandomVehicleTypes();
-	UFUNCTION() TSubclassOf<ASpaceShip> GetRandomSpaceShipType();
+	UPROPERTY() UObjectWithChanceGenerator* RandomSpaceShipGenerator;
 
 public:	
 	// Called every frame

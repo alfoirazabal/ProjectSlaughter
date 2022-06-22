@@ -33,14 +33,17 @@ public:
 	UPROPERTY() UAudioComponent* TrainArrivalSoundComponent;
 	UPROPERTY(EditAnywhere) USoundBase* TrainPassingSound;
 	UPROPERTY(EditAnywhere) USoundBase* TrainOnStationSound;
+	UPROPERTY(EditAnywhere) float TrainOnStationSoundPlayDelayFromYellowLight;
 
 private:
-	void SetRedLight() const;
-	void SetYellowLight() const;
-	void SetGreenLight() const;
+	UFUNCTION() void SetRedLight() const;
+	UFUNCTION() void SetYellowLight() const;
+	UFUNCTION() void SetGreenLight() const;
 
-	float redLightOnTime;
-	float redLightTimeLeft;
+	UFUNCTION() void PlayTrainOnStationSound() const;
+
+	UPROPERTY() float redLightOnTime;
+	UPROPERTY() float redLightTimeLeft;
 
 protected:
 	// Called when the game starts or when spawned
@@ -48,8 +51,8 @@ protected:
 
 	void SpawnVehicle();
 
-	float randSpawnTime;
-	float currentSpawnTime;
+	UPROPERTY() float randSpawnTime;
+	UPROPERTY() float currentSpawnTime;
 
 	SlaughterFirendsDemoConstants* demoConstantsHelper;
 

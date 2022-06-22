@@ -9,6 +9,7 @@ ARabbitPaperCharacter::ARabbitPaperCharacter()
 	this->SequentialTimesJumped = 0;
 	Super::SpecialPowerLoadTime = 0;
 	this->PlayerDescription = FString("RABBIT").Append(LINE_TERMINATOR).Append("Can double jump");
+	this->SpecialPowerReadyPropShown = true;
 }
 
 void ARabbitPaperCharacter::DropGun()
@@ -21,11 +22,11 @@ void ARabbitPaperCharacter::Fire()
 {
 	if (IsValid(this->AttachedGun))
 	{
-		this->AttachedGun->Fire();
+		this->AttachedGun->Fire(this);
 	}
 	if (IsValid(this->AttachedGun))
 	{
-		this->CharacterHUD->SetStaminaBar(this->AttachedGun->ShotsCount, this->AttachedGun->ShotsLeft);
+		this->UserWidgetPlayersStatusControl->SetStaminaBar(this->AttachedGun->ShotsCount, this->AttachedGun->ShotsLeft);
 	}
 }
 

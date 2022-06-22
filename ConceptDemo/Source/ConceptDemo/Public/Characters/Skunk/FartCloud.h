@@ -3,7 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "ConceptDemoPaperCharacter.h"
+#include "Characters/ConceptDemoPaperCharacter.h"
 #include "Characters/CharacterPowerProp.h"
 #include "FartCloud.generated.h"
 
@@ -16,7 +16,7 @@ public:
 	// Sets default values for this actor's properties
 	AFartCloud();
 
-	UPROPERTY() AUConceptDemoPaperCharacter* SkunkFartSource;
+	UPROPERTY() AConceptDemoPaperCharacter* SkunkFartSource;
 	UPROPERTY(EditAnywhere) float AliveTime;
 	UPROPERTY() float AliveTimeLeft;
 	UPROPERTY(EditAnywhere) float InitialMovementSlowdownRatio;
@@ -38,7 +38,7 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
-	int FindCharacterWalkSpeedIndex(const AUConceptDemoPaperCharacter* Character);
+	int FindCharacterWalkSpeedIndex(const AConceptDemoPaperCharacter* Character);
 
 	UPROPERTY(VisibleAnywhere, Category = "Trigger Capsule")
 	class UCapsuleComponent* TriggerCapsule;

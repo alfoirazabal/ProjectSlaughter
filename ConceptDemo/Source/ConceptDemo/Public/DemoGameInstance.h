@@ -3,7 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "ConceptDemoPaperCharacter.h"
+#include "Characters/ConceptDemoPaperCharacter.h"
 #include "Engine/GameInstance.h"
 #include "DemoGameInstance.generated.h"
 
@@ -11,15 +11,22 @@
  * 
  */
 UCLASS()
-class CONCEPTDEMO_API UDemoGameInstance : public UGameInstance
+class CONCEPTDEMO_API UDemoGameInstance final : public UGameInstance
 {
 	GENERATED_BODY()
 
 public:
-	UPROPERTY() TSubclassOf<AUConceptDemoPaperCharacter> SelectedPlayer1Type;
-	UPROPERTY() TSubclassOf<AUConceptDemoPaperCharacter> SelectedPlayer2Type;
+
+	UDemoGameInstance();
+	
+	UPROPERTY() TSubclassOf<AConceptDemoPaperCharacter> SelectedPlayer1Type;
+	UPROPERTY() TSubclassOf<AConceptDemoPaperCharacter> SelectedPlayer2Type;
 	UPROPERTY() FText Player1Name;
 	UPROPERTY() FText Player2Name;
-	UPROPERTY() uint8 WinningPlayerNumber;
+	UPROPERTY() uint8 WinnerSurvivorPlayerNumber;
+	UPROPERTY() uint8 WinnerScorePlayerNumber;
+	UPROPERTY() float Player1Score;
+	UPROPERTY() float Player2Score;
+	UPROPERTY(EditAnywhere) bool UseControllerForPlayer2;
 	
 };

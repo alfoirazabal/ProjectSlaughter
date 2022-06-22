@@ -15,11 +15,11 @@ void ASkunkPaperCharacter::Fire()
 {
 	if (IsValid(this->AttachedGun))
 	{
-		this->AttachedGun->Fire();
+		this->AttachedGun->Fire(this);
 	}
 	if (IsValid(this->AttachedGun))
 	{
-		this->CharacterHUD->SetStaminaBar(this->AttachedGun->ShotsCount, this->AttachedGun->ShotsLeft);
+		this->UserWidgetPlayersStatusControl->SetStaminaBar(this->AttachedGun->ShotsCount, this->AttachedGun->ShotsLeft);
 	}
 }
 
@@ -31,15 +31,18 @@ void ASkunkPaperCharacter::UsePower()
 		{
 			FVector SpawnLocation = this->GetActorLocation();
 			SpawnLocation.X += 10;
-			AFartCloud* FartCloud = this->GetWorld()->SpawnActor<AFartCloud>(this->SkunkFartCloud, SpawnLocation, this->GetActorRotation());
+			FTransform Transform = FTransform::Identity;
+			Transform.SetLocation(SpawnLocation);
+			Transform.CopyRotation(this->GetTransform());
+			AFartCloud* FartCloud = this->GetWorld()->SpawnActorDeferred<AFartCloud>(this->SkunkFartCloud, Transform, this, this, ESpawnActorCollisionHandlingMethod::AlwaysSpawn);
 			FartCloud->SkunkFartSource = this;
+			UGameplayStatics::FinishSpawningActor(FartCloud, Transform);
 		}
 		else
 		{
 			GEngine->AddOnScreenDebugMessage(18572334, 2, FColor::Red, "Fart cloud not set for Skunk: " + this->GetName());
 		}
-		UGameplayStatics::SpawnSound2D(this->GetWorld(), this->PowerSound);
-		this->CurrentSpecialPowerLoadTime = 0;
+		Super::UsePower();
 	}
 }
 

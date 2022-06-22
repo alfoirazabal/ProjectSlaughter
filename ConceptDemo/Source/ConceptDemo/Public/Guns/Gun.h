@@ -4,7 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
-#include "Bullet.h"
+#include "Guns/Bullets/Bullet.h"
 #include "SlaughterFirendsDemoConstants.h"
 #include "Gun.generated.h"
 
@@ -30,6 +30,8 @@ public:
 	// Sets default values for this actor's properties
 	AGun();
 	UPROPERTY(EditAnywhere) bool bRotate;
+	UPROPERTY(EditAnywhere) bool ShouldRotate;
+	UPROPERTY(EditAnywhere) FVector RelativeAttachLocation;
 	UPROPERTY(EditAnywhere) uint8 RotationSpeed;
 	UPROPERTY(EditAnywhere) uint8 ShotsCount;
 	UPROPERTY(EditAnywhere) int32 TimeBetweenShots;
@@ -39,6 +41,7 @@ public:
 	UPROPERTY(EditAnywhere) int32 ShotLossTime;	// Time by which a bullet is lost. If 0 the gun shall be destroyed
 
 	UPROPERTY(EditAnywhere) FVector BulletSpawnRelativeLocation;
+	UPROPERTY(EditAnywhere) FVector RelativeAttachedSize;
 
 	UPROPERTY(EditAnywhere) TSubclassOf<ABullet> BulletClass;
 
@@ -53,6 +56,9 @@ public:
 
 	UPROPERTY(EditAnywhere, Category="Sounds") USoundBase* GunGrabSound;
 
+	UPROPERTY(EditAnywhere, Category="GunProps") TSubclassOf<AActor> SparklesType;
+	UPROPERTY() AActor* Sparkles;
+
 	FOnShotLost ShotLost;
 	FOnGunDead GunDead;
 
@@ -62,12 +68,18 @@ protected:
 	int32 CurrentTimeBetweenShots;
 	int32 CurrentShotLossTime;
 
+	UFUNCTION() void SpawnSparkles();
+	UFUNCTION() void DestroySparkles() const;
+
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 	void SetAttached();
 	void SetDetached();
-	UFUNCTION() void Fire();
+	UFUNCTION() void Fire(AActor* SourceActor);
 	UFUNCTION() void Respawn();
+
+	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable) void OnGunAttatched();
+	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable) void OnGunDetached();
 
 };

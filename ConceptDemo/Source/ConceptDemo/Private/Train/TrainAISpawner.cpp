@@ -26,6 +26,8 @@ ATrainAISpawner::ATrainAISpawner()
 	this->trainClass = nullptr;
 	this->trainTrafficLights = nullptr;
 
+	this->TrainOnStationSoundPlayDelayFromYellowLight = 4;
+
 	this->demoConstantsHelper = new SlaughterFirendsDemoConstants();
 }
 
@@ -54,6 +56,11 @@ void ATrainAISpawner::SetGreenLight() const
 		this->trainTrafficLights->bYellowLightOn = false;
 		this->trainTrafficLights->bRedLightOn = false;
 	}
+}
+
+void ATrainAISpawner::PlayTrainOnStationSound() const
+{
+	if (this->TrainOnStationSound) UGameplayStatics::PlaySound2D(this->GetWorld(), this->TrainOnStationSound);
 }
 
 // Called when the game starts or when spawned
@@ -106,7 +113,6 @@ void ATrainAISpawner::Tick(const float DeltaTime)
 			if (this->trainTrafficLights && !this->trainTrafficLights->bRedLightOn)
 			{
 				this->SetRedLight();
-				if (this->TrainOnStationSound) UGameplayStatics::PlaySound2D(this->GetWorld(), this->TrainOnStationSound);
 			}
 			this->redLightTimeLeft--;
 		}
@@ -116,6 +122,10 @@ void ATrainAISpawner::Tick(const float DeltaTime)
 				{
 					this->SetYellowLight();
 					if (this->TrainPassingSound) UGameplayStatics::PlaySound2D(this->GetWorld(), this->TrainPassingSound);
+					FTimerHandle TimerHandle;
+					this->GetWorld()->GetTimerManager().SetTimer(
+						TimerHandle, this, &ATrainAISpawner::PlayTrainOnStationSound, this->TrainOnStationSoundPlayDelayFromYellowLight, false
+					);
 				}
 			}
 			else {

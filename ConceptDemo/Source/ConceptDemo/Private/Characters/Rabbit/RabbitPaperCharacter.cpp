@@ -49,12 +49,9 @@ void ARabbitPaperCharacter::Landed(const FHitResult& Hit)
 void ARabbitPaperCharacter::Jump()
 {
 	this->SequentialTimesJumped++;
-	if (this->SequentialTimesJumped == this->SequentialJumps)
+	if (this->CurrentPowerUpReadyIndicator)
 	{
-		if (this->CurrentPowerUpReadyIndicator)
-		{
-			this->CurrentPowerUpReadyIndicator->Destroy();
-		}
+		this->CurrentPowerUpReadyIndicator->Destroy();
 	}
 	Super::Jump();
 }

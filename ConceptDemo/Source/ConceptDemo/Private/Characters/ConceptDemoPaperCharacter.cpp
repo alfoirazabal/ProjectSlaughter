@@ -419,11 +419,14 @@ void AConceptDemoPaperCharacter::Tick(const float DeltaTime)
 			const FVector PowerUpReadyPropPosition = this->GetActorLocation();
 			FTransform Transform = this->GetTransform();
 			Transform.SetLocation(PowerUpReadyPropPosition);
-			APowerupReadyProp* PowerUpReadyProp = this->GetWorld()->SpawnActorDeferred<APowerupReadyProp>(
-				this->PowerUpReadyPropType, Transform, this, this, ESpawnActorCollisionHandlingMethod::AlwaysSpawn
-			);
-			PowerUpReadyProp->ActorToFollow = this;
-			UGameplayStatics::FinishSpawningActor(PowerUpReadyProp, Transform);
+			if (this->PowerUpReadyPropType)
+			{
+				APowerupReadyProp* PowerUpReadyProp = this->GetWorld()->SpawnActorDeferred<APowerupReadyProp>(
+					this->PowerUpReadyPropType, Transform, this, this, ESpawnActorCollisionHandlingMethod::AlwaysSpawn
+				);
+				PowerUpReadyProp->ActorToFollow = this;
+				UGameplayStatics::FinishSpawningActor(PowerUpReadyProp, Transform);
+			}
 			UGameplayStatics::SpawnSound2D(this->GetWorld(), this->PowerUpReadySound);
 			if (!this->CurrentPowerUpReadyIndicator && this->PowerUpReadyIndicatorType)
 			{

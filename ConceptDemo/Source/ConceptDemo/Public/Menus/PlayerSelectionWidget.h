@@ -30,27 +30,12 @@ public:
 	UPROPERTY(EditAnywhere) TArray<UTexture2D*> BackgroundTextureSequence;
 	UPROPERTY(EditAnywhere) float BackgroundTextureSequenceFlipTime;
 
-	UPROPERTY() TArray<UButton*> P1Buttons;
 	UPROPERTY() TArray<UImage*> P1CharacterImages;
-	UPROPERTY() TArray<UButton*> P2Buttons;
 	UPROPERTY() TArray<UImage*> P2CharacterImages;
 	UPROPERTY() TArray<UImage*> P1SelectionMarkerImages;
 	UPROPERTY() TArray<UImage*> P2SelectionMarkerImages;
 
     UPROPERTY(meta = (BindWidget)) UImage* BackgroundImage;
-
-	UPROPERTY(meta = (BindWidget)) UButton* BtnP1Pos1;
-	UPROPERTY(meta = (BindWidget)) UButton* BtnP1Pos2;
-	UPROPERTY(meta = (BindWidget)) UButton* BtnP1Pos3;
-	UPROPERTY(meta = (BindWidget)) UButton* BtnP1Pos4;
-	UPROPERTY(meta = (BindWidget)) UButton* BtnP1Pos5;
-	UPROPERTY(meta = (BindWidget)) UButton* BtnP1Pos6;
-	UPROPERTY(meta = (BindWidget)) UButton* BtnP2Pos1;
-	UPROPERTY(meta = (BindWidget)) UButton* BtnP2Pos2;
-	UPROPERTY(meta = (BindWidget)) UButton* BtnP2Pos3;
-	UPROPERTY(meta = (BindWidget)) UButton* BtnP2Pos4;
-	UPROPERTY(meta = (BindWidget)) UButton* BtnP2Pos5;
-	UPROPERTY(meta = (BindWidget)) UButton* BtnP2Pos6;
 
 	UPROPERTY(meta = (BindWidget)) UImage* ImgP1Pos1;
 	UPROPERTY(meta = (BindWidget)) UImage* ImgP1Pos2;
@@ -96,19 +81,6 @@ protected:
 	UPROPERTY() int CurrentFlippingImageIndex;
 	UPROPERTY() FTimerHandle BackgroundImageFlippingTimer; 
 	UFUNCTION() void SetBackgroundImageFlipping();
-
-	UFUNCTION() void SelectP1Pos1();
-	UFUNCTION() void SelectP1Pos2();
-	UFUNCTION() void SelectP1Pos3();
-	UFUNCTION() void SelectP1Pos4();
-	UFUNCTION() void SelectP1Pos5();
-	UFUNCTION() void SelectP1Pos6();
-	UFUNCTION() void SelectP2Pos1();
-	UFUNCTION() void SelectP2Pos2();
-	UFUNCTION() void SelectP2Pos3();
-	UFUNCTION() void SelectP2Pos4();
-	UFUNCTION() void SelectP2Pos5();
-	UFUNCTION() void SelectP2Pos6();
 
 	UFUNCTION() void P1SelectLeftwardsPlayer();
 	UFUNCTION() void P1SelectUpwardsPlayer();

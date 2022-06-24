@@ -44,18 +44,6 @@ void UPlayerSelectionWidget::NativeConstruct()
 		this->BackgroundImageFlippingTimer, this, &UPlayerSelectionWidget::SetBackgroundImageFlipping,
 		this->BackgroundTextureSequenceFlipTime, true
 	);
-	this->P1Buttons.Add(this->BtnP1Pos1);
-	this->P1Buttons.Add(this->BtnP1Pos2);
-	this->P1Buttons.Add(this->BtnP1Pos3);
-	this->P1Buttons.Add(this->BtnP1Pos4);
-	this->P1Buttons.Add(this->BtnP1Pos5);
-	this->P1Buttons.Add(this->BtnP1Pos6);
-	this->P2Buttons.Add(this->BtnP2Pos1);
-	this->P2Buttons.Add(this->BtnP2Pos2);
-	this->P2Buttons.Add(this->BtnP2Pos3);
-	this->P2Buttons.Add(this->BtnP2Pos4);
-	this->P2Buttons.Add(this->BtnP2Pos5);
-	this->P2Buttons.Add(this->BtnP2Pos6);
 	this->P1CharacterImages.Add(this->ImgP1Pos1);
 	this->P1CharacterImages.Add(this->ImgP1Pos2);
 	this->P1CharacterImages.Add(this->ImgP1Pos3);
@@ -85,18 +73,6 @@ void UPlayerSelectionWidget::NativeConstruct()
 		this->P1CharacterImages[i]->SetBrushFromTexture(this->P1Characters[i]->CharacterFaceImage);
 		this->P2CharacterImages[i]->SetBrushFromTexture(this->P2Characters[i]->CharacterFaceImage);
 	}
-	this->P1Buttons[0]->OnClicked.AddDynamic(this, &UPlayerSelectionWidget::SelectP1Pos1);
-	this->P1Buttons[1]->OnClicked.AddDynamic(this, &UPlayerSelectionWidget::SelectP1Pos2);
-	this->P1Buttons[2]->OnClicked.AddDynamic(this, &UPlayerSelectionWidget::SelectP1Pos3);
-	this->P1Buttons[3]->OnClicked.AddDynamic(this, &UPlayerSelectionWidget::SelectP1Pos4);
-	this->P1Buttons[4]->OnClicked.AddDynamic(this, &UPlayerSelectionWidget::SelectP1Pos5);
-	this->P1Buttons[5]->OnClicked.AddDynamic(this, &UPlayerSelectionWidget::SelectP1Pos6);
-	this->P2Buttons[0]->OnClicked.AddDynamic(this, &UPlayerSelectionWidget::SelectP2Pos1);
-	this->P2Buttons[1]->OnClicked.AddDynamic(this, &UPlayerSelectionWidget::SelectP2Pos2);
-	this->P2Buttons[2]->OnClicked.AddDynamic(this, &UPlayerSelectionWidget::SelectP2Pos3);
-	this->P2Buttons[3]->OnClicked.AddDynamic(this, &UPlayerSelectionWidget::SelectP2Pos4);
-	this->P2Buttons[4]->OnClicked.AddDynamic(this, &UPlayerSelectionWidget::SelectP2Pos5);
-	this->P2Buttons[5]->OnClicked.AddDynamic(this, &UPlayerSelectionWidget::SelectP2Pos6);
 	this->Player1Character = this->P1Characters[FMath::RandRange(0, this->P1Characters.Num() - 1)];
 	this->Player2Character = this->P2Characters[FMath::RandRange(0, this->P2Characters.Num() - 1)];
 	this->DisplaySelectedP1();
@@ -147,68 +123,6 @@ void UPlayerSelectionWidget::SetBackgroundImageFlipping()
 		}
 		this->BackgroundImage->SetBrushFromTexture(this->BackgroundTextureSequence[this->CurrentFlippingImageIndex]);
 	}
-}
-
-void UPlayerSelectionWidget::SelectP1Pos1()
-{
-	this->Player1Character = this->P1Characters[0];
-	DisplaySelectedP1();
-}
-void UPlayerSelectionWidget::SelectP1Pos2()
-{
-	this->Player1Character = this->P1Characters[1];
-	DisplaySelectedP1();
-}
-void UPlayerSelectionWidget::SelectP1Pos3()
-{
-	this->Player1Character = this->P1Characters[2];
-	DisplaySelectedP1();
-}
-void UPlayerSelectionWidget::SelectP1Pos4()
-{
-	this->Player1Character = this->P1Characters[3];
-	DisplaySelectedP1();
-}
-void UPlayerSelectionWidget::SelectP1Pos5()
-{
-	this->Player1Character = this->P1Characters[4];
-	DisplaySelectedP1();
-}
-void UPlayerSelectionWidget::SelectP1Pos6()
-{
-	this->Player1Character = this->P1Characters[5];
-	DisplaySelectedP1();
-}
-
-void UPlayerSelectionWidget::SelectP2Pos1()
-{
-	this->Player2Character = this->P2Characters[0];
-	DisplaySelectedP2();
-}
-void UPlayerSelectionWidget::SelectP2Pos2()
-{
-	this->Player2Character = this->P2Characters[1];
-	DisplaySelectedP2();
-}
-void UPlayerSelectionWidget::SelectP2Pos3()
-{
-	this->Player2Character = this->P2Characters[2];
-	DisplaySelectedP2();
-}
-void UPlayerSelectionWidget::SelectP2Pos4()
-{
-	this->Player2Character = this->P2Characters[3];
-	DisplaySelectedP2();
-}
-void UPlayerSelectionWidget::SelectP2Pos5()
-{
-	this->Player2Character = this->P2Characters[4];
-	DisplaySelectedP2();
-}
-void UPlayerSelectionWidget::SelectP2Pos6()
-{
-	this->Player2Character = this->P2Characters[5];
-	DisplaySelectedP2();
 }
 
 void UPlayerSelectionWidget::P1SelectLeftwardsPlayer()

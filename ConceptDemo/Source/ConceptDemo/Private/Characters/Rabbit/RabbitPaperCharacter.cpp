@@ -3,6 +3,9 @@
 
 #include "Characters/Rabbit/RabbitPaperCharacter.h"
 
+#include "PaperFlipbookComponent.h"
+#include "Kismet/GameplayStatics.h"
+
 ARabbitPaperCharacter::ARabbitPaperCharacter()
 {
 	this->SequentialJumps = 2;
@@ -10,6 +13,12 @@ ARabbitPaperCharacter::ARabbitPaperCharacter()
 	Super::SpecialPowerLoadTime = 0;
 	this->PlayerDescription = FString("RABBIT").Append(LINE_TERMINATOR).Append("Can double jump");
 	this->SpecialPowerReadyPropShown = true;
+}
+
+void ARabbitPaperCharacter::BeginPlay()
+{
+	Super::BeginPlay();
+	this->SpawnPowerUpReadyIndicator();
 }
 
 void ARabbitPaperCharacter::DropGun()
@@ -33,16 +42,44 @@ void ARabbitPaperCharacter::Fire()
 void ARabbitPaperCharacter::Landed(const FHitResult& Hit)
 {
 	this->SequentialTimesJumped = 0;
+	this->SpawnPowerUpReadyIndicator();
 	Super::Landed(Hit);
 }
 
 void ARabbitPaperCharacter::Jump()
 {
 	this->SequentialTimesJumped++;
+	if (this->CurrentPowerUpReadyIndicator)
+	{
+		this->CurrentPowerUpReadyIndicator->Destroy();
+	}
 	Super::Jump();
 }
 
 bool ARabbitPaperCharacter::CanJumpInternal_Implementation() const
 {
 	return this->SequentialTimesJumped <= this->SequentialJumps;
+}
+
+void ARabbitPaperCharacter::SpawnPowerUpReadyIndicator()
+{
+	if (this->CurrentPowerUpReadyIndicator)
+	{
+		this->CurrentPowerUpReadyIndicator->Destroy();
+	}
+	if (this->PowerUpReadyIndicatorType)
+	{
+		APowerupReadyIndicator* PowerUpReadyIndicator = this->GetWorld()->SpawnActor<APowerupReadyIndicator>(this->PowerUpReadyIndicatorType, this->GetActorLocation(), this->GetActorRotation());
+		if (PowerUpReadyIndicator)
+		{
+			PowerUpReadyIndicator->FollowingActor = this;
+			PowerUpReadyIndicator->FollowingRelativePosition = this->PowerUpReadyIndicatorRelativeLocation;
+			PowerUpReadyIndicator->GetRenderComponent()->SetFlipbook(this->PowerUpReadyIndicatorFlipBook);
+			this->CurrentPowerUpReadyIndicator = PowerUpReadyIndicator;
+		}
+		else
+		{
+			GEngine->AddOnScreenDebugMessage(192857125, 2, FColor::Red, "Failed to spawn Rabbit PowerUp Ready Indicator for: " + this->GetName());
+		}
+	}
 }

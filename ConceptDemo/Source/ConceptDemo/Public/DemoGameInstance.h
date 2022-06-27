@@ -10,7 +10,7 @@
 /**
  * 
  */
-UCLASS()
+UCLASS(Config=Settings)
 class CONCEPTDEMO_API UDemoGameInstance final : public UGameInstance
 {
 	GENERATED_BODY()
@@ -27,6 +27,6 @@ public:
 	UPROPERTY() uint8 WinnerScorePlayerNumber;
 	UPROPERTY() float Player1Score;
 	UPROPERTY() float Player2Score;
-	UPROPERTY(EditAnywhere) bool UseControllerForPlayer2;
+	UPROPERTY(EditAnywhere, Config) bool UseControllerForPlayer2;
 	
 };

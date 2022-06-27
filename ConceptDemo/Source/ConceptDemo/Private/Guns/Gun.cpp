@@ -143,16 +143,16 @@ void AGun::Fire(AActor* SourceActor) {
 			else if (this->FacingDirection == EFacing_Direction::Right) {
 				bulletLocation.Y += this->BulletSpawnRelativeLocation.Y;
 			}
-			ABullet* Bullet = this->GetWorld()->SpawnActor<ABullet>(this->BulletClass, bulletLocation, this->GetActorRotation());
-			if (Bullet)
-			{
-				Bullet->SourceActor = SourceActor;
-				Bullet->SourceGun = this;
-				Bullet->FacingDirection = this->FacingDirection;
-				Bullet->TravelSpeed = 15;
-				Bullet->MaxTravelDistance = 5000;
-				Bullet->BulletDamage = this->ShotDamage;
-			}
+			FTransform Transform = this->GetActorTransform();
+			Transform.SetLocation(bulletLocation);
+			ABullet* Bullet = this->GetWorld()->SpawnActorDeferred<ABullet>(this->BulletClass, Transform, this, nullptr, ESpawnActorCollisionHandlingMethod::AlwaysSpawn);
+			Bullet->SourceActor = SourceActor;
+			Bullet->SourceGun = this;
+			Bullet->FacingDirection = this->FacingDirection;
+			Bullet->TravelSpeed = 15;
+			Bullet->MaxTravelDistance = 5000;
+			Bullet->BulletDamage = this->ShotDamage;
+			UGameplayStatics::FinishSpawningActor(Bullet, Transform);
 			this->CurrentTimeBetweenShots = this->TimeBetweenShots;
 			this->ShotsLeft--;
 		}

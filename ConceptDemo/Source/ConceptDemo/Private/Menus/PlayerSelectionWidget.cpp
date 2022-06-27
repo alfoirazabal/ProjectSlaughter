@@ -222,6 +222,7 @@ void UPlayerSelectionWidget::DisplaySelectedP1()
 			this->P1SelectionMarkerImages[i]->SetVisibility(ESlateVisibility::Hidden);
 		}
 	}
+	this->ImgP1Body->SetBrushFromTexture(this->Player1Character->CharacterImage);
 }
 
 void UPlayerSelectionWidget::DisplaySelectedP2()
@@ -239,4 +240,5 @@ void UPlayerSelectionWidget::DisplaySelectedP2()
 			this->P2SelectionMarkerImages[i]->SetVisibility(ESlateVisibility::Hidden);
 		}
 	}
+	this->ImgP2Body->SetBrushFromTexture(this->Player2Character->CharacterImage);
 }

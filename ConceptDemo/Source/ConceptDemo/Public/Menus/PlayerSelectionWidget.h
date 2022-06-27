@@ -63,6 +63,9 @@ public:
 	UPROPERTY(meta = (BindWidget)) UImage* ImgSelectedP2Pos5;
 	UPROPERTY(meta = (BindWidget)) UImage* ImgSelectedP2Pos6;
 
+	UPROPERTY(meta = (BindWidget)) UImage* ImgP1Body;
+	UPROPERTY(meta = (BindWidget)) UImage* ImgP2Body;
+
 	UPROPERTY(meta = (BindWidget)) URichTextBlock* RichTextBlockPlayer1Description;
 	UPROPERTY(meta = (BindWidget)) URichTextBlock* RichTextBlockPlayer2Description;
 	UPROPERTY(meta = (BindWidget)) UEditableTextBox* EditableTextBoxPlayer1Name;

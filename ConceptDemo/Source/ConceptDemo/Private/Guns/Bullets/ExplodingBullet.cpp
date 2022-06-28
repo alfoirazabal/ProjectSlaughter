@@ -79,7 +79,8 @@ void AExplodingBullet::OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActo
 				const AConceptDemoPaperPawn* SourcePawn = Cast<AConceptDemoPaperPawn>(this->SourceActor);
 				if (SourcePawn)
 				{
-					SourcePawn->OnEnemyDamaged.Broadcast(OtherActor, SourceActor, this, this->InitialDamage);
+					const int EnemyDamageScore = this->InitialDamage * 100;
+					SourcePawn->OnEnemyDamaged.Broadcast(OtherActor, SourceActor, this, EnemyDamageScore);
 				}
 			}
 		}

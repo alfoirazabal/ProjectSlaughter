@@ -25,8 +25,8 @@ public:
 	UPROPERTY() FText Player2Name;
 	UPROPERTY() uint8 WinnerSurvivorPlayerNumber;
 	UPROPERTY() uint8 WinnerScorePlayerNumber;
-	UPROPERTY() float Player1Score;
-	UPROPERTY() float Player2Score;
+	UPROPERTY() int Player1Score;
+	UPROPERTY() int Player2Score;
 	UPROPERTY(EditAnywhere, Config) bool UseControllerForPlayer2;
 	
 };

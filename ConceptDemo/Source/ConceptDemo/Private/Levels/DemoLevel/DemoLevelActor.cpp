@@ -18,8 +18,6 @@ ADemoLevelActor::ADemoLevelActor()
 	this->GunsSpawnCheckTimeInSeconds = 5;
 	this->LifeCollectibleSpawnTimeInSeconds = 15;
 	this->LifeCollectibleSpawnChance = 0.95;
-	this->PlayersScoreFormattingOptions.MinimumFractionalDigits = 2;
-	this->PlayersScoreFormattingOptions.MaximumFractionalDigits = 2;
 	static ConstructorHelpers::FClassFinder<UUserWidgetPlayersStatus> UserWidgetPLayerStatusClassFinder(TEXT("/Game/Widgets/PlayersScoreWidget"));
 	this->UserWidgetPlayerStatusClass = UserWidgetPLayerStatusClassFinder.Class;
 }
@@ -371,7 +369,7 @@ void ADemoLevelActor::ExitLevel()
 	UGameplayStatics::OpenLevel(this, "MainMenu");
 }
 
-void ADemoLevelActor::OnPlayerDamagedPlayer(AActor* TargetedPawn, AActor* SourcePawn, AActor* Asset, const float DamageScore)
+void ADemoLevelActor::OnPlayerDamagedPlayer(AActor* TargetedPawn, AActor* SourcePawn, AActor* Asset, const int DamageScore)
 {
 	AConceptDemoPaperPawn* ConceptDemoSourcePawn = Cast<AConceptDemoPaperPawn>(SourcePawn);
 	const AConceptDemoPaperPawn* ConceptDemoTargetPawn = Cast<AConceptDemoPaperPawn>(TargetedPawn);
@@ -389,7 +387,7 @@ void ADemoLevelActor::OnPlayerDamagedPlayer(AActor* TargetedPawn, AActor* Source
 			{
 				PlayerScoreText = this->UserWidgetPlayersStatus->TxtP2Score;
 			}
-			PlayerScoreText->SetText(FText::AsNumber(ConceptDemoSourcePawn->Score, &this->PlayersScoreFormattingOptions));
+			PlayerScoreText->SetText(FText::AsNumber(ConceptDemoSourcePawn->Score));
 		}
 	}
 }

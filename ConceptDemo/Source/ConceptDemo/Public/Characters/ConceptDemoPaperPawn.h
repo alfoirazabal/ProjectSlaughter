@@ -7,7 +7,7 @@
 #include "SlaughterFirendsDemoConstants.h"
 #include "ConceptDemoPaperPawn.generated.h"
 
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_FourParams(FOnEnemyDamaged, AActor*, TargetPawn, AActor*, SourcePawn, AActor*, Asset, float, DamageScore);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_FourParams(FOnEnemyDamaged, AActor*, TargetPawn, AActor*, SourcePawn, AActor*, Asset, int, DamageScore);
 
 UCLASS()
 class CONCEPTDEMO_API AConceptDemoPaperPawn : public APaperCharacter
@@ -27,7 +27,7 @@ public:
 	UFUNCTION() static FRotator GetRightRotator();
 	UFUNCTION() static FRotator GetLeftRotator();
 
-	UPROPERTY() float Score;
+	UPROPERTY() int Score;
 	UPROPERTY() FOnEnemyDamaged OnEnemyDamaged;
 	
 	UPROPERTY() FVector InitialPosition;

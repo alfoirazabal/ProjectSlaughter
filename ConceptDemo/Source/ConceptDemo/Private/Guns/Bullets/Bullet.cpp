@@ -102,7 +102,8 @@ void ABullet::OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor* OtherA
 				const AConceptDemoPaperPawn* SourcePawn = Cast<AConceptDemoPaperPawn>(this->SourceActor);
 				if (SourcePawn)
 				{
-					SourcePawn->OnEnemyDamaged.Broadcast(Character, SourceActor, this, this->BulletDamage);
+					const int EnemyDamageScore = this->BulletDamage * 100;
+					SourcePawn->OnEnemyDamaged.Broadcast(Character, SourceActor, this, EnemyDamageScore);
 				}
 				this->DestroyOrExplodeBullet();
 			}

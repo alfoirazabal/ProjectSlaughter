@@ -83,7 +83,8 @@ void AFartCloud::OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor* Oth
 			{
 				if (this->FindCharacterWalkSpeedIndex(Character) == -1)
 				{
-					this->SkunkFartSource->OnEnemyDamaged.Broadcast(Character, this->SkunkFartSource, this, this->DamageScore);
+					const int EnemyDamageScore = this->DamageScore * 100;
+					this->SkunkFartSource->OnEnemyDamaged.Broadcast(Character, this->SkunkFartSource, this, EnemyDamageScore);
 					FCharacterDefaultWalkSpeeds CharacterDefaultWalkSpeed;
 					CharacterDefaultWalkSpeed.Character = Character;
 					CharacterDefaultWalkSpeed.DefaultWalkSpeed = Character->GetCharacterMovement()->MaxWalkSpeed;

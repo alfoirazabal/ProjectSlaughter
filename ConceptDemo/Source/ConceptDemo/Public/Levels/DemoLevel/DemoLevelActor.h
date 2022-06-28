@@ -43,7 +43,6 @@ public:
 	UPROPERTY(EditAnywhere, Category = "Music") UAudioComponent* LevelMusicComponent;
 	UPROPERTY(EditAnywhere, Category = "Music") USoundBase* BackgroundMusic;
 	UPROPERTY() int CurrentBackgroundMusicPlayingIndex;
-	FNumberFormattingOptions PlayersScoreFormattingOptions;
 
 	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable) void OnGunSpawned(AGun* Gun);
 	
@@ -78,5 +77,5 @@ protected:
 	UFUNCTION() void ReactToGunDeath(AGun* Gun);
 	UFUNCTION() void ExitLevel();
 
-	UFUNCTION() void OnPlayerDamagedPlayer(AActor* TargetedPawn, AActor* SourcePawn, AActor* Asset, float DamageScore);
+	UFUNCTION() void OnPlayerDamagedPlayer(AActor* TargetedPawn, AActor* SourcePawn, AActor* Asset, int DamageScore);
 };

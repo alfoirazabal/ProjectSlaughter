@@ -39,7 +39,7 @@ namespace Slaughter_Friends_Launcher.Logic
             if (!File.Exists(this.SettingsFilePath))
             {
                 Directory.CreateDirectory(localAppDataPath + "\\" + settingsPath);
-                string defaultConfigurationText = "[/Script/ConceptDemo.DemoGameInstance]\r\nUseControllerForPlayer2 = 1";
+                string defaultConfigurationText = "[/Script/ConceptDemo.DemoGameInstance]\r\nUseControllerForPlayer2=0";
                 File.WriteAllText(this.SettingsFilePath, defaultConfigurationText);
             }
             this.SettingsFileLines = this.ReadSettingsFile();

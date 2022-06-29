@@ -18,6 +18,7 @@ public:
 	// Sets default values for this pawn's properties
 	AConceptDemoPaperPawn();
 
+	UPROPERTY() bool Frozen;
 	UPROPERTY() bool Immune;
 	UPROPERTY() bool bFallingDeath;
 

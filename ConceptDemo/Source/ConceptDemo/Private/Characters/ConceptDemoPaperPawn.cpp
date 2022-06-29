@@ -83,7 +83,11 @@ void AConceptDemoPaperPawn::BeginPlay()
 void AConceptDemoPaperPawn::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-
+	if (this->Frozen)
+	{
+		UCharacterMovementComponent* CharacterMovementComponent = this->GetCharacterMovement();
+		CharacterMovementComponent->Velocity = FVector::ZeroVector;
+	}
 }
 
 void AConceptDemoPaperPawn::SetPlayerNumber(const TEnumAsByte<EAutoReceiveInput::Type> PlayerNumber)

@@ -72,9 +72,9 @@ namespace Slaughter_Friends_Launcher
             this.LblLauncherVersion.AutoSize = true;
             this.LblLauncherVersion.Location = new System.Drawing.Point(211, 0);
             this.LblLauncherVersion.Name = "LblLauncherVersion";
-            this.LblLauncherVersion.Size = new System.Drawing.Size(13, 13);
+            this.LblLauncherVersion.Size = new System.Drawing.Size(22, 13);
             this.LblLauncherVersion.TabIndex = 3;
-            this.LblLauncherVersion.Text = "1";
+            this.LblLauncherVersion.Text = "1.1";
             // 
             // MainForm
             // 
@@ -87,9 +87,11 @@ namespace Slaughter_Friends_Launcher
             this.Controls.Add(this.CbxUseControllerForP2);
             this.Controls.Add(this.BtnStart);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
+            this.MaximizeBox = false;
             this.MaximumSize = new System.Drawing.Size(328, 287);
             this.MinimumSize = new System.Drawing.Size(328, 287);
             this.Name = "MainForm";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Slaughter Friends";
             this.ResumeLayout(false);
             this.PerformLayout();

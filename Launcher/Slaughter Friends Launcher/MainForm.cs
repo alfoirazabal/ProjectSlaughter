@@ -22,7 +22,6 @@ namespace Slaughter_Friends_Launcher
         public MainForm()
         {
             InitializeComponent();
-            this.LblLauncherVersion.Text = "1.0";
             this.SettingsFileLogic = new SettingsFileLogic();
             this.CbxUseControllerForP2.Checked = this.SettingsFileLogic.IsUseControllerForP2Enabled();
         }

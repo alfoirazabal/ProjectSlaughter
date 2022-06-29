@@ -68,9 +68,6 @@ void UGameOverWidget::FillSurvivalWinner()
 
 void UGameOverWidget::FillScores()
 {
-	FNumberFormattingOptions NumberFormattingOptions;
-	NumberFormattingOptions.MinimumFractionalDigits = 2;
-	NumberFormattingOptions.MaximumFractionalDigits = 2;
 	AConceptDemoPaperCharacter* Character1;
 	AConceptDemoPaperCharacter* Character2;
 	if (this->DemoGameInstance->Player1Score >= this->DemoGameInstance->Player2Score)
@@ -79,8 +76,8 @@ void UGameOverWidget::FillScores()
 		Character2 = this->DemoGameInstance->SelectedPlayer2Type.GetDefaultObject();
 		this->TxtFirstPlayerName->SetText(this->DemoGameInstance->Player1Name);
 		this->TxtSecondPlayerName->SetText(this->DemoGameInstance->Player2Name);
-		this->TxtFirstPlayerScore->SetText(FText::AsNumber(this->DemoGameInstance->Player1Score, &NumberFormattingOptions));
-		this->TxtSecondPlayerScore->SetText(FText::AsNumber(this->DemoGameInstance->Player2Score, &NumberFormattingOptions));
+		this->TxtFirstPlayerScore->SetText(FText::AsNumber(this->DemoGameInstance->Player1Score));
+		this->TxtSecondPlayerScore->SetText(FText::AsNumber(this->DemoGameInstance->Player2Score));
 	}
 	else
 	{
@@ -88,8 +85,8 @@ void UGameOverWidget::FillScores()
 		Character2 = this->DemoGameInstance->SelectedPlayer1Type.GetDefaultObject();
 		this->TxtFirstPlayerName->SetText(this->DemoGameInstance->Player2Name);
 		this->TxtSecondPlayerName->SetText(this->DemoGameInstance->Player1Name);
-		this->TxtFirstPlayerScore->SetText(FText::AsNumber(this->DemoGameInstance->Player2Score, &NumberFormattingOptions));
-		this->TxtSecondPlayerScore->SetText(FText::AsNumber(this->DemoGameInstance->Player1Score, &NumberFormattingOptions));
+		this->TxtFirstPlayerScore->SetText(FText::AsNumber(this->DemoGameInstance->Player2Score));
+		this->TxtSecondPlayerScore->SetText(FText::AsNumber(this->DemoGameInstance->Player1Score));
 	}
 	this->ImgWinnerScore1->SetBrushFromTexture(Character1->CharacterFaceImage);
 	this->ImgWinnerScore2->SetBrushFromTexture(Character2->CharacterFaceImage);

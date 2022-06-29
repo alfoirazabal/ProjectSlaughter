@@ -87,6 +87,10 @@ void UPlayerSelectionWidget::NativeConstruct()
 	PlayerController->InputComponent->BindAction(TEXT("P2 Up"), IE_Pressed, this, &UPlayerSelectionWidget::P2SelectUpwardsPlayer);
 	PlayerController->InputComponent->BindAction(TEXT("P2 Right"), IE_Pressed, this, &UPlayerSelectionWidget::P2SelectRightwardsPlayer);
 	PlayerController->InputComponent->BindAction(TEXT("P2 Down"), IE_Pressed, this, &UPlayerSelectionWidget::P2SelectDownwardsPlayer);
+	PlayerController->InputComponent->BindAction(TEXT("C Up"), IE_Pressed, this, &UPlayerSelectionWidget::P2SelectUpwardsPlayer);
+	PlayerController->InputComponent->BindAction(TEXT("C Down"), IE_Pressed, this, &UPlayerSelectionWidget::P2SelectDownwardsPlayer);
+	PlayerController->InputComponent->BindAction(TEXT("C Right"), IE_Pressed, this, &UPlayerSelectionWidget::P2SelectRightwardsPlayer);
+	PlayerController->InputComponent->BindAction(TEXT("C Left"), IE_Pressed, this, &UPlayerSelectionWidget::P2SelectLeftwardsPlayer);
 }
 
 void UPlayerSelectionWidget::NativeDestruct()

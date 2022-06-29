@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "Characters/ConceptDemoPaperPawn.h"
 #include "GameFramework/Actor.h"
 #include "DeathIndicator.generated.h"
 
@@ -15,7 +16,7 @@ public:
 	// Sets default values for this actor's properties
 	ADeathIndicator();
 
-	UPROPERTY() ACharacter* DeadCharacter;
+	UPROPERTY() AConceptDemoPaperPawn* DeadCharacter;
 	UPROPERTY(EditAnywhere) float DisplayTime;
 	UPROPERTY(EditAnywhere) float PlayerMoveXDistance;
 	UPROPERTY(EditAnywhere) float PlayerMoveYDistance;

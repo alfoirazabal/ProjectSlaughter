@@ -25,8 +25,6 @@ AGun::AGun()
 
 	this->BulletSpawnRelativeLocation = FVector(0.0f, 50.0f, 10.0f);
 
-	this->BulletClass = nullptr;
-
 	this->GunType = Common;
 
 	static ConstructorHelpers::FObjectFinder<USoundWave> GunGrabObject(TEXT("/Game/Props/Guns/GunGrab"));
@@ -132,7 +130,7 @@ void AGun::SetDetached() {
 }
 
 void AGun::Fire(AActor* SourceActor) {
-	if (this->BulletClass != nullptr) {
+	if (this->BulletClasses.Num() > 0) {
 		if (this->CurrentTimeBetweenShots == 0 && this->ShotsLeft > 0)
 		{
 			FVector bulletLocation = this->GetActorLocation();
@@ -145,7 +143,9 @@ void AGun::Fire(AActor* SourceActor) {
 			}
 			FTransform Transform = this->GetActorTransform();
 			Transform.SetLocation(bulletLocation);
-			ABullet* Bullet = this->GetWorld()->SpawnActorDeferred<ABullet>(this->BulletClass, Transform, this, nullptr, ESpawnActorCollisionHandlingMethod::AlwaysSpawn);
+			const int RandomBulletIndex = FMath::RandRange(0, this->BulletClasses.Num() - 1);
+			const TSubclassOf<ABullet> BulletClass = this->BulletClasses[RandomBulletIndex];
+			ABullet* Bullet = this->GetWorld()->SpawnActorDeferred<ABullet>(BulletClass, Transform, this, nullptr, ESpawnActorCollisionHandlingMethod::AlwaysSpawn);
 			Bullet->SourceActor = SourceActor;
 			Bullet->SourceGun = this;
 			Bullet->FacingDirection = this->FacingDirection;

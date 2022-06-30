@@ -43,7 +43,7 @@ public:
 	UPROPERTY(EditAnywhere) FVector BulletSpawnRelativeLocation;
 	UPROPERTY(EditAnywhere) FVector RelativeAttachedSize;
 
-	UPROPERTY(EditAnywhere) TSubclassOf<ABullet> BulletClass;
+	UPROPERTY(EditAnywhere) TArray<TSubclassOf<ABullet>> BulletClasses;
 
 	UPROPERTY() TEnumAsByte<EGunType> GunType;
 

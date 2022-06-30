@@ -9,6 +9,7 @@
 #include <PaperFlipbookComponent.h>
 
 #include "Characters/PowerupReadyIndicator.h"
+#include "Characters/Helpers/UPaperCharacterDroppables.h"
 #include "Components/CapsuleComponent.h"
 #include "Components/WidgetComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
@@ -48,16 +49,8 @@ AConceptDemoPaperCharacter::AConceptDemoPaperCharacter()
 	this->PowerUpReadyPropType = PowerUpReadyObject.Class;
 	static ConstructorHelpers::FObjectFinder<USoundBase> PowerUpReadySoundObject(TEXT("/Game/Character/Sounds/AbilityReady"));
 	this->PowerUpReadySound = PowerUpReadySoundObject.Object;
-	static ConstructorHelpers::FClassFinder<ADroppable> DroppableBone1OClassFinder(TEXT("/Game/Character/Droppables/DroppableBone1"));
-	static ConstructorHelpers::FClassFinder<ADroppable> DroppableBone2OClassFinder(TEXT("/Game/Character/Droppables/DroppableBone2"));
-	static ConstructorHelpers::FClassFinder<ADroppable> DroppableBloodSplat1ClassFinder(TEXT("/Game/Character/Droppables/DroppableBloodSplat1"));
-	static ConstructorHelpers::FClassFinder<ADroppable> DroppableBloodSplat2ClassFinder(TEXT("/Game/Character/Droppables/DroppableBloodSplat2"));
-	static ConstructorHelpers::FClassFinder<ADroppable> DroppableBloodSplat3ClassFinder(TEXT("/Game/Character/Droppables/DroppableBloodSplat3"));
-	this->DroppableTypes.Add(DroppableBone1OClassFinder.Class);
-	this->DroppableTypes.Add(DroppableBone2OClassFinder.Class);
-	this->DroppableTypes.Add(DroppableBloodSplat1ClassFinder.Class);
-	this->DroppableTypes.Add(DroppableBloodSplat2ClassFinder.Class);
-	this->DroppableTypes.Add(DroppableBloodSplat3ClassFinder.Class);
+	UPaperCharacterDroppables* DroppablesFiller = CreateDefaultSubobject<UPaperCharacterDroppables>(TEXT("Droppables"));
+	this->DroppableTypes = DroppablesFiller->GetDroppables();
 	this->PowerUpReadyIndicatorRelativeLocation = FVector(-70, 0, 130);
 	
 	this->RelativeGunAttachLocation = FVector(-5, -30, -30);

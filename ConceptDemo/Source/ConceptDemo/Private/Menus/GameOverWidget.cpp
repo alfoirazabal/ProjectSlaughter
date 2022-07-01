@@ -45,10 +45,6 @@ void UGameOverWidget::FillSurvivalWinner()
 			if (IsValid(ObjectTexture)) {
 				this->ImgWinnerSurviving->SetBrushFromTexture(ObjectTexture);
 			}
-			if (DefaultObject->WinSound)
-			{
-				UGameplayStatics::PlaySound2D(this->GetWorld(), DefaultObject->WinSound);
-			}
 		}
 	}
 	FText WinnerPlayerName;

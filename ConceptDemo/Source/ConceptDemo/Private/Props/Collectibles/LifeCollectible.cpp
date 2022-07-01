@@ -16,10 +16,10 @@ ALifeCollectible::ALifeCollectible()
 	this->SpawnTime = 10;
 	this->RotationSpeed = 3;
 
-	this->TriggerCapsule = CreateDefaultSubobject<UCapsuleComponent>(TEXT("Trigger Capsule"));
-	this->TriggerCapsule->InitCapsuleSize(50.3, 59.1);
-	this->TriggerCapsule->SetCollisionProfileName("Trigger");
-	this->TriggerCapsule->SetupAttachment(this->RootComponent);
+	UCapsuleComponent* TriggerCapsule = CreateDefaultSubobject<UCapsuleComponent>(TEXT("Trigger Capsule"));
+	TriggerCapsule->InitCapsuleSize(50.3, 59.1);
+	TriggerCapsule->SetCollisionProfileName("Trigger");
+	TriggerCapsule->SetupAttachment(this->RootComponent);
 
 }
 
@@ -27,8 +27,6 @@ ALifeCollectible::ALifeCollectible()
 void ALifeCollectible::BeginPlay()
 {
 	Super::BeginPlay();
-
-	this->TriggerCapsule->OnComponentBeginOverlap.AddDynamic(this, &ALifeCollectible::OnOverlapBegin);
 
 	FTimerHandle TimerHandle;
 	this->GetWorld()->GetTimerManager().SetTimer(TimerHandle, this, &ALifeCollectible::SpawnTimeExpired, this->SpawnTime, false);
@@ -52,21 +50,3 @@ void ALifeCollectible::Tick(float DeltaTime)
 	CurrentRotation.Yaw = CurrentRotationYaw;
 	this->SetActorRotation(CurrentRotation);
 }
-
-void ALifeCollectible::OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor* OtherActor,
-	UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
-{
-	if (OtherComp)
-	{
-		if (OtherActor)
-		{
-			AConceptDemoPaperCharacter* Character = Cast<AConceptDemoPaperCharacter>(OtherActor);
-			if (Character)
-			{
-				Character->AddLife(this->LifeBarFill);
-				this->Destroy();
-			}
-		}
-	}
-}
-

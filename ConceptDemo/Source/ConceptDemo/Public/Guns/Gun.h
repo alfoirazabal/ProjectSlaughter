@@ -54,8 +54,7 @@ public:
 	EFacing_Direction FacingDirection;
 	int32 ShotsLeft;
 
-	UPROPERTY(EditAnywhere, Category="Sounds") USoundBase* GunGrabSound;
-
+	UPROPERTY(EditAnywhere, Category="Sounds") USoundBase* EmptySound;
 	UPROPERTY(EditAnywhere, Category="GunProps") TSubclassOf<AActor> SparklesType;
 	UPROPERTY() AActor* Sparkles;
 
@@ -65,6 +64,7 @@ public:
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
+	
 	int32 CurrentTimeBetweenShots;
 	int32 CurrentShotLossTime;
 
@@ -74,8 +74,8 @@ protected:
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
-	void SetAttached();
-	void SetDetached();
+	UFUNCTION() void SetAttached();
+	UFUNCTION() void SetDetached();
 	UFUNCTION() void Fire(AActor* SourceActor);
 	UFUNCTION() void Respawn();
 

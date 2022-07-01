@@ -27,10 +27,10 @@ AGun::AGun()
 
 	this->GunType = Common;
 
-	static ConstructorHelpers::FObjectFinder<USoundWave> GunGrabObject(TEXT("/Game/Props/Guns/GunGrab"));
-	this->GunGrabSound = GunGrabObject.Object;
-
 	this->RelativeAttachedSize = FVector(0.8, 0.8, 0.8);
+	
+	static ConstructorHelpers::FObjectFinder<USoundBase> GunEmptySoundFinder(TEXT("/Game/Sounds/Gun_empty"));
+	this->EmptySound = GunEmptySoundFinder.Object;
 
 	this->TriggerCapsule = CreateDefaultSubobject<UCapsuleComponent>(TEXT("Trigger Capsule"));
 	this->TriggerCapsule->InitCapsuleSize(67.68, 67.68);
@@ -114,7 +114,6 @@ void AGun::Tick(const float DeltaTime)
 void AGun::SetAttached() {
 	if (this->ShouldRotate) this->bRotate = false;
 	this->SetActorEnableCollision(false);
-	UGameplayStatics::SpawnSound2D(this->GetWorld(), this->GunGrabSound);
 	this->DestroySparkles();
 	this->SetActorScale3D(this->RelativeAttachedSize);
 	this->OnGunAttatched();
@@ -158,6 +157,7 @@ void AGun::Fire(AActor* SourceActor) {
 		}
 		if (this->ShotsLeft == 0)
 		{
+			UGameplayStatics::PlaySound2D(this->GetWorld(), this->EmptySound);
 			this->GunDead.Broadcast(this);
 		}
 	}

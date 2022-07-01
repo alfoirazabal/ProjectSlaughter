@@ -11,6 +11,7 @@
 #include "Characters/PowerupReadyIndicator.h"
 #include "Characters/PowerupReadyProp.h"
 #include "Characters/Skull.h"
+#include "Helpers/PaperCharacterSounds.h"
 #include "Levels/UserWidgetPlayersStatusControl.h"
 #include "Props/Death/DeathIndicator.h"
 #include "Props/Droppables/Droppable.h"
@@ -43,13 +44,7 @@ public:
 	
 	UPROPERTY() UUserWidgetPlayersStatusControl* UserWidgetPlayersStatusControl;
 
-	UPROPERTY(EditAnywhere, Category="Sounds") USoundBase* JumpSound;
-	UPROPERTY(EditAnywhere, Category="Sounds") USoundBase* PowerSound;
-	UPROPERTY(EditAnywhere, Category="Sounds") USoundBase* DamageReceivedSound;
-	UPROPERTY(EditAnywhere, Category="Sounds") USoundBase* AttachGunSound;
-	UPROPERTY(EditAnywhere, Category="Sounds") USoundBase* RespawnSound;
-	UPROPERTY(EditAnywhere, Category="Sounds") USoundBase* WinSound;
-	UPROPERTY(EditAnywhere, Category="Sounds") USoundBase* PowerUpReadySound;
+	UPROPERTY(EditAnywhere) UPaperCharacterSounds* PaperCharacterSounds;
 
 protected:
 	// Called when the game starts

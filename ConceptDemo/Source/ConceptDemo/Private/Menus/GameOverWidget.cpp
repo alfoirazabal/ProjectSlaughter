@@ -16,6 +16,7 @@ void UGameOverWidget::NativeConstruct()
 		this->FillScores();
 	}
 	this->ButtonContinue->OnClicked.AddDynamic(this, &UGameOverWidget::ContinueToMainMenu);
+	Super::NativeConstruct();
 }
 
 void UGameOverWidget::NativeDestruct()

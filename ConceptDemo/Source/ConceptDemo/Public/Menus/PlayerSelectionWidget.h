@@ -25,6 +25,9 @@ class CONCEPTDEMO_API UPlayerSelectionWidget : public UUserWidget
 	UPROPERTY() AConceptDemoPaperCharacter* Player1Character;
 	UPROPERTY() AConceptDemoPaperCharacter* Player2Character;
 
+	UPROPERTY() UAudioComponent* Player1SelectionAudioComponent;
+	UPROPERTY() UAudioComponent* Player2SelectionAudioComponent;
+
 public:
 	
 	UPROPERTY(EditAnywhere) TArray<UTexture2D*> BackgroundTextureSequence;

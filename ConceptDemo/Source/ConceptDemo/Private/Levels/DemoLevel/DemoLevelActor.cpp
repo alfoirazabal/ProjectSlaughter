@@ -372,6 +372,7 @@ void ADemoLevelActor::ReactToGunDeath(AGun* Gun)
 	}
 	if (this->Player1->AttachedGun == Gun) this->Player1->DropGun();
 	if (this->Player2->AttachedGun == Gun) this->Player2->DropGun();
+	Gun->Sparkles->Destroy();
 	Gun->Destroy();
 }
 

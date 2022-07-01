@@ -112,20 +112,17 @@ void AGun::Tick(const float DeltaTime)
 }
 
 void AGun::SetAttached() {
+	this->DestroySparkles();
 	if (this->ShouldRotate) this->bRotate = false;
 	this->SetActorEnableCollision(false);
-	this->DestroySparkles();
 	this->SetActorScale3D(this->RelativeAttachedSize);
-	this->OnGunAttatched();
 }
 
 void AGun::SetDetached() {
+	this->SpawnSparkles();
 	if (this->ShouldRotate) this->bRotate = true;
 	this->SetActorEnableCollision(true);
-	FTimerHandle TimerHandle;
-	this->GetWorld()->GetTimerManager().SetTimer(TimerHandle, this, &AGun::SpawnSparkles, 0.1, false);
 	this->SetActorScale3D(FVector(1, 1, 1));
-	this->OnGunDetached();
 }
 
 void AGun::Fire(AActor* SourceActor) {

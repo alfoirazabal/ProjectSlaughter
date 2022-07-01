@@ -271,7 +271,6 @@ void AConceptDemoPaperCharacter::AttachGun(AGun* Gun)
 void AConceptDemoPaperCharacter::DropGun()
 {
 	if (this->AttachedGun != nullptr) {
-		this->AttachedGun->SetDetached();
 		this->UserWidgetPlayersStatusControl->SetGunAttached(false);
 		FVector NewGunLocation;
 		if (this->bFallingDeath)
@@ -294,6 +293,7 @@ void AConceptDemoPaperCharacter::DropGun()
 		}
 		this->AttachedGun->SetActorLocation(NewGunLocation);
 		this->AttachedGun->ShotLost.RemoveDynamic(this, &AConceptDemoPaperCharacter::UpdateShotsCount);
+		this->AttachedGun->SetDetached();
 		this->AttachedGun = nullptr;
 		for (int i = 0; i < this->GunsIgnored.Num(); i++) {
 			this->MoveIgnoreActorRemove(this->GunsIgnored[i]);

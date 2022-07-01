@@ -79,7 +79,4 @@ public:
 	UFUNCTION() void Fire(AActor* SourceActor);
 	UFUNCTION() void Respawn();
 
-	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable) void OnGunAttatched();
-	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable) void OnGunDetached();
-
 };

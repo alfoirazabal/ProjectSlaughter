@@ -42,6 +42,8 @@ void ADemoLevelActor::BeginPlay()
 	this->SetupInputs();
 	this->Player1->PlayerDeath.AddDynamic(this, &ADemoLevelActor::P1ReactToDeath);
 	this->Player2->PlayerDeath.AddDynamic(this, &ADemoLevelActor::P2ReactToDeath);
+	this->Player1->PlayerLifeLost.AddDynamic(this, &ADemoLevelActor::P1ReactToLifeLost);
+	this->Player2->PlayerLifeLost.AddDynamic(this, &ADemoLevelActor::P2ReactToLifeLost);
 	if (this->Guns.Num() == 0)
 	{
 		GEngine->AddOnScreenDebugMessage(92576662, 2, FColor::Red, "Need to setup Demo Level guns!");
@@ -321,6 +323,16 @@ uint8 ADemoLevelActor::GetScoreWinnerPlayerNumber() const
 		WinnerPlayerNumber = 0;
 	}
 	return WinnerPlayerNumber;
+}
+
+void ADemoLevelActor::P1ReactToLifeLost()
+{
+	UGameplayStatics::SpawnSound2D(this->GetWorld(), this->Player2->PaperCharacterSounds.Kill);
+}
+
+void ADemoLevelActor::P2ReactToLifeLost()
+{
+	UGameplayStatics::SpawnSound2D(this->GetWorld(), this->Player1->PaperCharacterSounds.Kill);
 }
 
 

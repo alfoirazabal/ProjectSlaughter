@@ -9,6 +9,7 @@
 #include <PaperFlipbookComponent.h>
 
 #include "Characters/PowerupReadyIndicator.h"
+#include "Characters/Helpers/PaperCharacterSoundsInitializer.h"
 #include "Characters/Helpers/UPaperCharacterDroppables.h"
 #include "Components/CapsuleComponent.h"
 #include "Components/WidgetComponent.h"
@@ -48,15 +49,17 @@ AConceptDemoPaperCharacter::AConceptDemoPaperCharacter()
 	this->DeathIndicatorType = DeathIndicatorObject.Class;
 	static ConstructorHelpers::FClassFinder<APowerupReadyProp> PowerUpReadyObject(TEXT("/Game/Props/VFX/CharacterPowerupReady/PowerupReady"));
 	this->PowerUpReadyPropType = PowerUpReadyObject.Class;
-	this->PaperCharacterSounds = CreateDefaultSubobject<UPaperCharacterSounds>(TEXT("Sounds"));
 	UPaperCharacterDroppables* DroppablesFiller = CreateDefaultSubobject<UPaperCharacterDroppables>(TEXT("Droppables"));
 	this->DroppableTypes = DroppablesFiller->GetDroppables();
+	UPaperCharacterSoundsInitializer* SoundsInitializer = CreateDefaultSubobject<UPaperCharacterSoundsInitializer>(TEXT("Sounds"));
+	SoundsInitializer->InitializeDefaultSounds(this->PaperCharacterSounds);
 	this->PowerUpReadyIndicatorRelativeLocation = FVector(-70, 0, 130);
 	
 	this->RelativeGunAttachLocation = FVector(-5, -30, -30);
 	this->RelativeGunDropDistance = 150;
 
 	this->DamageLevel2Threshold = 0.35;
+	this->DamageLevel = NonCritical;
 
 	this->TriggerCapsule = CreateDefaultSubobject<UCapsuleComponent>(TEXT("Trigger Capsule"));
 	this->TriggerCapsule->InitCapsuleSize(38.59, 89.37);
@@ -103,19 +106,25 @@ void AConceptDemoPaperCharacter::BindInputs()
 	}
 }
 
-void AConceptDemoPaperCharacter::UpdateFlipBooks()
+void AConceptDemoPaperCharacter::UpdateDamageLevel()
 {
-	if (this->CurrentLifeSize > this->DamageLevel2Threshold)
+	if (this->DamageLevel == Critical && (this->CurrentLifeSize > this->DamageLevel2Threshold) || (this->CurrentLifeSize == this->LifeSize))
 	{
 		if (this->IdleFlipBookDamageLevel1) this->IdleFlipBook = this->IdleFlipBookDamageLevel1;
 		if (this->JumpingFlipBookDamageLevel1) this->JumpingFlipBook = this->JumpingFlipBookDamageLevel1;
 		if (this->MovingFlipBookDamageLevel1) this->MovingFlipBook = this->MovingFlipBookDamageLevel1;
+		this->DamageLevel = NonCritical;
 	}
-	else
+	else if (this->DamageLevel == NonCritical && (this->CurrentLifeSize <= this->DamageLevel2Threshold))
 	{
 		if (this->IdleFlipBookDamageLevel2) this->IdleFlipBook = this->IdleFlipBookDamageLevel2;
 		if (this->JumpingFlipBookDamageLevel2) this->JumpingFlipBook = this->JumpingFlipBookDamageLevel2;
 		if (this->MovingFlipBookDamageLevel2) this->MovingFlipBook = this->MovingFlipBookDamageLevel2;
+		if (this->DamageLevel == NonCritical)
+		{
+			UGameplayStatics::SpawnSound2D(this->GetWorld(), this->PaperCharacterSounds.CriticalDamage);
+		}
+		this->DamageLevel = Critical;
 	}
 }
 
@@ -124,7 +133,7 @@ void AConceptDemoPaperCharacter::BeginPlay()
 {
 	Super::BeginPlay();
 	this->InitialPosition = this->GetActorLocation();
-	this->UpdateFlipBooks();
+	this->UpdateDamageLevel();
 }
 
 void AConceptDemoPaperCharacter::MakeFallingDeathWithIndicator()
@@ -142,6 +151,7 @@ void AConceptDemoPaperCharacter::MakeFallingDeath()
 	FVector CurrentPosition = this->GetActorLocation();
 	CurrentPosition.X -= 500;
 	this->SetActorLocation(CurrentPosition);
+	this->PlayerLifeLost.Broadcast();
 }
 
 void AConceptDemoPaperCharacter::UpdateHealthIndicator() const
@@ -158,8 +168,8 @@ void AConceptDemoPaperCharacter::UpdateHealthIndicator() const
 
 void AConceptDemoPaperCharacter::Respawn()
 {
-	this->UpdateFlipBooks();
-	UGameplayStatics::SpawnSound2D(this->GetWorld(), this->PaperCharacterSounds->Spawn);
+	this->UpdateDamageLevel();
+	UGameplayStatics::SpawnSound2D(this->GetWorld(), this->PaperCharacterSounds.Spawn);
 	this->SetActorHiddenInGame(false);
 	this->Immune = true;
 	if (this->AttachedGun != nullptr) {
@@ -249,7 +259,8 @@ void AConceptDemoPaperCharacter::AttachGun(AGun* Gun)
 		this->UserWidgetPlayersStatusControl->SetGunAttached(true);
 		this->UserWidgetPlayersStatusControl->SetStaminaBar(Gun->ShotsCount, Gun->ShotsLeft);
 		this->AttachedGun->ShotLost.AddDynamic(this, &AConceptDemoPaperCharacter::UpdateShotsCount);
-		UGameplayStatics::SpawnSound2D(this->GetWorld(), this->PaperCharacterSounds->TakeGun);
+		UGameplayStatics::SpawnSound2D(this->GetWorld(), this->PaperCharacterSounds.TakeGun);
+		UGameplayStatics::SpawnSound2D(this->GetWorld(), this->PaperCharacterSounds.TakeGunOrLife);
 	}
 	else {
 		this->GunsIgnored.Add(Gun);
@@ -318,7 +329,7 @@ void AConceptDemoPaperCharacter::FireAxis(const float AxisValue)
 void AConceptDemoPaperCharacter::UsePower()
 {
 	this->CurrentSpecialPowerLoadTime = 0;
-	UGameplayStatics::SpawnSound2D(this->GetWorld(), this->PaperCharacterSounds->SpecialSkill);
+	UGameplayStatics::SpawnSound2D(this->GetWorld(), this->PaperCharacterSounds.SpecialSkill);
 	if (this->CurrentPowerUpReadyIndicator)
 	{
 		this->CurrentPowerUpReadyIndicator->Destroy();
@@ -355,13 +366,13 @@ void AConceptDemoPaperCharacter::TakeDamage(const float DamageCount)
 			const TSubclassOf<ADroppable> RandomDroppable = this->DroppableTypes[FMath::RandRange(0, this->DroppableTypes.Num() - 1)];
 			this->GetWorld()->SpawnActor<ADroppable>(RandomDroppable, this->GetActorLocation(), this->GetActorRotation());
 		}
-		if (this->PaperCharacterSounds->DamageTaken.Num() > 0)
+		if (this->PaperCharacterSounds.DamageTaken.Num() > 0)
 		{
-			const int RandomIndex = FMath::RandRange(0, this->PaperCharacterSounds->DamageTaken.Num() - 1);
-			USoundBase* RandomDamageTakenSound = this->PaperCharacterSounds->DamageTaken[RandomIndex];
+			const int RandomIndex = FMath::RandRange(0, this->PaperCharacterSounds.DamageTaken.Num() - 1);
+			USoundBase* RandomDamageTakenSound = this->PaperCharacterSounds.DamageTaken[RandomIndex];
 			UGameplayStatics::SpawnSound2D(this->GetWorld(), RandomDamageTakenSound);
 		}
-		this->UpdateFlipBooks();
+		this->UpdateDamageLevel();
 	}
 }
 
@@ -376,7 +387,7 @@ void AConceptDemoPaperCharacter::AddLife(const float Life)
 		this->CurrentLifeSize = 1;
 	}
 	this->UpdateHealthIndicator();
-	this->UpdateFlipBooks();
+	this->UpdateDamageLevel();
 }
 
 void AConceptDemoPaperCharacter::ProcessRespawning()
@@ -424,7 +435,7 @@ void AConceptDemoPaperCharacter::Tick(const float DeltaTime)
 				PowerUpReadyProp->ActorToFollow = this;
 				UGameplayStatics::FinishSpawningActor(PowerUpReadyProp, Transform);
 			}
-			UGameplayStatics::SpawnSound2D(this->GetWorld(), this->PaperCharacterSounds->PowerUpReadySound);
+			UGameplayStatics::SpawnSound2D(this->GetWorld(), this->PaperCharacterSounds.PowerUpReadySound);
 			if (!this->CurrentPowerUpReadyIndicator && this->PowerUpReadyIndicatorType)
 			{
 				if (this->PowerUpReadyIndicatorFlipBook)
@@ -457,12 +468,9 @@ void AConceptDemoPaperCharacter::OnOverlapBegin(UPrimitiveComponent* OverlappedC
 		const ATrainAI* Train = Cast<ATrainAI>(OtherActor);
 		AGun* Gun = Cast<AGun>(OtherActor);
 		ALifeCollectible* LifeCollectible = Cast<ALifeCollectible>(OtherActor);
-		if (Spikes)
+		if (Spikes || Train)
 		{
-			this->MakeFallingDeathWithIndicator();
-		}
-		if (Train)
-		{
+			UGameplayStatics::SpawnSound2D(this->GetWorld(), this->PaperCharacterSounds.DeathByTrap);
 			this->MakeFallingDeathWithIndicator();
 		}
 		if (Gun)
@@ -479,7 +487,8 @@ void AConceptDemoPaperCharacter::OnOverlapBegin(UPrimitiveComponent* OverlappedC
 		if (LifeCollectible)
 		{
 			this->AddLife(LifeCollectible->LifeBarFill);
-			UGameplayStatics::SpawnSound2D(this->GetWorld(), this->PaperCharacterSounds->TakeLife);
+			UGameplayStatics::SpawnSound2D(this->GetWorld(), this->PaperCharacterSounds.TakeLife);
+			UGameplayStatics::SpawnSound2D(this->GetWorld(), this->PaperCharacterSounds.TakeGunOrLife);
 			LifeCollectible->Destroy();
 		}
 	}

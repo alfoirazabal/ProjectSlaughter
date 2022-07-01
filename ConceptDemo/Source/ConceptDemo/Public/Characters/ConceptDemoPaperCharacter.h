@@ -11,6 +11,7 @@
 #include "Characters/PowerupReadyIndicator.h"
 #include "Characters/PowerupReadyProp.h"
 #include "Characters/Skull.h"
+#include "Helpers/DamageLevel.h"
 #include "Helpers/PaperCharacterSounds.h"
 #include "Levels/UserWidgetPlayersStatusControl.h"
 #include "Props/Death/DeathIndicator.h"
@@ -18,6 +19,7 @@
 #include "ConceptDemoPaperCharacter.generated.h"
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnPlayerDeath);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnPlayerLifeLost);
 
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class CONCEPTDEMO_API AConceptDemoPaperCharacter : public AConceptDemoPaperPawn
@@ -44,7 +46,7 @@ public:
 	
 	UPROPERTY() UUserWidgetPlayersStatusControl* UserWidgetPlayersStatusControl;
 
-	UPROPERTY(EditAnywhere) UPaperCharacterSounds* PaperCharacterSounds;
+	UPROPERTY(EditAnywhere) FPaperCharacterSounds PaperCharacterSounds;
 
 protected:
 	// Called when the game starts
@@ -57,7 +59,8 @@ protected:
 	UPROPERTY() UPaperFlipbook* IdleFlipBook;
 	UPROPERTY() UPaperFlipbook* MovingFlipBook;
 	UPROPERTY() UPaperFlipbook* JumpingFlipBook;
-	UFUNCTION() void UpdateFlipBooks();
+	UPROPERTY(EditAnywhere) TEnumAsByte<EDamageLevel> DamageLevel;
+	UFUNCTION() void UpdateDamageLevel();
 	UPROPERTY(EditAnywhere, Category="Concept Demo Action Sprites DamageLevel2") float DamageLevel2Threshold;
 	UPROPERTY(EditAnywhere, Category="Concept Demo Drops") TSubclassOf<ASkull> DeathSkull;
 	UPROPERTY(EditAnywhere, Category="Character Asset Positions") FVector RelativeGunAttachLocation;
@@ -112,6 +115,7 @@ public:
 	UFUNCTION() void Die();
 	
 	FOnPlayerDeath PlayerDeath;
+	FOnPlayerLifeLost PlayerLifeLost;
 
 	UPROPERTY() AGun* AttachedGun;
 	

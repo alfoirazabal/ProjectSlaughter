@@ -8,14 +8,10 @@
 /**
  * 
  */
-UCLASS()
-class CONCEPTDEMO_API UPaperCharacterSounds : public UObject
+USTRUCT()
+struct CONCEPTDEMO_API FPaperCharacterSounds
 {
 	GENERATED_BODY()
-
-public:
-
-	UPaperCharacterSounds();
 	
 	UPROPERTY(EditAnywhere, Category="Sounds") USoundBase* PowerUpReadySound;
 	UPROPERTY(EditAnywhere, Category="Sounds") USoundBase* CriticalDamage;

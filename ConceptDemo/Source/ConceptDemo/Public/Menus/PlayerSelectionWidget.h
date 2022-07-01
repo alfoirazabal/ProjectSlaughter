@@ -29,7 +29,8 @@ class CONCEPTDEMO_API UPlayerSelectionWidget : public UUserWidget
 	UPROPERTY() UAudioComponent* Player2SelectionAudioComponent;
 
 public:
-	
+
+	UPROPERTY(EditAnywhere) USoundBase* PlayerChangeSound;
 	UPROPERTY(EditAnywhere) TArray<UTexture2D*> BackgroundTextureSequence;
 	UPROPERTY(EditAnywhere) float BackgroundTextureSequenceFlipTime;
 
@@ -71,8 +72,8 @@ public:
 
 	UPROPERTY(meta = (BindWidget)) URichTextBlock* RichTextBlockPlayer1Description;
 	UPROPERTY(meta = (BindWidget)) URichTextBlock* RichTextBlockPlayer2Description;
-	UPROPERTY(meta = (BindWidget)) UEditableTextBox* EditableTextBoxPlayer1Name;
-	UPROPERTY(meta = (BindWidget)) UEditableTextBox* EditableTextBoxPlayer2Name;
+	UPROPERTY(meta = (BindWidget), BlueprintReadOnly) UEditableTextBox* EditableTextBoxPlayer1Name;
+	UPROPERTY(meta = (BindWidget), BlueprintReadOnly) UEditableTextBox* EditableTextBoxPlayer2Name;
 
 	UPROPERTY(meta = (BindWidget)) UButton* ButtonBegin;
 

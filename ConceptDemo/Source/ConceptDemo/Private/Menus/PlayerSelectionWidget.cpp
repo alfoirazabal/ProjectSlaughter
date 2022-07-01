@@ -233,6 +233,7 @@ void UPlayerSelectionWidget::DisplaySelectedP1()
 	if (Player1SelectionAudioComponent->IsPlaying()) Player1SelectionAudioComponent->Stop();
 	Player1SelectionAudioComponent->SetSound(this->Player1Character->PaperCharacterSounds.Select);
 	Player1SelectionAudioComponent->Play();
+	UGameplayStatics::PlaySound2D(this->GetWorld(), this->PlayerChangeSound);
 }
 
 void UPlayerSelectionWidget::DisplaySelectedP2()
@@ -254,4 +255,5 @@ void UPlayerSelectionWidget::DisplaySelectedP2()
 	if (Player2SelectionAudioComponent->IsPlaying()) Player2SelectionAudioComponent->Stop();
 	Player2SelectionAudioComponent->SetSound(this->Player2Character->PaperCharacterSounds.Select);
 	Player2SelectionAudioComponent->Play();
+	UGameplayStatics::PlaySound2D(this->GetWorld(), this->PlayerChangeSound);
 }

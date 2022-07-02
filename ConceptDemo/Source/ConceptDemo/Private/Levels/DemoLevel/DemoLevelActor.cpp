@@ -149,6 +149,15 @@ void ADemoLevelActor::SetupPlayersStatusWidget()
 	this->UserWidgetPlayersStatus->ImgP2CharacterType->SetBrushFromTexture(this->Player2->CharacterFaceImage);
 	this->UserWidgetPlayersStatus->AddToViewport();
 	this->PlayersActionsWidget = CreateWidget<UPlayersActionsWidget>(this->GetWorld(), this->PlayersActionsWidgetClass);
+	this->PlayersActionsWidget->SetPlayerControllerType(1, EPlayersActionsWidgetControllerType::KeyboardPlayer1);
+	if (this->GameInstance->UseControllerForPlayer2)
+	{
+		this->PlayersActionsWidget->SetPlayerControllerType(2, EPlayersActionsWidgetControllerType::XBoxController);
+	}
+	else
+	{
+		this->PlayersActionsWidget->SetPlayerControllerType(2, EPlayersActionsWidgetControllerType::KeyboardPlayer2);
+	}
 	this->PlayersActionsWidget->AddToViewport();
 	UUserWidgetPlayersStatusControl* Player1StatusController = NewObject<UUserWidgetPlayersStatusControl>();
 	UUserWidgetPlayersStatusControl* Player2StatusController = NewObject<UUserWidgetPlayersStatusControl>();

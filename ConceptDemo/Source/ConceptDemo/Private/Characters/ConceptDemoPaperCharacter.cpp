@@ -259,6 +259,7 @@ void AConceptDemoPaperCharacter::AttachGun(AGun* Gun)
 		this->UserWidgetPlayersStatusControl->SetGunAttached(true);
 		this->UserWidgetPlayersStatusControl->SetStaminaBar(Gun->ShotsCount, Gun->ShotsLeft);
 		this->AttachedGun->ShotLost.AddDynamic(this, &AConceptDemoPaperCharacter::UpdateShotsCount);
+		this->PlayerGunAttached.Broadcast();
 		UGameplayStatics::SpawnSound2D(this->GetWorld(), this->PaperCharacterSounds.TakeGun);
 		UGameplayStatics::SpawnSound2D(this->GetWorld(), this->PaperCharacterSounds.TakeGunOrLife);
 	}
@@ -300,12 +301,18 @@ void AConceptDemoPaperCharacter::DropGun()
 		}
 		this->GunsIgnored.Empty();
 		this->UserWidgetPlayersStatusControl->SetGunAttached(false);
+		this->PlayerGunDropped.Broadcast();
 	}
 }
 
 bool AConceptDemoPaperCharacter::HasGun() const
 {
 	return this->AttachedGun != nullptr;
+}
+
+bool AConceptDemoPaperCharacter::CanUsePower() const
+{
+	return CurrentSpecialPowerLoadTime >= this->SpecialPowerLoadTime;
 }
 
 void AConceptDemoPaperCharacter::Fire()
@@ -330,6 +337,7 @@ void AConceptDemoPaperCharacter::UsePower()
 {
 	this->CurrentSpecialPowerLoadTime = 0;
 	UGameplayStatics::SpawnSound2D(this->GetWorld(), this->PaperCharacterSounds.SpecialSkill);
+	this->PlayerPowerUsed.Broadcast();
 	if (this->CurrentPowerUpReadyIndicator)
 	{
 		this->CurrentPowerUpReadyIndicator->Destroy();
@@ -448,6 +456,7 @@ void AConceptDemoPaperCharacter::Tick(const float DeltaTime)
 					PowerUpReadyIndicator->GetRenderComponent()->SetFlipbook(this->PowerUpReadyIndicatorFlipBook);
 					UGameplayStatics::FinishSpawningActor(PowerUpReadyIndicator, Transform);
 					this->CurrentPowerUpReadyIndicator = PowerUpReadyIndicator;
+					this->PlayerPowerReady.Broadcast();
 				}
 				else
 				{

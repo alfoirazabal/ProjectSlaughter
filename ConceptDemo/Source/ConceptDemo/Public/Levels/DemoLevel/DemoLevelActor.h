@@ -7,6 +7,7 @@
 #include "DemoGameInstance.h"
 #include "Engine/LevelScriptActor.h"
 #include "Guns/SpawnerGun.h"
+#include "Levels/PlayersActionsWidget.h"
 #include "Levels/UserWidgetPlayersStatus.h"
 #include "Props/Collectibles/LifeCollectible.h"
 #include "DemoLevelActor.generated.h"
@@ -26,6 +27,8 @@ public:
 	UPROPERTY() UDemoGameInstance* GameInstance;
 	UPROPERTY() TSubclassOf<UUserWidgetPlayersStatus> UserWidgetPlayerStatusClass;
 	UPROPERTY() UUserWidgetPlayersStatus* UserWidgetPlayersStatus;
+	UPROPERTY() TSubclassOf<UPlayersActionsWidget> PlayersActionsWidgetClass;
+	UPROPERTY() UPlayersActionsWidget* PlayersActionsWidget;
 	UPROPERTY(EditAnywhere, Category = "Players") TArray<FVector> RandomPlayerSpawnLocations;
 	UPROPERTY(EditAnywhere, Category = "Guns") TArray<TSubclassOf<AGun>> Guns;
 	UPROPERTY(EditAnywhere, Category = "Guns") TArray<ASpawnerGun*> SpawnerGuns;
@@ -76,6 +79,10 @@ protected:
 	UFUNCTION() void P2ReactToLifeLost();
 	UFUNCTION() void P1ReactToDeath();
 	UFUNCTION() void P2ReactToDeath();
+	UFUNCTION() void P1UpdateGunStatus();
+	UFUNCTION() void P2UpdateGunStatus();
+	UFUNCTION() void P1UpdatePowerUpStatus();
+	UFUNCTION() void P2UpdatePowerUpStatus();
 	UFUNCTION() void ReactToGunDeath(AGun* Gun);
 	UFUNCTION() void ExitLevel();
 

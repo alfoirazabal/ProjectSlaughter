@@ -20,6 +20,10 @@
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnPlayerDeath);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnPlayerLifeLost);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnPlayerGunDropped);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnPlayerGunAttached);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnPlayerPowerReady);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnPlayerPowerUsed);
 
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class CONCEPTDEMO_API AConceptDemoPaperCharacter : public AConceptDemoPaperPawn
@@ -105,6 +109,7 @@ public:
 	UFUNCTION() void AttachGun(AGun* Gun);
 	UFUNCTION(BlueprintCallable) virtual void DropGun();
 	UFUNCTION() bool HasGun() const;
+	UFUNCTION() bool CanUsePower() const;
 	UFUNCTION(BlueprintCallable) virtual void Fire();
 	UFUNCTION() void FireAxis(const float AxisValue);
 	UFUNCTION() virtual void UsePower();
@@ -116,6 +121,10 @@ public:
 	
 	FOnPlayerDeath PlayerDeath;
 	FOnPlayerLifeLost PlayerLifeLost;
+	FOnPlayerGunAttached PlayerGunAttached;
+	FOnPlayerGunDropped PlayerGunDropped;
+	FOnPlayerPowerReady PlayerPowerReady;
+	FOnPlayerPowerUsed PlayerPowerUsed;
 
 	UPROPERTY() AGun* AttachedGun;
 	

@@ -64,7 +64,7 @@ void ASpaceShipSpawner::Tick(const float DeltaTime)
 void ASpaceShipSpawner::SpawnVehicle()
 {
 	const FTransform Transform = this->GetActorTransform();
-	const TSubclassOf<ASpaceShip> RandomSpaceShipType = this->RandomSpaceShipGenerator->GetRandomObjectClass();
+	const TSubclassOf<UObject> RandomSpaceShipType = this->RandomSpaceShipGenerator->GetRandomObjectClass();
 	if (RandomSpaceShipType)
 	{
 		ASpaceShip* NewShip = this->GetWorld()->SpawnActorDeferred<ASpaceShip>(RandomSpaceShipType, Transform, this, nullptr, ESpawnActorCollisionHandlingMethod::AlwaysSpawn);
@@ -94,7 +94,7 @@ void ASpaceShipSpawner::SpawnStartupVehicles()
 		FVector SpawnPosition = this->GetActorLocation();
 		SpawnPosition.Y += RandomSpawnDistance;
 		const FTransform Transform = this->GetActorTransform();
-		const TSubclassOf<ASpaceShip> RandomSpaceShipType = this->RandomSpaceShipGenerator->GetRandomObjectClass();
+		const TSubclassOf<UObject> RandomSpaceShipType = this->RandomSpaceShipGenerator->GetRandomObjectClass();
 		if (RandomSpaceShipType)
 		{
 			ASpaceShip* NewShip = this->GetWorld()->SpawnActorDeferred<ASpaceShip>(RandomSpaceShipType, Transform, this, nullptr, ESpawnActorCollisionHandlingMethod::AlwaysSpawn);

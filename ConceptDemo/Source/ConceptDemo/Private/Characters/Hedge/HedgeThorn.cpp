@@ -100,7 +100,7 @@ void AHedgeThorn::OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor* Ot
 		AConceptDemoPaperCharacter* Character = Cast<AConceptDemoPaperCharacter>(OtherActor);
 		if (Character && Character != this->HedgeThornSource)
 		{
-			Character->TakeDamage(this->HedgeThornDamage);
+			Character->Harm(this->HedgeThornDamage);
 			const int EnemyDamageScore = this->HedgeThornDamage * 100;
 			this->HedgeThornSource->OnEnemyDamaged.Broadcast(Character, this->HedgeThornSource, this, EnemyDamageScore);
 			this->DestroyOrExplodeBullet();

@@ -60,7 +60,7 @@ void AExplodingBullet::Tick(const float DeltaSeconds)
 		{
 			if (!this->AffectedActors.Contains(Character))
 			{
-				Character->TakeDamage(this->ExplosionDamage);
+				Character->Harm(this->ExplosionDamage);
 				this->AffectedActors.Add(Character);
 			}
 		}

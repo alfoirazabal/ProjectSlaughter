@@ -15,11 +15,9 @@ constexpr int GLevelsZFallLimit = -5000;
 /**
  * 
  */
-class CONCEPTDEMO_API SlaughterFirendsDemoConstants
+class CONCEPTDEMO_API FSlaughterFriendsDemoConstants
 {
 public:
-	SlaughterFirendsDemoConstants();
-	~SlaughterFirendsDemoConstants();
-
-	static float GenerateBoundedFloat(float Min, float Max);
+	FSlaughterFriendsDemoConstants();
+	~FSlaughterFriendsDemoConstants();
 };

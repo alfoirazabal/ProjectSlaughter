@@ -115,7 +115,7 @@ public:
 	UFUNCTION() void FireAxis(const float AxisValue);
 	UFUNCTION() virtual void UsePower();
 	UFUNCTION() void UpdateShotsCount();
-	UFUNCTION() void TakeDamage(float DamageCount);
+	UFUNCTION() void Harm(float DamageCount);
 	UFUNCTION() void AddLife(float Life);
 	UFUNCTION() void ProcessRespawning();
 	UFUNCTION() void Die();

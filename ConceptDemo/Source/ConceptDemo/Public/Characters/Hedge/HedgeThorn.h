@@ -6,7 +6,7 @@
 #include "Guns/Bullets/ExplodingBullet.h"
 #include "Characters/ConceptDemoPaperCharacter.h"
 #include "Characters/CharacterPowerProp.h"
-#include "SlaughterFirendsDemoConstants.h"
+#include "SlaughterFriendsDemoConstants.h"
 #include "HedgeThorn.generated.h"
 
 /**

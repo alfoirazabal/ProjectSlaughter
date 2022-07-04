@@ -15,7 +15,7 @@ public:
 	// Sets default values for this actor's properties
 	ASkull();
 
-	uint8 SpawnXDistance;
+	int16 SpawnXDistance;
 	uint16 DisappearanceTimeLeft;
 	UPROPERTY(EditAnywhere) uint16 DisappearanceTime;
 

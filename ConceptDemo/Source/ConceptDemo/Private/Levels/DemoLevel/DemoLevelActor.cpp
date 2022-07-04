@@ -20,6 +20,8 @@ ADemoLevelActor::ADemoLevelActor()
 	this->LifeCollectibleSpawnChance = 0.95;
 	static ConstructorHelpers::FClassFinder<UUserWidgetPlayersStatus> UserWidgetPLayerStatusClassFinder(TEXT("/Game/Widgets/PlayersScoreWidget"));
 	this->UserWidgetPlayerStatusClass = UserWidgetPLayerStatusClassFinder.Class;
+	static ConstructorHelpers::FClassFinder<UPlayersActionsWidget> PlayersActionsWidgetClassFinder(TEXT("/Game/Widgets/PlayersActionsWidget"));
+	this->PlayersActionsWidgetClass = PlayersActionsWidgetClassFinder.Class;
 }
 
 void ADemoLevelActor::BeginPlay()
@@ -42,6 +44,16 @@ void ADemoLevelActor::BeginPlay()
 	this->SetupInputs();
 	this->Player1->PlayerDeath.AddDynamic(this, &ADemoLevelActor::P1ReactToDeath);
 	this->Player2->PlayerDeath.AddDynamic(this, &ADemoLevelActor::P2ReactToDeath);
+	this->Player1->PlayerLifeLost.AddDynamic(this, &ADemoLevelActor::P1ReactToLifeLost);
+	this->Player2->PlayerLifeLost.AddDynamic(this, &ADemoLevelActor::P2ReactToLifeLost);
+	this->Player1->PlayerGunAttached.AddDynamic(this, &ADemoLevelActor::P1UpdateGunStatus);
+	this->Player1->PlayerGunDropped.AddDynamic(this, &ADemoLevelActor::P1UpdateGunStatus);
+	this->Player2->PlayerGunAttached.AddDynamic(this, &ADemoLevelActor::P2UpdateGunStatus);
+	this->Player2->PlayerGunDropped.AddDynamic(this, &ADemoLevelActor::P2UpdateGunStatus);
+	this->Player1->PlayerPowerReady.AddDynamic(this, &ADemoLevelActor::ADemoLevelActor::P1UpdatePowerUpStatus);
+	this->Player1->PlayerPowerUsed.AddDynamic(this, &ADemoLevelActor::ADemoLevelActor::P1UpdatePowerUpStatus);
+	this->Player2->PlayerPowerReady.AddDynamic(this, &ADemoLevelActor::ADemoLevelActor::P2UpdatePowerUpStatus);
+	this->Player2->PlayerPowerUsed.AddDynamic(this, &ADemoLevelActor::ADemoLevelActor::P2UpdatePowerUpStatus);
 	if (this->Guns.Num() == 0)
 	{
 		GEngine->AddOnScreenDebugMessage(92576662, 2, FColor::Red, "Need to setup Demo Level guns!");
@@ -136,6 +148,19 @@ void ADemoLevelActor::SetupPlayersStatusWidget()
 	this->UserWidgetPlayersStatus->ImgP1CharacterType->SetBrushFromTexture(this->Player1->CharacterFaceImage);
 	this->UserWidgetPlayersStatus->ImgP2CharacterType->SetBrushFromTexture(this->Player2->CharacterFaceImage);
 	this->UserWidgetPlayersStatus->AddToViewport();
+	this->PlayersActionsWidget = CreateWidget<UPlayersActionsWidget>(this->GetWorld(), this->PlayersActionsWidgetClass);
+	this->PlayersActionsWidget->SetPlayerPowerUpTexture(1, this->Player1->PowerUpReadyIndicatorTexture);
+	this->PlayersActionsWidget->SetPlayerPowerUpTexture(2, this->Player2->PowerUpReadyIndicatorTexture);
+	this->PlayersActionsWidget->SetPlayerControllerType(1, EPlayersActionsWidgetControllerType::KeyboardPlayer1);
+	if (this->GameInstance->UseControllerForPlayer2)
+	{
+		this->PlayersActionsWidget->SetPlayerControllerType(2, EPlayersActionsWidgetControllerType::XBoxController);
+	}
+	else
+	{
+		this->PlayersActionsWidget->SetPlayerControllerType(2, EPlayersActionsWidgetControllerType::KeyboardPlayer2);
+	}
+	this->PlayersActionsWidget->AddToViewport();
 	UUserWidgetPlayersStatusControl* Player1StatusController = NewObject<UUserWidgetPlayersStatusControl>();
 	UUserWidgetPlayersStatusControl* Player2StatusController = NewObject<UUserWidgetPlayersStatusControl>();
 	Player1StatusController->ImgHeart1 = this->UserWidgetPlayersStatus->ImgP1Heart1;
@@ -323,6 +348,16 @@ uint8 ADemoLevelActor::GetScoreWinnerPlayerNumber() const
 	return WinnerPlayerNumber;
 }
 
+void ADemoLevelActor::P1ReactToLifeLost()
+{
+	UGameplayStatics::SpawnSound2D(this->GetWorld(), this->Player2->PaperCharacterSounds.Kill);
+}
+
+void ADemoLevelActor::P2ReactToLifeLost()
+{
+	UGameplayStatics::SpawnSound2D(this->GetWorld(), this->Player1->PaperCharacterSounds.Kill);
+}
+
 
 void ADemoLevelActor::P1ReactToDeath()
 {
@@ -344,6 +379,32 @@ void ADemoLevelActor::P2ReactToDeath()
 	UGameplayStatics::OpenLevel(this, "GameOverMenu");
 }
 
+void ADemoLevelActor::P1UpdateGunStatus()
+{
+	const bool GunActionsEnabled = this->Player1->HasGun();
+	this->PlayersActionsWidget->UpdateHUD(1, DropGun, GunActionsEnabled);
+	this->PlayersActionsWidget->UpdateHUD(1, FireGun, GunActionsEnabled);
+}
+
+void ADemoLevelActor::P2UpdateGunStatus()
+{
+	const bool GunActionsEnabled = this->Player2->HasGun();
+	this->PlayersActionsWidget->UpdateHUD(2, DropGun, GunActionsEnabled);
+	this->PlayersActionsWidget->UpdateHUD(2, FireGun, GunActionsEnabled);
+}
+
+void ADemoLevelActor::P1UpdatePowerUpStatus()
+{
+	const bool PowerUpEnabled = this->Player1->CanUsePower();
+	this->PlayersActionsWidget->UpdateHUD(1, UsePower, PowerUpEnabled);
+}
+
+void ADemoLevelActor::P2UpdatePowerUpStatus()
+{
+	const bool PowerUpEnabled = this->Player2->CanUsePower();
+	this->PlayersActionsWidget->UpdateHUD(2, UsePower, PowerUpEnabled);
+}
+
 void ADemoLevelActor::ReactToGunDeath(AGun* Gun)
 {
 	ASpawnerGun* SpawnerGunFound = nullptr;
@@ -360,6 +421,7 @@ void ADemoLevelActor::ReactToGunDeath(AGun* Gun)
 	}
 	if (this->Player1->AttachedGun == Gun) this->Player1->DropGun();
 	if (this->Player2->AttachedGun == Gun) this->Player2->DropGun();
+	Gun->Sparkles->Destroy();
 	Gun->Destroy();
 }
 

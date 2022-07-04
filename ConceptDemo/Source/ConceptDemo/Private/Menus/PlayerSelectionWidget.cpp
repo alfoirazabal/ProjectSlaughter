@@ -4,6 +4,7 @@
 #include "Menus/PlayerSelectionWidget.h"
 
 #include "DemoGameInstance.h"
+#include "Components/AudioComponent.h"
 #include "Components/Image.h"
 #include "Kismet/GameplayStatics.h"
 
@@ -75,6 +76,8 @@ void UPlayerSelectionWidget::NativeConstruct()
 	}
 	this->Player1Character = this->P1Characters[FMath::RandRange(0, this->P1Characters.Num() - 1)];
 	this->Player2Character = this->P2Characters[FMath::RandRange(0, this->P2Characters.Num() - 1)];
+	this->Player1SelectionAudioComponent = NewObject<UAudioComponent>(this->GetWorld());
+	this->Player2SelectionAudioComponent = NewObject<UAudioComponent>(this->GetWorld());
 	this->DisplaySelectedP1();
 	this->DisplaySelectedP2();
 	this->ButtonBegin->OnClicked.AddDynamic(this, &UPlayerSelectionWidget::BeginGame);
@@ -227,6 +230,10 @@ void UPlayerSelectionWidget::DisplaySelectedP1()
 		}
 	}
 	this->ImgP1Body->SetBrushFromTexture(this->Player1Character->CharacterImage);
+	if (Player1SelectionAudioComponent->IsPlaying()) Player1SelectionAudioComponent->Stop();
+	Player1SelectionAudioComponent->SetSound(this->Player1Character->PaperCharacterSounds.Select);
+	Player1SelectionAudioComponent->Play();
+	UGameplayStatics::PlaySound2D(this->GetWorld(), this->PlayerChangeSound);
 }
 
 void UPlayerSelectionWidget::DisplaySelectedP2()
@@ -245,4 +252,8 @@ void UPlayerSelectionWidget::DisplaySelectedP2()
 		}
 	}
 	this->ImgP2Body->SetBrushFromTexture(this->Player2Character->CharacterImage);
+	if (Player2SelectionAudioComponent->IsPlaying()) Player2SelectionAudioComponent->Stop();
+	Player2SelectionAudioComponent->SetSound(this->Player2Character->PaperCharacterSounds.Select);
+	Player2SelectionAudioComponent->Play();
+	UGameplayStatics::PlaySound2D(this->GetWorld(), this->PlayerChangeSound);
 }

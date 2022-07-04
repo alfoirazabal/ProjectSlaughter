@@ -11,12 +11,19 @@
 #include "Characters/PowerupReadyIndicator.h"
 #include "Characters/PowerupReadyProp.h"
 #include "Characters/Skull.h"
+#include "Helpers/DamageLevel.h"
+#include "Helpers/PaperCharacterSounds.h"
 #include "Levels/UserWidgetPlayersStatusControl.h"
 #include "Props/Death/DeathIndicator.h"
 #include "Props/Droppables/Droppable.h"
 #include "ConceptDemoPaperCharacter.generated.h"
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnPlayerDeath);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnPlayerLifeLost);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnPlayerGunDropped);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnPlayerGunAttached);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnPlayerPowerReady);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnPlayerPowerUsed);
 
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class CONCEPTDEMO_API AConceptDemoPaperCharacter : public AConceptDemoPaperPawn
@@ -39,17 +46,12 @@ public:
 	UPROPERTY(EditAnywhere) TSubclassOf<APowerupReadyIndicator> PowerUpReadyIndicatorType;
 	UPROPERTY(EditAnywhere) UPaperFlipbook* PowerUpReadyIndicatorFlipBook;
 	UPROPERTY(EditAnywhere) FVector PowerUpReadyIndicatorRelativeLocation;
+	UPROPERTY(EditAnywhere) UTexture2D* PowerUpReadyIndicatorTexture;
 	UPROPERTY() APowerupReadyIndicator* CurrentPowerUpReadyIndicator;
 	
 	UPROPERTY() UUserWidgetPlayersStatusControl* UserWidgetPlayersStatusControl;
 
-	UPROPERTY(EditAnywhere, Category="Sounds") USoundBase* JumpSound;
-	UPROPERTY(EditAnywhere, Category="Sounds") USoundBase* PowerSound;
-	UPROPERTY(EditAnywhere, Category="Sounds") USoundBase* DamageReceivedSound;
-	UPROPERTY(EditAnywhere, Category="Sounds") USoundBase* AttachGunSound;
-	UPROPERTY(EditAnywhere, Category="Sounds") USoundBase* RespawnSound;
-	UPROPERTY(EditAnywhere, Category="Sounds") USoundBase* WinSound;
-	UPROPERTY(EditAnywhere, Category="Sounds") USoundBase* PowerUpReadySound;
+	UPROPERTY(EditAnywhere) FPaperCharacterSounds PaperCharacterSounds;
 
 protected:
 	// Called when the game starts
@@ -62,7 +64,8 @@ protected:
 	UPROPERTY() UPaperFlipbook* IdleFlipBook;
 	UPROPERTY() UPaperFlipbook* MovingFlipBook;
 	UPROPERTY() UPaperFlipbook* JumpingFlipBook;
-	UFUNCTION() void UpdateFlipBooks();
+	UPROPERTY(EditAnywhere) TEnumAsByte<EDamageLevel> DamageLevel;
+	UFUNCTION() void UpdateDamageLevel();
 	UPROPERTY(EditAnywhere, Category="Concept Demo Action Sprites DamageLevel2") float DamageLevel2Threshold;
 	UPROPERTY(EditAnywhere, Category="Concept Demo Drops") TSubclassOf<ASkull> DeathSkull;
 	UPROPERTY(EditAnywhere, Category="Character Asset Positions") FVector RelativeGunAttachLocation;
@@ -107,6 +110,7 @@ public:
 	UFUNCTION() void AttachGun(AGun* Gun);
 	UFUNCTION(BlueprintCallable) virtual void DropGun();
 	UFUNCTION() bool HasGun() const;
+	UFUNCTION() bool CanUsePower() const;
 	UFUNCTION(BlueprintCallable) virtual void Fire();
 	UFUNCTION() void FireAxis(const float AxisValue);
 	UFUNCTION() virtual void UsePower();
@@ -117,6 +121,11 @@ public:
 	UFUNCTION() void Die();
 	
 	FOnPlayerDeath PlayerDeath;
+	FOnPlayerLifeLost PlayerLifeLost;
+	FOnPlayerGunAttached PlayerGunAttached;
+	FOnPlayerGunDropped PlayerGunDropped;
+	FOnPlayerPowerReady PlayerPowerReady;
+	FOnPlayerPowerUsed PlayerPowerUsed;
 
 	UPROPERTY() AGun* AttachedGun;
 	

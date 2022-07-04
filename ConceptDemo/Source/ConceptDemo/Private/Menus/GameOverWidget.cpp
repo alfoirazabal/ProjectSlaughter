@@ -16,6 +16,7 @@ void UGameOverWidget::NativeConstruct()
 		this->FillScores();
 	}
 	this->ButtonContinue->OnClicked.AddDynamic(this, &UGameOverWidget::ContinueToMainMenu);
+	Super::NativeConstruct();
 }
 
 void UGameOverWidget::NativeDestruct()
@@ -44,10 +45,6 @@ void UGameOverWidget::FillSurvivalWinner()
 			UTexture2D* ObjectTexture = DefaultObject->CharacterFaceImage;
 			if (IsValid(ObjectTexture)) {
 				this->ImgWinnerSurviving->SetBrushFromTexture(ObjectTexture);
-			}
-			if (DefaultObject->WinSound)
-			{
-				UGameplayStatics::PlaySound2D(this->GetWorld(), DefaultObject->WinSound);
 			}
 		}
 	}

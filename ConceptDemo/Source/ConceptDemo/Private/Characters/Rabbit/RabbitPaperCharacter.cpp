@@ -53,6 +53,10 @@ void ARabbitPaperCharacter::Jump()
 	{
 		this->CurrentPowerUpReadyIndicator->Destroy();
 	}
+	if (this->SequentialTimesJumped == this->SequentialJumps)
+	{
+		UGameplayStatics::SpawnSound2D(this->GetWorld(), this->PaperCharacterSounds.SpecialSkill);
+	}
 	Super::Jump();
 }
 
@@ -60,6 +64,8 @@ bool ARabbitPaperCharacter::CanJumpInternal_Implementation() const
 {
 	return this->SequentialTimesJumped <= this->SequentialJumps;
 }
+
+void ARabbitPaperCharacter::UsePower(){ }
 
 void ARabbitPaperCharacter::SpawnPowerUpReadyIndicator()
 {

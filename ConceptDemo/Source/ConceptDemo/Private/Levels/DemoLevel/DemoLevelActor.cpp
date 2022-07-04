@@ -149,6 +149,8 @@ void ADemoLevelActor::SetupPlayersStatusWidget()
 	this->UserWidgetPlayersStatus->ImgP2CharacterType->SetBrushFromTexture(this->Player2->CharacterFaceImage);
 	this->UserWidgetPlayersStatus->AddToViewport();
 	this->PlayersActionsWidget = CreateWidget<UPlayersActionsWidget>(this->GetWorld(), this->PlayersActionsWidgetClass);
+	this->PlayersActionsWidget->SetPlayerPowerUpTexture(1, this->Player1->PowerUpReadyIndicatorTexture);
+	this->PlayersActionsWidget->SetPlayerPowerUpTexture(2, this->Player2->PowerUpReadyIndicatorTexture);
 	this->PlayersActionsWidget->SetPlayerControllerType(1, EPlayersActionsWidgetControllerType::KeyboardPlayer1);
 	if (this->GameInstance->UseControllerForPlayer2)
 	{

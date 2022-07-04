@@ -26,6 +26,7 @@ public:
 	virtual void Landed(const FHitResult& Hit) override;
 	virtual void Jump() override;
 	virtual bool CanJumpInternal_Implementation() const override;
+	virtual void UsePower() override;
 
 protected:
 	UFUNCTION() void SpawnPowerUpReadyIndicator();

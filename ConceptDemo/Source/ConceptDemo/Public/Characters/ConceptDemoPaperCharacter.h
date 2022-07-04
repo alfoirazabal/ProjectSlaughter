@@ -46,6 +46,7 @@ public:
 	UPROPERTY(EditAnywhere) TSubclassOf<APowerupReadyIndicator> PowerUpReadyIndicatorType;
 	UPROPERTY(EditAnywhere) UPaperFlipbook* PowerUpReadyIndicatorFlipBook;
 	UPROPERTY(EditAnywhere) FVector PowerUpReadyIndicatorRelativeLocation;
+	UPROPERTY(EditAnywhere) UTexture2D* PowerUpReadyIndicatorTexture;
 	UPROPERTY() APowerupReadyIndicator* CurrentPowerUpReadyIndicator;
 	
 	UPROPERTY() UUserWidgetPlayersStatusControl* UserWidgetPlayersStatusControl;

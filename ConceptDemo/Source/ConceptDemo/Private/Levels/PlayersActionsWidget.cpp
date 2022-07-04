@@ -19,10 +19,28 @@ void UPlayersActionsWidget::SetActionImageEnabled(UImage* Image, const bool IsEn
 	if (IsEnabled)
 	{
 		Image->SetOpacity(1);
+		if (Image == this->ImgP1UsePower)
+		{
+			this->GetWorld()->GetTimerManager().SetTimer(this->TimerHandlerP1PowerReadyIndicatorFlash, this, &UPlayersActionsWidget::FlashP1PowerUpReadyIndicator, this->PowerReadyIndicatorFlashTime, true);
+		}
+		else if (Image == this->ImgP2UsePower)
+		{
+			this->GetWorld()->GetTimerManager().SetTimer(this->TimerHandlerP2PowerReadyIndicatorFlash, this, &UPlayersActionsWidget::FlashP2PowerUpReadyIndicator, this->PowerReadyIndicatorFlashTime, true);
+		}
 	}
 	else
 	{
 		Image->SetOpacity(this->KeyDisabledOpacityLevel);
+		if (Image == this->ImgP1UsePower)
+		{
+			this->GetWorld()->GetTimerManager().ClearTimer(this->TimerHandlerP1PowerReadyIndicatorFlash);
+			this->ImgP1PowerReadyIndicator->SetVisibility(ESlateVisibility::Hidden);
+		}
+		else if (Image == this->ImgP2UsePower)
+		{
+			this->GetWorld()->GetTimerManager().ClearTimer(this->TimerHandlerP2PowerReadyIndicatorFlash);
+			this->ImgP2PowerReadyIndicator->SetVisibility(ESlateVisibility::Hidden);
+		}
 	}
 }
 
@@ -47,6 +65,36 @@ void UPlayersActionsWidget::MapKeyboardTypesToTextureKeys(const EPlayersActionsW
 		TextureKeys.Add(this->TextureKeyControllerFire);
 		TextureKeys.Add(this->TextureKeyControllerUsePower);
 	}
+}
+
+void UPlayersActionsWidget::FlashP1PowerUpReadyIndicator()
+{
+	if (this->ImgP1PowerReadyIndicator->Visibility == ESlateVisibility::Visible)
+	{
+		this->ImgP1PowerReadyIndicator->SetVisibility(ESlateVisibility::Hidden);
+	}
+	else if (this->ImgP1PowerReadyIndicator->Visibility == ESlateVisibility::Hidden)
+	{
+		this->ImgP1PowerReadyIndicator->SetVisibility(ESlateVisibility::Visible);
+	}
+}
+
+void UPlayersActionsWidget::FlashP2PowerUpReadyIndicator()
+{
+	if (this->ImgP2PowerReadyIndicator->Visibility == ESlateVisibility::Visible)
+	{
+		this->ImgP2PowerReadyIndicator->SetVisibility(ESlateVisibility::Hidden);
+	}
+	else if (this->ImgP2PowerReadyIndicator->Visibility == ESlateVisibility::Hidden)
+	{
+		this->ImgP2PowerReadyIndicator->SetVisibility(ESlateVisibility::Visible);
+	}
+}
+
+void UPlayersActionsWidget::SetPlayerPowerUpTexture(const uint8 PlayerNumber, UTexture2D* PowerUpTexture) const
+{
+	if (PlayerNumber == 1) this->ImgP1PowerReadyIndicator->SetBrushFromTexture(PowerUpTexture);
+	else if (PlayerNumber == 2) this->ImgP2PowerReadyIndicator->SetBrushFromTexture(PowerUpTexture);
 }
 
 void UPlayersActionsWidget::SetPlayerControllerType(const uint8 PlayerNumber,

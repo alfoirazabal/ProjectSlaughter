@@ -33,6 +33,9 @@ class CONCEPTDEMO_API UPlayersActionsWidget : public UUserWidget
 	
 	UFUNCTION() void SetActionImageEnabled(UImage* Image, bool IsEnabled);
 	UFUNCTION() void MapKeyboardTypesToTextureKeys(EPlayersActionsWidgetControllerType ControllerType, TArray<UTexture2D*>& TextureKeys) const;
+
+	UFUNCTION() void FlashP1PowerUpReadyIndicator();
+	UFUNCTION() void FlashP2PowerUpReadyIndicator();
 	
 public:
 
@@ -56,6 +59,13 @@ public:
 	UPROPERTY(meta = (BindWidget)) UImage* ImgP2FireGun;
 	UPROPERTY(meta = (BindWidget)) UImage* ImgP2UsePower;
 
+	UPROPERTY() FTimerHandle TimerHandlerP1PowerReadyIndicatorFlash;
+	UPROPERTY() FTimerHandle TimerHandlerP2PowerReadyIndicatorFlash;
+	UPROPERTY(meta = (BindWidget)) UImage* ImgP1PowerReadyIndicator;
+	UPROPERTY(meta = (BindWidget)) UImage* ImgP2PowerReadyIndicator;
+	UPROPERTY(EditAnywhere) float PowerReadyIndicatorFlashTime = 0.5;
+
+	UFUNCTION() void SetPlayerPowerUpTexture(uint8 PlayerNumber, UTexture2D* PowerUpTexture) const;
 	UFUNCTION() void SetPlayerControllerType(uint8 PlayerNumber, EPlayersActionsWidgetControllerType ControllerType) const;
 	UFUNCTION() void UpdateHUD(uint8 PlayerNumber, EPlayersActionsWidgetAction WidgetAction, bool IsEnabled);
 	

@@ -65,6 +65,8 @@ bool ARabbitPaperCharacter::CanJumpInternal_Implementation() const
 	return this->SequentialTimesJumped <= this->SequentialJumps;
 }
 
+void ARabbitPaperCharacter::UsePower(){ }
+
 void ARabbitPaperCharacter::SpawnPowerUpReadyIndicator()
 {
 	if (this->CurrentPowerUpReadyIndicator)

@@ -99,7 +99,7 @@ void ABullet::OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor* OtherA
 				Character->AttachedGun == nullptr
 			) {
 				this->TargetDamagedActor = Character;
-				Character->TakeDamage(this->BulletDamage);
+				Character->Harm(this->BulletDamage);
 				const AConceptDemoPaperPawn* SourcePawn = Cast<AConceptDemoPaperPawn>(this->SourceActor);
 				if (SourcePawn)
 				{

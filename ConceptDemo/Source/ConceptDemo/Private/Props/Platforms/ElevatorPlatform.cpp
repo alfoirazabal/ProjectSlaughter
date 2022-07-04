@@ -90,7 +90,7 @@ void AElevatorPlatform::Tick(float DeltaTime)
 	}
 }
 
-EPlatform_Status AElevatorPlatform::GetTargetLocation() const
+EPlatform_Status AElevatorPlatform::GetTargetPlatformLocation() const
 {
 	switch (this->LastStaticStatus) {
 		case EPlatform_Status::On_Ceiling:

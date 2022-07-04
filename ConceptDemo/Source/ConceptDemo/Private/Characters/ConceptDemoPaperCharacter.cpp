@@ -108,7 +108,7 @@ void AConceptDemoPaperCharacter::BindInputs()
 
 void AConceptDemoPaperCharacter::UpdateDamageLevel()
 {
-	if (this->DamageLevel == Critical && (this->CurrentLifeSize > this->DamageLevel2Threshold) || (this->CurrentLifeSize == this->LifeSize))
+	if ((this->DamageLevel == Critical && (this->CurrentLifeSize > this->DamageLevel2Threshold)) || (this->CurrentLifeSize == this->LifeSize))
 	{
 		if (this->IdleFlipBookDamageLevel1) this->IdleFlipBook = this->IdleFlipBookDamageLevel1;
 		if (this->JumpingFlipBookDamageLevel1) this->JumpingFlipBook = this->JumpingFlipBookDamageLevel1;
@@ -354,7 +354,7 @@ void AConceptDemoPaperCharacter::UpdateShotsCount()
 	}
 }
 
-void AConceptDemoPaperCharacter::TakeDamage(const float DamageCount)
+void AConceptDemoPaperCharacter::Harm(const float DamageCount)
 {
 	if (!this->Immune)
 	{

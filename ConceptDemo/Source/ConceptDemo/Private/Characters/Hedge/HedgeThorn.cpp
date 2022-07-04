@@ -10,6 +10,7 @@
 #include "Components/SphereComponent.h"
 #include "Kismet/GameplayStatics.h"
 #include "SpecialZones/DangerZone.h"
+#include "Props/Platforms/SemiSolidPlatform.h"
 
 
 
@@ -99,12 +100,18 @@ void AHedgeThorn::OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor* Ot
 		AConceptDemoPaperCharacter* Character = Cast<AConceptDemoPaperCharacter>(OtherActor);
 		if (Character && Character != this->HedgeThornSource)
 		{
-			Character->TakeDamage(this->HedgeThornDamage);
+			Character->Harm(this->HedgeThornDamage);
 			const int EnemyDamageScore = this->HedgeThornDamage * 100;
 			this->HedgeThornSource->OnEnemyDamaged.Broadcast(Character, this->HedgeThornSource, this, EnemyDamageScore);
 			this->DestroyOrExplodeBullet();
 		}
-		else if (OtherActor != this && !Cast<ADangerZone>(OtherActor) && !Cast<AGun>(OtherActor) && !Cast<ACharacterPowerProp>(OtherActor))
+		else if (
+			OtherActor != this && 
+			!Cast<ADangerZone>(OtherActor) && 
+			!Cast<AGun>(OtherActor) && 
+			!Cast<ACharacterPowerProp>(OtherActor) &&
+			!Cast<ASemiSolidPlatform>(OtherActor)
+		)
 		{
 			this->DestroyOrExplodeBullet();
 		}

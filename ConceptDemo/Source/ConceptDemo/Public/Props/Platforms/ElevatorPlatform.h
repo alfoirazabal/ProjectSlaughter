@@ -52,6 +52,6 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
-	EPlatform_Status GetTargetLocation() const;
+	EPlatform_Status GetTargetPlatformLocation() const;
 
 };

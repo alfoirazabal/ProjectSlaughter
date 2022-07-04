@@ -27,8 +27,6 @@ ATrainAISpawner::ATrainAISpawner()
 	this->trainTrafficLights = nullptr;
 
 	this->TrainOnStationSoundPlayDelayFromYellowLight = 4;
-
-	this->demoConstantsHelper = new SlaughterFirendsDemoConstants();
 }
 
 void ATrainAISpawner::SetRedLight() const
@@ -100,7 +98,7 @@ void ATrainAISpawner::Tick(const float DeltaTime)
 	Super::Tick(DeltaTime);
 	if (this->currentSpawnTime == 0)
 	{
-		this->randSpawnTime = this->demoConstantsHelper->GenerateBoundedFloat(this->minSpawnTime, this->maxSpawnTime);
+		this->randSpawnTime = FMath::RandRange(this->minSpawnTime, this->maxSpawnTime);
 	}
 	if (this->currentSpawnTime >= this->randSpawnTime) {
 		this->SpawnVehicle();

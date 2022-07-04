@@ -5,7 +5,7 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
 #include "Guns/Bullets/Bullet.h"
-#include "SlaughterFirendsDemoConstants.h"
+#include "SlaughterFriendsDemoConstants.h"
 #include "Gun.generated.h"
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnShotLost);

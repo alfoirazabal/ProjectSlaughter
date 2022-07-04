@@ -4,7 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "PaperCharacter.h"
-#include "SlaughterFirendsDemoConstants.h"
+#include "SlaughterFriendsDemoConstants.h"
 #include "ConceptDemoPaperPawn.generated.h"
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_FourParams(FOnEnemyDamaged, AActor*, TargetPawn, AActor*, SourcePawn, AActor*, Asset, int, DamageScore);

@@ -5,7 +5,7 @@
 #include "CoreMinimal.h"
 #include "ExplodingBullet.h"
 #include "GameFramework/Actor.h"
-#include "SlaughterFirendsDemoConstants.h"
+#include "SlaughterFriendsDemoConstants.h"
 #include "Bullet.generated.h"
 
 UCLASS()

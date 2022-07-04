@@ -45,7 +45,7 @@ void AElevatorLightSetter::Tick(const float DeltaTime)
 			default:
 				break;
 		}
-		switch (this->ElevatorPlatform->GetTargetLocation()) {
+		switch (this->ElevatorPlatform->GetTargetPlatformLocation()) {
 			case EPlatform_Status::On_Ceiling:
 				this->ElevatorLight->SpikesRedLight->SetVisibility(true);
 				break;

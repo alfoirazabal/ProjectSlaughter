@@ -6,5 +6,5 @@
 void UMainMenuWidget::NativeConstruct()
 {
 	Super::NativeConstruct();
-	this->TxtVersionText->SetText(FText::FromString("V 2022.07.03"));
+	this->TxtVersionText->SetText(FText::FromString("V 2022.07.03-2"));
 }

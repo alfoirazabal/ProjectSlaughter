@@ -30,6 +30,8 @@ class CONCEPTDEMO_API UPlayerSelectionWidget : public UUserWidget
 
 public:
 
+	UPROPERTY(EditAnywhere) TSubclassOf<UUserWidget> MainMenuWidgetClass;
+	
 	UPROPERTY(EditAnywhere) USoundBase* PlayerChangeSound;
 	UPROPERTY(EditAnywhere) TArray<UTexture2D*> BackgroundTextureSequence;
 	UPROPERTY(EditAnywhere) float BackgroundTextureSequenceFlipTime;
@@ -76,6 +78,7 @@ public:
 	UPROPERTY(meta = (BindWidget), BlueprintReadOnly) UEditableTextBox* EditableTextBoxPlayer2Name;
 
 	UPROPERTY(meta = (BindWidget)) UButton* ButtonBegin;
+	UPROPERTY(meta = (BindWidget)) UButton* ButtonGoBack;
 
 	explicit UPlayerSelectionWidget(const FObjectInitializer& ObjectInitializer);
 	virtual void NativeConstruct() override;

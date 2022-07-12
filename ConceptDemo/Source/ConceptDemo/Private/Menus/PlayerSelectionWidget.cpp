@@ -94,6 +94,8 @@ void UPlayerSelectionWidget::NativeConstruct()
 	PlayerController->InputComponent->BindAction(TEXT("C Down"), IE_Pressed, this, &UPlayerSelectionWidget::P2SelectDownwardsPlayer);
 	PlayerController->InputComponent->BindAction(TEXT("C Right"), IE_Pressed, this, &UPlayerSelectionWidget::P2SelectRightwardsPlayer);
 	PlayerController->InputComponent->BindAction(TEXT("C Left"), IE_Pressed, this, &UPlayerSelectionWidget::P2SelectLeftwardsPlayer);
+
+	this->ButtonGoBack->OnClicked.AddDynamic(this, &UPlayerSelectionWidget::GoBack);
 }
 
 void UPlayerSelectionWidget::NativeDestruct()
@@ -104,7 +106,12 @@ void UPlayerSelectionWidget::NativeDestruct()
 
 void UPlayerSelectionWidget::GoBack()
 {
-	GEngine->AddOnScreenDebugMessage(287572113, 2, FColor::Green, "Implemented on Blueprints");
+	const APlayerController* PlayerController = this->GetOwningPlayer();
+	UInputComponent* PlayerInputComponent = PlayerController->InputComponent;
+	PlayerInputComponent->ClearActionBindings();
+	UUserWidget* MainMenuWidget = CreateWidget<UUserWidget>(this->GetWorld(), this->MainMenuWidgetClass);
+	MainMenuWidget->AddToViewport();
+	this->RemoveFromParent();
 }
 
 void UPlayerSelectionWidget::BeginGame()

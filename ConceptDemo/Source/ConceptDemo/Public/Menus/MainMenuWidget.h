@@ -17,7 +17,7 @@ class CONCEPTDEMO_API UMainMenuWidget : public UUserWidget
 {
 	GENERATED_BODY()
 
-	UPROPERTY(EditAnywhere) FText VersionText = FText::FromString("V 2022.07.12");
+	UPROPERTY(EditAnywhere) FText VersionText = FText::FromString("V 2022.07.12-2");
 	
 	UPROPERTY(EditAnywhere) float BackgroundFlipTime = 0.1;
 	UPROPERTY(EditAnywhere) TArray<UTexture2D*> BackgroundTextures;

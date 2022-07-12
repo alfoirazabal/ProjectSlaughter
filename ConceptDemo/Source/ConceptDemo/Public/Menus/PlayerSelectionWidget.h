@@ -68,6 +68,19 @@ public:
 	UPROPERTY(meta = (BindWidget)) UImage* ImgSelectedP2Pos4;
 	UPROPERTY(meta = (BindWidget)) UImage* ImgSelectedP2Pos5;
 	UPROPERTY(meta = (BindWidget)) UImage* ImgSelectedP2Pos6;
+	
+	UPROPERTY(meta = (BindWidget)) UButton* BtnP1Pos1;
+	UPROPERTY(meta = (BindWidget)) UButton* BtnP1Pos2;
+	UPROPERTY(meta = (BindWidget)) UButton* BtnP1Pos3;
+	UPROPERTY(meta = (BindWidget)) UButton* BtnP1Pos4;
+	UPROPERTY(meta = (BindWidget)) UButton* BtnP1Pos5;
+	UPROPERTY(meta = (BindWidget)) UButton* BtnP1Pos6;
+	UPROPERTY(meta = (BindWidget)) UButton* BtnP2Pos1;
+	UPROPERTY(meta = (BindWidget)) UButton* BtnP2Pos2;
+	UPROPERTY(meta = (BindWidget)) UButton* BtnP2Pos3;
+	UPROPERTY(meta = (BindWidget)) UButton* BtnP2Pos4;
+	UPROPERTY(meta = (BindWidget)) UButton* BtnP2Pos5;
+	UPROPERTY(meta = (BindWidget)) UButton* BtnP2Pos6;
 
 	UPROPERTY(meta = (BindWidget)) UImage* ImgP1Body;
 	UPROPERTY(meta = (BindWidget)) UImage* ImgP2Body;
@@ -100,6 +113,19 @@ protected:
 	UFUNCTION() void P2SelectUpwardsPlayer();
 	UFUNCTION() void P2SelectRightwardsPlayer();
 	UFUNCTION() void P2SelectDownwardsPlayer();
+
+	UFUNCTION() void ClickedP1Pos1();
+	UFUNCTION() void ClickedP1Pos2();
+	UFUNCTION() void ClickedP1Pos3();
+	UFUNCTION() void ClickedP1Pos4();
+	UFUNCTION() void ClickedP1Pos5();
+	UFUNCTION() void ClickedP1Pos6();
+	UFUNCTION() void ClickedP2Pos1();
+	UFUNCTION() void ClickedP2Pos2();
+	UFUNCTION() void ClickedP2Pos3();
+	UFUNCTION() void ClickedP2Pos4();
+	UFUNCTION() void ClickedP2Pos5();
+	UFUNCTION() void ClickedP2Pos6();
 
 	UFUNCTION() void DisplaySelectedP1();
 	UFUNCTION() void DisplaySelectedP2();

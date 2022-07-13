@@ -11,7 +11,7 @@ ARabbitPaperCharacter::ARabbitPaperCharacter()
 	this->SequentialJumps = 2;
 	this->SequentialTimesJumped = 0;
 	Super::SpecialPowerLoadTime = 0;
-	this->PlayerDescription = FString("RABBIT").Append(LINE_TERMINATOR).Append("Can double jump");
+	this->PlayerDescription = FString("BLASTER").Append(LINE_TERMINATOR).Append("Can double jump");
 	this->SpecialPowerReadyPropShown = true;
 }
 

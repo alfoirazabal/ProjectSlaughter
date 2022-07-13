@@ -8,7 +8,7 @@
 ASkunkPaperCharacter::ASkunkPaperCharacter()
 {
 	Super::SpecialPowerLoadTime = 2500;
-	this->PlayerDescription = FString("SKUNK").Append(LINE_TERMINATOR).Append("Can throw toxic fart that slows down enemies");
+	this->PlayerDescription = FString("MARLEY").Append(LINE_TERMINATOR).Append("Can throw toxic fart that slows down enemies");
 }
 
 void ASkunkPaperCharacter::Fire()

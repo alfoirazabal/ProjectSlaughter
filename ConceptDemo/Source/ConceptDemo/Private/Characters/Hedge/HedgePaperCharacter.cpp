@@ -12,7 +12,7 @@ AHedgePaperCharacter::AHedgePaperCharacter()
 	this->ThornSpawnDistance = 75;
 	this->RelativeGunAttachLocation = FVector(-5, -35, -45);
 
-	this->PlayerDescription = FString("HEDGE").Append(LINE_TERMINATOR).Append("Can throw thorns from his back and damage enemies");
+	this->PlayerDescription = FString("MEEDLE").Append(LINE_TERMINATOR).Append("Can throw thorns from his back and damage enemies");
 }
 
 void AHedgePaperCharacter::Fire()

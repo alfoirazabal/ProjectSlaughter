@@ -36,7 +36,7 @@ void ADangerZone::Tick(float DeltaSeconds)
 			AConceptDemoPaperCharacter* Character = Cast<AConceptDemoPaperCharacter>(OverlappingActor);
 			if (Character)
 			{
-				Character->TakeDamage(this->ZoneDamage);
+				Character->Harm(this->ZoneDamage);
 			}
 		}
 		this->CurrentDamageHitDeltaSeconds = this->DamageHitDeltaSeconds;

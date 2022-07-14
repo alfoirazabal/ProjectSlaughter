@@ -4,6 +4,7 @@
 #include "Menus/PlayerSelectionWidget.h"
 
 #include "DemoGameInstance.h"
+#include "Components/AudioComponent.h"
 #include "Components/Image.h"
 #include "Kismet/GameplayStatics.h"
 
@@ -44,18 +45,6 @@ void UPlayerSelectionWidget::NativeConstruct()
 		this->BackgroundImageFlippingTimer, this, &UPlayerSelectionWidget::SetBackgroundImageFlipping,
 		this->BackgroundTextureSequenceFlipTime, true
 	);
-	this->P1Buttons.Add(this->BtnP1Pos1);
-	this->P1Buttons.Add(this->BtnP1Pos2);
-	this->P1Buttons.Add(this->BtnP1Pos3);
-	this->P1Buttons.Add(this->BtnP1Pos4);
-	this->P1Buttons.Add(this->BtnP1Pos5);
-	this->P1Buttons.Add(this->BtnP1Pos6);
-	this->P2Buttons.Add(this->BtnP2Pos1);
-	this->P2Buttons.Add(this->BtnP2Pos2);
-	this->P2Buttons.Add(this->BtnP2Pos3);
-	this->P2Buttons.Add(this->BtnP2Pos4);
-	this->P2Buttons.Add(this->BtnP2Pos5);
-	this->P2Buttons.Add(this->BtnP2Pos6);
 	this->P1CharacterImages.Add(this->ImgP1Pos1);
 	this->P1CharacterImages.Add(this->ImgP1Pos2);
 	this->P1CharacterImages.Add(this->ImgP1Pos3);
@@ -80,25 +69,27 @@ void UPlayerSelectionWidget::NativeConstruct()
 	this->P2SelectionMarkerImages.Add(this->ImgSelectedP2Pos4);
 	this->P2SelectionMarkerImages.Add(this->ImgSelectedP2Pos5);
 	this->P2SelectionMarkerImages.Add(this->ImgSelectedP2Pos6);
+	this->BtnP1Pos1->OnClicked.AddDynamic(this, &UPlayerSelectionWidget::ClickedP1Pos1);
+	this->BtnP1Pos2->OnClicked.AddDynamic(this, &UPlayerSelectionWidget::ClickedP1Pos2);
+	this->BtnP1Pos3->OnClicked.AddDynamic(this, &UPlayerSelectionWidget::ClickedP1Pos3);
+	this->BtnP1Pos4->OnClicked.AddDynamic(this, &UPlayerSelectionWidget::ClickedP1Pos4);
+	this->BtnP1Pos5->OnClicked.AddDynamic(this, &UPlayerSelectionWidget::ClickedP1Pos5);
+	this->BtnP1Pos6->OnClicked.AddDynamic(this, &UPlayerSelectionWidget::ClickedP1Pos6);
+	this->BtnP2Pos1->OnClicked.AddDynamic(this, &UPlayerSelectionWidget::ClickedP2Pos1);
+	this->BtnP2Pos2->OnClicked.AddDynamic(this, &UPlayerSelectionWidget::ClickedP2Pos2);
+	this->BtnP2Pos3->OnClicked.AddDynamic(this, &UPlayerSelectionWidget::ClickedP2Pos3);
+	this->BtnP2Pos4->OnClicked.AddDynamic(this, &UPlayerSelectionWidget::ClickedP2Pos4);
+	this->BtnP2Pos5->OnClicked.AddDynamic(this, &UPlayerSelectionWidget::ClickedP2Pos5);
+	this->BtnP2Pos6->OnClicked.AddDynamic(this, &UPlayerSelectionWidget::ClickedP2Pos6);
 	for (uint8 i = 0 ; i < 6 ; i++)
 	{
 		this->P1CharacterImages[i]->SetBrushFromTexture(this->P1Characters[i]->CharacterFaceImage);
 		this->P2CharacterImages[i]->SetBrushFromTexture(this->P2Characters[i]->CharacterFaceImage);
 	}
-	this->P1Buttons[0]->OnClicked.AddDynamic(this, &UPlayerSelectionWidget::SelectP1Pos1);
-	this->P1Buttons[1]->OnClicked.AddDynamic(this, &UPlayerSelectionWidget::SelectP1Pos2);
-	this->P1Buttons[2]->OnClicked.AddDynamic(this, &UPlayerSelectionWidget::SelectP1Pos3);
-	this->P1Buttons[3]->OnClicked.AddDynamic(this, &UPlayerSelectionWidget::SelectP1Pos4);
-	this->P1Buttons[4]->OnClicked.AddDynamic(this, &UPlayerSelectionWidget::SelectP1Pos5);
-	this->P1Buttons[5]->OnClicked.AddDynamic(this, &UPlayerSelectionWidget::SelectP1Pos6);
-	this->P2Buttons[0]->OnClicked.AddDynamic(this, &UPlayerSelectionWidget::SelectP2Pos1);
-	this->P2Buttons[1]->OnClicked.AddDynamic(this, &UPlayerSelectionWidget::SelectP2Pos2);
-	this->P2Buttons[2]->OnClicked.AddDynamic(this, &UPlayerSelectionWidget::SelectP2Pos3);
-	this->P2Buttons[3]->OnClicked.AddDynamic(this, &UPlayerSelectionWidget::SelectP2Pos4);
-	this->P2Buttons[4]->OnClicked.AddDynamic(this, &UPlayerSelectionWidget::SelectP2Pos5);
-	this->P2Buttons[5]->OnClicked.AddDynamic(this, &UPlayerSelectionWidget::SelectP2Pos6);
 	this->Player1Character = this->P1Characters[FMath::RandRange(0, this->P1Characters.Num() - 1)];
 	this->Player2Character = this->P2Characters[FMath::RandRange(0, this->P2Characters.Num() - 1)];
+	this->Player1SelectionAudioComponent = NewObject<UAudioComponent>(this->GetWorld());
+	this->Player2SelectionAudioComponent = NewObject<UAudioComponent>(this->GetWorld());
 	this->DisplaySelectedP1();
 	this->DisplaySelectedP2();
 	this->ButtonBegin->OnClicked.AddDynamic(this, &UPlayerSelectionWidget::BeginGame);
@@ -111,6 +102,12 @@ void UPlayerSelectionWidget::NativeConstruct()
 	PlayerController->InputComponent->BindAction(TEXT("P2 Up"), IE_Pressed, this, &UPlayerSelectionWidget::P2SelectUpwardsPlayer);
 	PlayerController->InputComponent->BindAction(TEXT("P2 Right"), IE_Pressed, this, &UPlayerSelectionWidget::P2SelectRightwardsPlayer);
 	PlayerController->InputComponent->BindAction(TEXT("P2 Down"), IE_Pressed, this, &UPlayerSelectionWidget::P2SelectDownwardsPlayer);
+	PlayerController->InputComponent->BindAction(TEXT("C Up"), IE_Pressed, this, &UPlayerSelectionWidget::P2SelectUpwardsPlayer);
+	PlayerController->InputComponent->BindAction(TEXT("C Down"), IE_Pressed, this, &UPlayerSelectionWidget::P2SelectDownwardsPlayer);
+	PlayerController->InputComponent->BindAction(TEXT("C Right"), IE_Pressed, this, &UPlayerSelectionWidget::P2SelectRightwardsPlayer);
+	PlayerController->InputComponent->BindAction(TEXT("C Left"), IE_Pressed, this, &UPlayerSelectionWidget::P2SelectLeftwardsPlayer);
+
+	this->ButtonGoBack->OnClicked.AddDynamic(this, &UPlayerSelectionWidget::GoBack);
 }
 
 void UPlayerSelectionWidget::NativeDestruct()
@@ -121,7 +118,12 @@ void UPlayerSelectionWidget::NativeDestruct()
 
 void UPlayerSelectionWidget::GoBack()
 {
-	GEngine->AddOnScreenDebugMessage(287572113, 2, FColor::Green, "Implemented on Blueprints");
+	const APlayerController* PlayerController = this->GetOwningPlayer();
+	UInputComponent* PlayerInputComponent = PlayerController->InputComponent;
+	PlayerInputComponent->ClearActionBindings();
+	UUserWidget* MainMenuWidget = CreateWidget<UUserWidget>(this->GetWorld(), this->MainMenuWidgetClass);
+	MainMenuWidget->AddToViewport();
+	this->RemoveFromParent();
 }
 
 void UPlayerSelectionWidget::BeginGame()
@@ -147,68 +149,6 @@ void UPlayerSelectionWidget::SetBackgroundImageFlipping()
 		}
 		this->BackgroundImage->SetBrushFromTexture(this->BackgroundTextureSequence[this->CurrentFlippingImageIndex]);
 	}
-}
-
-void UPlayerSelectionWidget::SelectP1Pos1()
-{
-	this->Player1Character = this->P1Characters[0];
-	DisplaySelectedP1();
-}
-void UPlayerSelectionWidget::SelectP1Pos2()
-{
-	this->Player1Character = this->P1Characters[1];
-	DisplaySelectedP1();
-}
-void UPlayerSelectionWidget::SelectP1Pos3()
-{
-	this->Player1Character = this->P1Characters[2];
-	DisplaySelectedP1();
-}
-void UPlayerSelectionWidget::SelectP1Pos4()
-{
-	this->Player1Character = this->P1Characters[3];
-	DisplaySelectedP1();
-}
-void UPlayerSelectionWidget::SelectP1Pos5()
-{
-	this->Player1Character = this->P1Characters[4];
-	DisplaySelectedP1();
-}
-void UPlayerSelectionWidget::SelectP1Pos6()
-{
-	this->Player1Character = this->P1Characters[5];
-	DisplaySelectedP1();
-}
-
-void UPlayerSelectionWidget::SelectP2Pos1()
-{
-	this->Player2Character = this->P2Characters[0];
-	DisplaySelectedP2();
-}
-void UPlayerSelectionWidget::SelectP2Pos2()
-{
-	this->Player2Character = this->P2Characters[1];
-	DisplaySelectedP2();
-}
-void UPlayerSelectionWidget::SelectP2Pos3()
-{
-	this->Player2Character = this->P2Characters[2];
-	DisplaySelectedP2();
-}
-void UPlayerSelectionWidget::SelectP2Pos4()
-{
-	this->Player2Character = this->P2Characters[3];
-	DisplaySelectedP2();
-}
-void UPlayerSelectionWidget::SelectP2Pos5()
-{
-	this->Player2Character = this->P2Characters[4];
-	DisplaySelectedP2();
-}
-void UPlayerSelectionWidget::SelectP2Pos6()
-{
-	this->Player2Character = this->P2Characters[5];
-	DisplaySelectedP2();
 }
 
 void UPlayerSelectionWidget::P1SelectLeftwardsPlayer()
@@ -293,6 +233,78 @@ void UPlayerSelectionWidget::P2SelectDownwardsPlayer()
 	}
 }
 
+void UPlayerSelectionWidget::ClickedP1Pos1()
+{
+	this->Player1Character = this->P1Characters[0];
+	this->DisplaySelectedP1();
+}
+
+void UPlayerSelectionWidget::ClickedP1Pos2()
+{
+	this->Player1Character = this->P1Characters[1];
+	this->DisplaySelectedP1();
+}
+
+void UPlayerSelectionWidget::ClickedP1Pos3()
+{
+	this->Player1Character = this->P1Characters[2];
+	this->DisplaySelectedP1();
+}
+
+void UPlayerSelectionWidget::ClickedP1Pos4()
+{
+	this->Player1Character = this->P1Characters[3];
+	this->DisplaySelectedP1();
+}
+
+void UPlayerSelectionWidget::ClickedP1Pos5()
+{
+	this->Player1Character = this->P1Characters[4];
+	this->DisplaySelectedP1();
+}
+
+void UPlayerSelectionWidget::ClickedP1Pos6()
+{
+	this->Player1Character = this->P1Characters[5];
+	this->DisplaySelectedP1();
+}
+
+void UPlayerSelectionWidget::ClickedP2Pos1()
+{
+	this->Player2Character = this->P2Characters[0];
+	this->DisplaySelectedP2();
+}
+
+void UPlayerSelectionWidget::ClickedP2Pos2()
+{
+	this->Player2Character = this->P2Characters[1];
+	this->DisplaySelectedP2();
+}
+
+void UPlayerSelectionWidget::ClickedP2Pos3()
+{
+	this->Player2Character = this->P2Characters[2];
+	this->DisplaySelectedP2();
+}
+
+void UPlayerSelectionWidget::ClickedP2Pos4()
+{
+	this->Player2Character = this->P2Characters[3];
+	this->DisplaySelectedP2();
+}
+
+void UPlayerSelectionWidget::ClickedP2Pos5()
+{
+	this->Player2Character = this->P2Characters[4];
+	this->DisplaySelectedP2();
+}
+
+void UPlayerSelectionWidget::ClickedP2Pos6()
+{
+	this->Player2Character = this->P2Characters[5];
+	this->DisplaySelectedP2();
+}
+
 void UPlayerSelectionWidget::DisplaySelectedP1()
 {
 	const uint8 SelectedCharacterIndex = this->P1Characters.IndexOfByKey(this->Player1Character);
@@ -308,6 +320,11 @@ void UPlayerSelectionWidget::DisplaySelectedP1()
 			this->P1SelectionMarkerImages[i]->SetVisibility(ESlateVisibility::Hidden);
 		}
 	}
+	this->ImgP1Body->SetBrushFromTexture(this->Player1Character->CharacterImage);
+	if (Player1SelectionAudioComponent->IsPlaying()) Player1SelectionAudioComponent->Stop();
+	Player1SelectionAudioComponent->SetSound(this->Player1Character->PaperCharacterSounds.Select);
+	Player1SelectionAudioComponent->Play();
+	UGameplayStatics::PlaySound2D(this->GetWorld(), this->PlayerChangeSound);
 }
 
 void UPlayerSelectionWidget::DisplaySelectedP2()
@@ -325,4 +342,9 @@ void UPlayerSelectionWidget::DisplaySelectedP2()
 			this->P2SelectionMarkerImages[i]->SetVisibility(ESlateVisibility::Hidden);
 		}
 	}
+	this->ImgP2Body->SetBrushFromTexture(this->Player2Character->CharacterImage);
+	if (Player2SelectionAudioComponent->IsPlaying()) Player2SelectionAudioComponent->Stop();
+	Player2SelectionAudioComponent->SetSound(this->Player2Character->PaperCharacterSounds.Select);
+	Player2SelectionAudioComponent->Play();
+	UGameplayStatics::PlaySound2D(this->GetWorld(), this->PlayerChangeSound);
 }

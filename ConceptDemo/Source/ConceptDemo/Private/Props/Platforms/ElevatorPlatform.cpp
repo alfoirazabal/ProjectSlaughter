@@ -49,10 +49,17 @@ void AElevatorPlatform::Tick(float DeltaTime)
 					ZLocation >= this->MiddleLevel - this->Speed &&
 					!this->bInTheMiddle
 			) {
-				this->bInTheMiddle = true;
-				this->CurrentStillTime = this->StillTime;
-				this->PlatformStatus = EPlatform_Status::On_Middle;
-				this->LastStaticStatus = this->PlatformStatus;
+				if (!this->ElevatorLight || (this->ElevatorLight && this->ElevatorLight->bGreenLightOn))
+				{
+					this->bInTheMiddle = true;
+					this->CurrentStillTime = this->StillTime;
+					this->PlatformStatus = EPlatform_Status::On_Middle;
+					this->LastStaticStatus = this->PlatformStatus;
+				}
+				if (!this->ElevatorLight)
+				{
+					GEngine->AddOnScreenDebugMessage(192476112, 2, FColor::Red, "Elevator light not set for Elevator Platform. Can cause elevator platform to go down when train is coming in");
+				}
 			}
 			else if (ZLocation <= this->FloorLevel && this->MovingDirection != EPlatform_Moving_Direction::Moving_Up) {
 				this->MovingDirection = EPlatform_Moving_Direction::Moving_Up;
@@ -83,7 +90,7 @@ void AElevatorPlatform::Tick(float DeltaTime)
 	}
 }
 
-EPlatform_Status AElevatorPlatform::GetTargetLocation() const
+EPlatform_Status AElevatorPlatform::GetTargetPlatformLocation() const
 {
 	switch (this->LastStaticStatus) {
 		case EPlatform_Status::On_Ceiling:

@@ -3,8 +3,8 @@
 
 #include "Characters/ConceptDemoPaperPawn.h"
 
+#include "GameFramework/CharacterMovementComponent.h"
 #include "Guns/Gun.h"
-#include "Kismet/GameplayStatics.h"
 
 constexpr float GDefault_Character_Plane_X_Position = 760;
 
@@ -15,6 +15,13 @@ AConceptDemoPaperPawn::AConceptDemoPaperPawn()
 	PrimaryActorTick.bCanEverTick = true;
 	
 	this->AutoPossessAI = EAutoPossessAI::PlacedInWorldOrSpawned;
+
+	UCharacterMovementComponent* CurrentCharacterMovement = this->GetCharacterMovement();
+	CurrentCharacterMovement->GravityScale = 10;
+	CurrentCharacterMovement->BrakingFrictionFactor = 10;
+	CurrentCharacterMovement->JumpZVelocity = 2300;
+	CurrentCharacterMovement->MaxAcceleration = 5000;
+	CurrentCharacterMovement->AirControl = 1;
 
 }
 
@@ -76,7 +83,11 @@ void AConceptDemoPaperPawn::BeginPlay()
 void AConceptDemoPaperPawn::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-
+	if (this->Frozen)
+	{
+		UCharacterMovementComponent* CharacterMovementComponent = this->GetCharacterMovement();
+		CharacterMovementComponent->Velocity = FVector::ZeroVector;
+	}
 }
 
 void AConceptDemoPaperPawn::SetPlayerNumber(const TEnumAsByte<EAutoReceiveInput::Type> PlayerNumber)

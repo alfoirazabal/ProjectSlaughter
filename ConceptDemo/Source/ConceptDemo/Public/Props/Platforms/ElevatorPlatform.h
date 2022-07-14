@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
+#include "Props/ElevatorLights/ElevatorLightAI.h"
 #include "ElevatorPlatform.generated.h"
 
 UENUM() enum EPlatform_Moving_Direction {
@@ -30,6 +31,7 @@ private:
 public:	
 	// Sets default values for this actor's properties
 	AElevatorPlatform();
+	UPROPERTY(EditAnywhere) AElevatorLightAI* ElevatorLight; 
 	UPROPERTY(EditAnywhere) bool bIsActivated;
 	UPROPERTY(EditAnywhere) float FloorLevel;
 	UPROPERTY(EditAnywhere) float MiddleLevel;
@@ -50,6 +52,6 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
-	EPlatform_Status GetTargetLocation() const;
+	EPlatform_Status GetTargetPlatformLocation() const;
 
 };

@@ -24,8 +24,6 @@ ABullet::ABullet()
 	this->ExplodingBulletClass = nullptr;
 	this->ExplodingBullet = false;
 
-	this->BulletScoreMultiplier = 5;
-
 	this->TriggerCapsule = CreateDefaultSubobject<UCapsuleComponent>(TEXT("Trigger Capsule"));
 	this->TriggerCapsule->InitCapsuleSize(13.45, 13.45);
 	this->TriggerCapsule->SetCollisionProfileName("Trigger");
@@ -82,8 +80,8 @@ void ABullet::DestroyOrExplodeBullet()
 		ExplodingBulletObject->SourceActor = this->SourceActor;
 		UGameplayStatics::FinishSpawningActor(ExplodingBulletObject, this->GetActorTransform());
 		ExplodingBulletObject->SetActorRotation(Rotator);
+		if (this->ShotSoundComponent) this->ShotSoundComponent->Stop();
 	}
-	if (this->ShotSoundComponent) this->ShotSoundComponent->Stop();
 	this->Destroy();
 }
 
@@ -93,6 +91,7 @@ void ABullet::OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor* OtherA
 	if (OtherComp)
 	{
 		AConceptDemoPaperCharacter* Character = Cast<AConceptDemoPaperCharacter>(OtherActor);
+		const ABullet* OtherBullet = Cast<ABullet>(OtherActor);
 		if (Character)
 		{
 			if (
@@ -100,13 +99,20 @@ void ABullet::OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor* OtherA
 				Character->AttachedGun == nullptr
 			) {
 				this->TargetDamagedActor = Character;
-				Character->TakeDamage(this->BulletDamage);
+				Character->Harm(this->BulletDamage);
 				const AConceptDemoPaperPawn* SourcePawn = Cast<AConceptDemoPaperPawn>(this->SourceActor);
 				if (SourcePawn)
 				{
-					float DamageScore = this->BulletDamage *= this->BulletScoreMultiplier;
-					SourcePawn->OnEnemyDamaged.Broadcast(Character, SourceActor, this, this->BulletDamage);
+					const int EnemyDamageScore = this->BulletDamage * 100;
+					SourcePawn->OnEnemyDamaged.Broadcast(Character, SourceActor, this, EnemyDamageScore);
 				}
+				this->DestroyOrExplodeBullet();
+			}
+		}
+		else if (OtherBullet)
+		{
+			if (this->SourceGun != OtherBullet->SourceGun)
+			{
 				this->DestroyOrExplodeBullet();
 			}
 		}

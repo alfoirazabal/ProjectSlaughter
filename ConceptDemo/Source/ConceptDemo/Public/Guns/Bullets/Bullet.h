@@ -5,7 +5,7 @@
 #include "CoreMinimal.h"
 #include "ExplodingBullet.h"
 #include "GameFramework/Actor.h"
-#include "SlaughterFirendsDemoConstants.h"
+#include "SlaughterFriendsDemoConstants.h"
 #include "Bullet.generated.h"
 
 UCLASS()
@@ -29,7 +29,6 @@ public:
 	UPROPERTY() AActor* SourceGun;
 
 	UPROPERTY(EditAnywhere) float BulletDamage;
-	UPROPERTY(EditAnywhere) float BulletScoreMultiplier; // Score to give to shooter based on BulletDamage
 
 protected:
 	// Called when the game starts or when spawned

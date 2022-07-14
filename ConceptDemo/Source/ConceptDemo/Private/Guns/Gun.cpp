@@ -25,14 +25,12 @@ AGun::AGun()
 
 	this->BulletSpawnRelativeLocation = FVector(0.0f, 50.0f, 10.0f);
 
-	this->BulletClass = nullptr;
-
 	this->GunType = Common;
 
-	static ConstructorHelpers::FObjectFinder<USoundWave> GunGrabObject(TEXT("/Game/Props/Guns/GunGrab"));
-	this->GunGrabSound = GunGrabObject.Object;
-
 	this->RelativeAttachedSize = FVector(0.8, 0.8, 0.8);
+	
+	static ConstructorHelpers::FObjectFinder<USoundBase> GunEmptySoundFinder(TEXT("/Game/Sounds/Gun_empty"));
+	this->EmptySound = GunEmptySoundFinder.Object;
 
 	this->TriggerCapsule = CreateDefaultSubobject<UCapsuleComponent>(TEXT("Trigger Capsule"));
 	this->TriggerCapsule->InitCapsuleSize(67.68, 67.68);
@@ -114,25 +112,21 @@ void AGun::Tick(const float DeltaTime)
 }
 
 void AGun::SetAttached() {
+	this->DestroySparkles();
 	if (this->ShouldRotate) this->bRotate = false;
 	this->SetActorEnableCollision(false);
-	UGameplayStatics::SpawnSound2D(this->GetWorld(), this->GunGrabSound);
-	this->DestroySparkles();
 	this->SetActorScale3D(this->RelativeAttachedSize);
-	this->OnGunAttatched();
 }
 
 void AGun::SetDetached() {
+	this->SpawnSparkles();
 	if (this->ShouldRotate) this->bRotate = true;
 	this->SetActorEnableCollision(true);
-	FTimerHandle TimerHandle;
-	this->GetWorld()->GetTimerManager().SetTimer(TimerHandle, this, &AGun::SpawnSparkles, 0.1, false);
 	this->SetActorScale3D(FVector(1, 1, 1));
-	this->OnGunDetached();
 }
 
 void AGun::Fire(AActor* SourceActor) {
-	if (this->BulletClass != nullptr) {
+	if (this->BulletClasses.Num() > 0) {
 		if (this->CurrentTimeBetweenShots == 0 && this->ShotsLeft > 0)
 		{
 			FVector bulletLocation = this->GetActorLocation();
@@ -143,21 +137,24 @@ void AGun::Fire(AActor* SourceActor) {
 			else if (this->FacingDirection == EFacing_Direction::Right) {
 				bulletLocation.Y += this->BulletSpawnRelativeLocation.Y;
 			}
-			ABullet* Bullet = this->GetWorld()->SpawnActor<ABullet>(this->BulletClass, bulletLocation, this->GetActorRotation());
-			if (Bullet)
-			{
-				Bullet->SourceActor = SourceActor;
-				Bullet->SourceGun = this;
-				Bullet->FacingDirection = this->FacingDirection;
-				Bullet->TravelSpeed = 15;
-				Bullet->MaxTravelDistance = 5000;
-				Bullet->BulletDamage = this->ShotDamage;
-			}
+			FTransform Transform = this->GetActorTransform();
+			Transform.SetLocation(bulletLocation);
+			const int RandomBulletIndex = FMath::RandRange(0, this->BulletClasses.Num() - 1);
+			const TSubclassOf<ABullet> BulletClass = this->BulletClasses[RandomBulletIndex];
+			ABullet* Bullet = this->GetWorld()->SpawnActorDeferred<ABullet>(BulletClass, Transform, this, nullptr, ESpawnActorCollisionHandlingMethod::AlwaysSpawn);
+			Bullet->SourceActor = SourceActor;
+			Bullet->SourceGun = this;
+			Bullet->FacingDirection = this->FacingDirection;
+			Bullet->TravelSpeed = 15;
+			Bullet->MaxTravelDistance = 5000;
+			Bullet->BulletDamage = this->ShotDamage;
+			UGameplayStatics::FinishSpawningActor(Bullet, Transform);
 			this->CurrentTimeBetweenShots = this->TimeBetweenShots;
 			this->ShotsLeft--;
 		}
 		if (this->ShotsLeft == 0)
 		{
+			UGameplayStatics::PlaySound2D(this->GetWorld(), this->EmptySound);
 			this->GunDead.Broadcast(this);
 		}
 	}

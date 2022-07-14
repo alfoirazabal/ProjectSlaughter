@@ -6,7 +6,6 @@
 #include "GameFramework/Actor.h"
 #include "TrainAI.h"
 #include "Props/ElevatorLights/ElevatorLightAI.h"
-#include "SlaughterFirendsDemoConstants.h"
 #include "TrainAISpawner.generated.h"
 
 UCLASS()
@@ -53,8 +52,6 @@ protected:
 
 	UPROPERTY() float randSpawnTime;
 	UPROPERTY() float currentSpawnTime;
-
-	SlaughterFirendsDemoConstants* demoConstantsHelper;
 
 public:	
 	// Called every frame

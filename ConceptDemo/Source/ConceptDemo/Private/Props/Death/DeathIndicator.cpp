@@ -12,7 +12,7 @@ ADeathIndicator::ADeathIndicator()
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
-	this->PlayerMoveXDistance = -1;
+	this->PlayerMoveXDistance = -6;
 	this->PlayerMoveYDistance = 0;
 	this->SpawnXDistance = -190;
 	this->SpawnYDistance = 0;
@@ -29,8 +29,8 @@ void ADeathIndicator::Disappear()
 		CurrentCharacterLocation.X += this->PlayerMoveXOnDestroyDistance;
 		CurrentCharacterLocation.Y += this->PlayerMoveYOnDestroyDistance;
 		this->DeadCharacter->SetActorLocation(CurrentCharacterLocation);
-		this->DeadCharacter->GetCharacterMovement()->MovementMode = EMovementMode::MOVE_Walking;
 		this->PlayerController->SetIgnoreMoveInput(false);
+		this->DeadCharacter->Frozen = false;
 	}
 	this->Destroy();
 }
@@ -53,9 +53,7 @@ void ADeathIndicator::BeginPlay()
 		this->DeadCharacter->SetActorLocation(CurrentCharacterPosition);
 		this->PlayerController = this->DeadCharacter->GetController();
 		this->PlayerController->SetIgnoreMoveInput(true);
-		UCharacterMovementComponent* DeadCharacterMovement = this->DeadCharacter->GetCharacterMovement();
-		DeadCharacterMovement->StopMovementImmediately();
-		DeadCharacterMovement->MovementMode = EMovementMode::MOVE_Flying;
+		this->DeadCharacter->Frozen = true;
 	}
 	
 	FTimerHandle TimerHandle;

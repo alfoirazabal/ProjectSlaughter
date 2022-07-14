@@ -61,6 +61,7 @@ protected:
 	UPROPERTY(EditAnywhere, Category="Concept Demo Action Sprites DamageLevel2") UPaperFlipbook* IdleFlipBookDamageLevel2;
 	UPROPERTY(EditAnywhere, Category="Concept Demo Action Sprites DamageLevel2") UPaperFlipbook* MovingFlipBookDamageLevel2;
 	UPROPERTY(EditAnywhere, Category="Concept Demo Action Sprites DamageLevel2") UPaperFlipbook* JumpingFlipBookDamageLevel2;
+	UPROPERTY(EditAnywhere, Category="Concept Demo Action Sprites") UPaperFlipbook* CharacterDeadFlipBook;
 	UPROPERTY() UPaperFlipbook* IdleFlipBook;
 	UPROPERTY() UPaperFlipbook* MovingFlipBook;
 	UPROPERTY() UPaperFlipbook* JumpingFlipBook;

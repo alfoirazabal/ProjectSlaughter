@@ -12,7 +12,7 @@ ADeathIndicator::ADeathIndicator()
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
-	this->PlayerMoveXDistance = 6;
+	this->PlayerMoveXDistance = -6;
 	this->PlayerMoveYDistance = 0;
 	this->SpawnXDistance = -190;
 	this->SpawnYDistance = 0;

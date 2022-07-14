@@ -140,6 +140,7 @@ void AConceptDemoPaperCharacter::MakeFallingDeathWithIndicator()
 {
 	const FTransform Transform = this->GetActorTransform();
 	ADeathIndicator* DeathIndicator = this->GetWorld()->SpawnActorDeferred<ADeathIndicator>(this->DeathIndicatorType, Transform, this, nullptr, ESpawnActorCollisionHandlingMethod::AlwaysSpawn);
+	this->IdleFlipBook = this->MovingFlipBook = this->JumpingFlipBook = this->CharacterDeadFlipBook;
 	this->bFallingDeath = true;
 	DeathIndicator->DeadCharacter = this;
 	UGameplayStatics::FinishSpawningActor(DeathIndicator, Transform);

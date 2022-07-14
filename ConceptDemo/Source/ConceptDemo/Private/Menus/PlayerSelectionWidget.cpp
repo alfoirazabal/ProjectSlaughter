@@ -69,6 +69,18 @@ void UPlayerSelectionWidget::NativeConstruct()
 	this->P2SelectionMarkerImages.Add(this->ImgSelectedP2Pos4);
 	this->P2SelectionMarkerImages.Add(this->ImgSelectedP2Pos5);
 	this->P2SelectionMarkerImages.Add(this->ImgSelectedP2Pos6);
+	this->BtnP1Pos1->OnClicked.AddDynamic(this, &UPlayerSelectionWidget::ClickedP1Pos1);
+	this->BtnP1Pos2->OnClicked.AddDynamic(this, &UPlayerSelectionWidget::ClickedP1Pos2);
+	this->BtnP1Pos3->OnClicked.AddDynamic(this, &UPlayerSelectionWidget::ClickedP1Pos3);
+	this->BtnP1Pos4->OnClicked.AddDynamic(this, &UPlayerSelectionWidget::ClickedP1Pos4);
+	this->BtnP1Pos5->OnClicked.AddDynamic(this, &UPlayerSelectionWidget::ClickedP1Pos5);
+	this->BtnP1Pos6->OnClicked.AddDynamic(this, &UPlayerSelectionWidget::ClickedP1Pos6);
+	this->BtnP2Pos1->OnClicked.AddDynamic(this, &UPlayerSelectionWidget::ClickedP2Pos1);
+	this->BtnP2Pos2->OnClicked.AddDynamic(this, &UPlayerSelectionWidget::ClickedP2Pos2);
+	this->BtnP2Pos3->OnClicked.AddDynamic(this, &UPlayerSelectionWidget::ClickedP2Pos3);
+	this->BtnP2Pos4->OnClicked.AddDynamic(this, &UPlayerSelectionWidget::ClickedP2Pos4);
+	this->BtnP2Pos5->OnClicked.AddDynamic(this, &UPlayerSelectionWidget::ClickedP2Pos5);
+	this->BtnP2Pos6->OnClicked.AddDynamic(this, &UPlayerSelectionWidget::ClickedP2Pos6);
 	for (uint8 i = 0 ; i < 6 ; i++)
 	{
 		this->P1CharacterImages[i]->SetBrushFromTexture(this->P1Characters[i]->CharacterFaceImage);
@@ -94,6 +106,8 @@ void UPlayerSelectionWidget::NativeConstruct()
 	PlayerController->InputComponent->BindAction(TEXT("C Down"), IE_Pressed, this, &UPlayerSelectionWidget::P2SelectDownwardsPlayer);
 	PlayerController->InputComponent->BindAction(TEXT("C Right"), IE_Pressed, this, &UPlayerSelectionWidget::P2SelectRightwardsPlayer);
 	PlayerController->InputComponent->BindAction(TEXT("C Left"), IE_Pressed, this, &UPlayerSelectionWidget::P2SelectLeftwardsPlayer);
+
+	this->ButtonGoBack->OnClicked.AddDynamic(this, &UPlayerSelectionWidget::GoBack);
 }
 
 void UPlayerSelectionWidget::NativeDestruct()
@@ -104,7 +118,12 @@ void UPlayerSelectionWidget::NativeDestruct()
 
 void UPlayerSelectionWidget::GoBack()
 {
-	GEngine->AddOnScreenDebugMessage(287572113, 2, FColor::Green, "Implemented on Blueprints");
+	const APlayerController* PlayerController = this->GetOwningPlayer();
+	UInputComponent* PlayerInputComponent = PlayerController->InputComponent;
+	PlayerInputComponent->ClearActionBindings();
+	UUserWidget* MainMenuWidget = CreateWidget<UUserWidget>(this->GetWorld(), this->MainMenuWidgetClass);
+	MainMenuWidget->AddToViewport();
+	this->RemoveFromParent();
 }
 
 void UPlayerSelectionWidget::BeginGame()
@@ -212,6 +231,78 @@ void UPlayerSelectionWidget::P2SelectDownwardsPlayer()
 		this->Player2Character = this->P2Characters[DownwardsIndex];
 		this->DisplaySelectedP2();
 	}
+}
+
+void UPlayerSelectionWidget::ClickedP1Pos1()
+{
+	this->Player1Character = this->P1Characters[0];
+	this->DisplaySelectedP1();
+}
+
+void UPlayerSelectionWidget::ClickedP1Pos2()
+{
+	this->Player1Character = this->P1Characters[1];
+	this->DisplaySelectedP1();
+}
+
+void UPlayerSelectionWidget::ClickedP1Pos3()
+{
+	this->Player1Character = this->P1Characters[2];
+	this->DisplaySelectedP1();
+}
+
+void UPlayerSelectionWidget::ClickedP1Pos4()
+{
+	this->Player1Character = this->P1Characters[3];
+	this->DisplaySelectedP1();
+}
+
+void UPlayerSelectionWidget::ClickedP1Pos5()
+{
+	this->Player1Character = this->P1Characters[4];
+	this->DisplaySelectedP1();
+}
+
+void UPlayerSelectionWidget::ClickedP1Pos6()
+{
+	this->Player1Character = this->P1Characters[5];
+	this->DisplaySelectedP1();
+}
+
+void UPlayerSelectionWidget::ClickedP2Pos1()
+{
+	this->Player2Character = this->P2Characters[0];
+	this->DisplaySelectedP2();
+}
+
+void UPlayerSelectionWidget::ClickedP2Pos2()
+{
+	this->Player2Character = this->P2Characters[1];
+	this->DisplaySelectedP2();
+}
+
+void UPlayerSelectionWidget::ClickedP2Pos3()
+{
+	this->Player2Character = this->P2Characters[2];
+	this->DisplaySelectedP2();
+}
+
+void UPlayerSelectionWidget::ClickedP2Pos4()
+{
+	this->Player2Character = this->P2Characters[3];
+	this->DisplaySelectedP2();
+}
+
+void UPlayerSelectionWidget::ClickedP2Pos5()
+{
+	this->Player2Character = this->P2Characters[4];
+	this->DisplaySelectedP2();
+}
+
+void UPlayerSelectionWidget::ClickedP2Pos6()
+{
+	this->Player2Character = this->P2Characters[5];
+	this->DisplaySelectedP2();
 }
 
 void UPlayerSelectionWidget::DisplaySelectedP1()

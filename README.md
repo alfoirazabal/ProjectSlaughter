@@ -23,8 +23,8 @@ The winning species will be considered the most powerful and ruler of Laughter C
 
 # Game pictures
 
-[![Main game HUD](https://img.itch.zone/aW1hZ2UvMTU1MDQyNi85MjY3MjQxLnBuZw==/original/hqKd7C.png)]()
-[![Rabbit and Skunk damaged](https://img.itch.zone/aW1hZ2UvMTU1MDQyNi85MjY3MjQ0LnBuZw==/original/9HthUe.png)]()
-[![Rabbit with gun](https://img.itch.zone/aW1hZ2UvMTU1MDQyNi85MjY3MjQzLnBuZw==/original/Bc83NU.png)]()
-[![Skunk fart](https://img.itch.zone/aW1hZ2UvMTU1MDQyNi85MjY3MjQyLnBuZw==/original/cqCOKC.png)]()
-[![Rabbit about to be hit by a train](https://img.itch.zone/aW1hZ2UvMTU1MDQyNi85MjY3MjQ1LnBuZw==/original/tVVajP.png)]()
+[![Main game HUD](https://img.itch.zone/aW1hZ2UvMTU1MDQyNi85MjY3MjQxLnBuZw==/original/hqKd7C.png)](https://img.itch.zone/aW1hZ2UvMTU1MDQyNi85MjY3MjQxLnBuZw==/original/hqKd7C.png)
+[![Rabbit and Skunk damaged](https://img.itch.zone/aW1hZ2UvMTU1MDQyNi85MjY3MjQ0LnBuZw==/original/9HthUe.png)](https://img.itch.zone/aW1hZ2UvMTU1MDQyNi85MjY3MjQ0LnBuZw==/original/9HthUe.png)
+[![Rabbit with gun](https://img.itch.zone/aW1hZ2UvMTU1MDQyNi85MjY3MjQzLnBuZw==/original/Bc83NU.png)](https://img.itch.zone/aW1hZ2UvMTU1MDQyNi85MjY3MjQzLnBuZw==/original/Bc83NU.png)
+[![Skunk fart](https://img.itch.zone/aW1hZ2UvMTU1MDQyNi85MjY3MjQyLnBuZw==/original/cqCOKC.png)](https://img.itch.zone/aW1hZ2UvMTU1MDQyNi85MjY3MjQyLnBuZw==/original/cqCOKC.png)
+[![Rabbit about to be hit by a train](https://img.itch.zone/aW1hZ2UvMTU1MDQyNi85MjY3MjQ1LnBuZw==/original/tVVajP.png)](https://img.itch.zone/aW1hZ2UvMTU1MDQyNi85MjY3MjQ1LnBuZw==/original/tVVajP.png)
